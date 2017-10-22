@@ -22,7 +22,132 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/thesis-research-revisited-greenland-temperature-profiles.html">Thesis Research Revisited - Greenland Temperature Profiles</a></h1>
+                    <h1 class="entry-title"><a href="/thesis-research-revisited-1d-heat-conduction-in-snow.html">Thesis Research Revisited - 1d Heat Conduction in Snow</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2017-10-21T00:00:00-06:00">
+                Published: Sat 21 October 2017
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+        </address>
+<p>In <a href="/category/science.html">Science</a>.</p>
+<p>tags: <a href="/tag/thesis.html">Thesis</a> <a href="/tag/greenland.html">Greenland</a> <a href="/tag/snow.html">Snow</a> <a href="/tag/heat-conduction.html">Heat Conduction</a> <a href="/tag/heat-equation.html">Heat Equation</a> </p>
+</footer><!-- /.post-info --><p>In my introduction to <a href="/thesis-research-revisited-greenland-temperature-profiles.html">Greenland temperature profiles</a>, I mentioned that the shape of the profile could largely be explained by heat conduction. When I first wrote my thesis, I took this as a given, and my advisor had already put together some plots similar to what I showed in the introductory post comparing theory to data. The idea isn't really new or controversial, so I never felt the need to question it. However, now that I want to explain it to a more general audience in this post, I feel like it is a good chance to put the theory to the test. Afterall, there is no better way to learn something than to give it a try with independent data and see if it works. The great thing about Science is that most of the time no one is stopping you from going out and seeing for yourself whether something makes sense. So, here I will combine heat conduction theory, snow temperature profile data, and surface temperature data to see if the temperatures really can be explained by heat conduction.</p>
+<h2>Heat Conduction Theory</h2>
+<p>First a bit of background about heat conduction. Transfer of heat by conduction occurs when rapidly moving molecules or atoms bump into slower molecules and atoms. Conservation of momentum causes the faster particules to slow down and the slower moving particules to speed up. So, if a metal bar is heated on one end, the atoms on that end start vibrating faster, bumping into adjacent molecules and heat is transfered along the length of the bar. Joseph Fourier discovered that this process could be described mathematically via the following:
+</p>
+<div class="math">$$ q = -K\frac{dT}{dx} $$</div>
+<p>
+The equation states that heat flux (the amount of energy, measured in Joules, transferred through a section of pipe) is proportional to the temperature gradient at that point in the metal. This equation is known as Fourier's Law, but it is identical to Fick's Law for diffusion, as heat conduction and diffusion behave exactly the same way. Diffusive processes include groundwater flow (Darcy's law), some types of hillslope evolution, and electrical current flow (Ohm's law). </p>
+<p>When thinking about diffusion one must consider the direction which the heat is flowing. In reality, heat is moving in all three dimensions: up, down, left, right depending on what the local temperature gradient is. Often, though, the dominant transfer of heat occurs in one dimension, such as in the example of bar of metal heated on one side. This makes the math a bit easier and the changes in temperature of one dimensional heat flow can be described via:
+</p>
+<div class="math">$$ \frac{\partial T}{\partial t} = k \frac{\partial^2 T}{\partial x^2} $$</div>
+<p>
+This is a partial differential equation derived from Fourier's law known as the <strong>heat equation</strong>. Note that here k is diffusivity which is defined as conductivity divided by density and specific heat capacity (<span class="math">\(\frac{K}{\rho c}\)</span>). While the heat equation looks complicated if you are not familiar with calculus, all it really says is that the change in temperature (T) at a location (x) is proportional to the curvature of temperature at that location. The heat equation can be solved for certain well defined situations resulting in a function that describes how the temperature varies with time (t) and location: T(t,x)</p>
+<h2>Heat Conduction theory in snow</h2>
+<p>Although snowpack is a three dimensional structure with a high degree of variability in density and ice crystal shape and bonding, it is reasonable to approximate it as one dimensional for some problems. In this case, we are assessing how snow temperatures change with depth at the scale of several centimeters, and there are several reasons why a one dimensional approach may be appropriate. First, if refreezing of water is ignored, any large changes in temperature occur at the upper surface driven by changes in solar radiation and air temperature. In Greenland, where the surface doesn't change all that much over long distances, the surface heating/cooling is relatively uniform and therefore the temperature at the surface should be relatively uniform. This means that heat won't really be moving sideways, just up and down. Second, although at small scales ice crystals can be highly variable with different shapes and degrees of bonding, these small scale variations "average out" and the snow can be thought of as a continuous mass with a particular thermal conductivity rather than a bunch of particles. Finally, since snow is building up from above, any variations in density that affect how heat is conducted are mostly the vertical direction. </p>
+<p>If you are willing to accept approximating heat conduction in snow as being largely one dimensional, just a few more assumptions are needed to get an analytical solution to the heat equation. Ideally, one would just adapt the heat equation for a particular site using measured thermal conductivities, surface temperatures, and a starting temperature profile. Then solve the equation to get a function T(t,d) that describes what snow temperatures will be at a certain time and depth. In reality, mathematicians have only figured out how to solve the heat equation in certain situations. This forces us to simplify the problem a bit more and our final solution is based on the following:</p>
+<ul>
+<li>One dimensional heat conduction</li>
+<li>Thermal conductivity is constant with space and time</li>
+<li>Surface temperatures change according to a sin wave</li>
+<li>Snow pack is infinitely deep</li>
+</ul>
+<p>Of those simplifications, holding thermal conductivity constant with depth is likely the least realistic. The true thermal conductivity will vary with depth depending on density and ice crystal shape. A sin wave approximation for surface temperature is reasonable because both daily and annual surface temperature changes follow a wave pattern resulting from changes in solar radiation. Furthermore, the heat equation has a property that rapid temperature changes are not conducted very far and can largely be ignored. So, a few unusually cold days are not going to have much of an affect on the temperature profile. Finally, a infinitely deep snow pack is reasonable for Greenland where the ground might be km's below the surface and we are only looking at the first 10m. It wouldn't be a reasonable simplification in a mountain snowpack. </p>
+<p>Here is how you solve the heat equation with the above assumptions: ... Actually maybe I will save that for another time. I am pretty rusty at solving partial differential equations, so I am happy to go with the solution provided by Patterson et al.</p>
+<div class="math">$$ T(d,t) = A \exp(-d\sqrt{w/2k})\sin(wt - d\sqrt{w/2k}) $$</div>
+<h2>Data</h2>
+<p>In order to actually use the solution calculated above, we need to define the frequency (w) and ,amplitude (A) of the surface temperature sin wave, as well as, plug in a snow thermal conductivity. While we could come up with a sin wave using measured snow surface temperatures, I thought it would be more interesting to use a completely separate dataset from the snow profile temperatures. At one of the temperature profile sites, Crawford Point, another research group 
+(<a href="http://cires1.colorado.edu/science/groups/steffen//gcnet/">Greenland Climate Network</a>) had a long running weather station. Using air temperature data from the weather station (air and surface temperatures are reasonably close), we can calculate theoretical temperature profiles to compare to the measured profiles. This approach has a number of benefits that I think are scientifically more rigorous. Using separate datasets ensures that the calculated profiles are not biased toward the measured profiles. It is vaguely circular to calculate temperature profiles from measured data and then compare the results to those same measurements. The measured surface temperatures in the temperature profiles are also highly suspect. Surface melting, accumulations, and solar radiation warming the sensor directly all contribute to increased uncertainty/bias in near surface temperature measurements. </p>
+<p><img alt="Crawford Pt Air Temperatures" src="/images/CPairtemps.png" style="width: 800px; height: auto; max-width: 100%;"/></p>
+<p>In the figure above I plotted a "best fit" (just eyeballed) sin wave to air temperature data from 2007. Note that the average temperature is around -15C and that the air temperatures only reach near freezing mid summer - ice sheets are cold! The equation of this sin wave is:</p>
+<div class="math">$$ T(t) = 15\sin(\frac{2\pi}{365}(t+100)) - 16 $$</div>
+<p>For thermal conductivity we can use a value computed as a function of density. Density and thermal conductivity are not perfectly correlated, but density is easy to measure and, for higher density snowpacks like those found in Greenland, there is less variation in thermal conductivity than for lower densities (Sturm et al., 2007). The relationship between density and thermal conductivity was another component of my thesis, and maybe I will do another blog post on it someday, but for now I will just use a thermal conductivity value of 1.5 (W/mK) given a snow density of 700 (kg/m^3) following the relationship defined by the "maxwell curve" in the figure below. </p>
+<p><img alt="Thermal conductivity vs density" src="/images/Kdenregressions.PNG" style="width: 634px; height: auto; max-width: 100%;"/></p>
+<h2>Data/Theory Comparison</h2>
+<p>Putting it all together our final equation for a theoretical temperature profile is:
+</p>
+<div class="math">$$ T(d,t) = 15 \exp(-d\sqrt{w/2k})\sin(w(t+100) - d\sqrt{w/2k}) - 16 $$</div>
+<p>
+Diffusivity (k) is calculated from conductivity using a snow density of 700 (kg/m^3) and a specific heat capacity of 2097 (J/kg*K). Note that there are also some unit changes involving seconds to days.</p>
+<p>We are now ready to compare theoretical and measured snow temperatures. To perform the calculations, I wrote a Python script available on Github. **Link. </p>
+<p><img alt="Data vs Theory" src="/images/profileplots.png" style="width: 1361px; height: auto; max-width: 100%;"/></p>
+<h2>Analysis</h2>
+<p>Unfortunately, the snow profile data from Crawford Point is limited to late June thru October 2007, so we cannot compare mid winter profiles. Nonetheless, above are three comparison plots from the beginning, middle, and end of the dataset. In general, the match between theory and data is by no means perfect, but does reflect the general shape of the data. In both theory and data, the 10m temperature is relatively stable with time and is very similar to the mean annual air temperature. Both curves show a subtle pattern of a temperature wave that travels from the surface into the snowpack over the course of the four month period. To put it another way, the increase and decrease in temperatures in the near surface over the summer is also present in the lower profile, but it occurs later and has a smaller magnitude.</p>
+<p>One feature that does stand out is the top 1m of snow in 6/27/2007. Here there is a sharp bend in the data and even above zero temperature readings. Surface melting in this area has likely exposed the top one or two temperature sensors to solar radiation which heats the sensor itself above that of the underlying snow. The water associated with the melting is also infiltrating and refreezing, and this gives off heat (latent heat of fusion) which raises the snow temperatures to near zero degrees. Once the snow is at zero, refreezing can no longer take place and the melt water infiltrates deeper into the snow. This section of zero degree snow is common at many sites and grows larger if there is enough melt water entering the snow.</p>
+<p>I did some testing with different values of density and thermal conductivity, as well as, shifted the surface temperature sin wave a bit. All of these parameters have a range of reasonable values, but there didn't seem to be any huge changes in the calculated profile. However, it is easy to "tune" the amplitude of the sin wave such that the 10m temperature matches the profile data almost exactly. So, it might be better to actually calculate the best fit sin wave rather than guesstimate it, as I am likely a little bias toward using an amplitude that happens to match better. Regardless, I think the theory holds up nicely and this analysis does indeed show that the observed temperature profile is primarily a function of heat conduction. </p>
+<h2>References</h2>
+<p>Paterson, W.S.B, The physics of glaciers, Academic Press, 3rd Ed, 2010.</p>
+<p>Sturm, M., Holmgren, J., Konig, M., Morris, K., The thermal conductivity of seasonal snow, Journal of Glaciology, Vol. 43, No.143, 1997.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="/thesis-research-revisited-greenland-temperature-profiles.html" rel="bookmark"
+                           title="Permalink to Thesis Research Revisited - Greenland Temperature Profiles">Thesis Research Revisited - Greenland Temperature Profiles</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2017-08-30T00:00:00-06:00">
                 Published: Wed 30 August 2017
@@ -33,29 +158,10 @@
         </address>
 <p>In <a href="/category/science.html">Science</a>.</p>
 <p>tags: <a href="/tag/thesis.html">Thesis</a> <a href="/tag/greenland.html">Greenland</a> <a href="/tag/snow.html">Snow</a> <a href="/tag/heat-conduction.html">Heat Conduction</a> </p>
-</footer><!-- /.post-info --><h2>Greenland:</h2>
-<p>My research, at least the data collection, took place in Greenland. The Greenland ice sheet is about the size of the western US and is roughly 2 miles thick in the middle (<a href="https://www.promice.dk/home.html">promice.dk</a>). I traveled to an area of SW Greenland in the summer of 2010 to assist with a drilling campaign and conduct a dye tracing experiment. Unlike paleo-climate studies, we were not drilling into the ice to extract an ice core. Rather, our goal was to punch a hole through the ice in order to conduct experiments investigating how water moves through and below the ice sheet. The drill actually consists of a heavy brass nozzle and thick tubing through which hot water is continuously pumped. The high pressure water spraying out the tip, melts a roughly two foot diameter hole in ice that grows downward as the drill tip is slowly lowered. </p>
-<p><img alt="Drilling Operations" src="/images/IMG_1657.JPG" style="width: 2048px; height: auto; max-width: 100%;"/></p>
-<p>We worked in an area relatively close to the edge of the ice and actually camped off of the ice most of the summer. In this area much of the ice surface resembles hummocky, rough textured rock with copious amounts of melt water forming streams everywhere. There are sections where crevasses form, but more intimidating are the moulins, verticals holes that form from draining meltwater and range in size from tiny, to larger than an SUV. Falling into a large moulin is a virtual death sentence. </p>
-<p><img alt="Giant Moulin" src="/images/IMG_1708.JPG" style="width: 768px; height: auto; max-width: 100%;"/></p>
-<p>Unfortunately, my dye tracing experiment failed and I ended up switching projects. So, since this post is about my thesis, I won't go into any more detail about drilling. However, for those interested, my <a href="http://ccscientifico.blogspot.com">old blog</a>from the trip, surprisingly, still exists and has some interesting content.</p>
-<h2>Snow Temperature Profiles:</h2>
-<p>My other project, which is what I actually wrote my thesis on, involved an in-depth analysis of temperature profiles collected from snow higher up on the ice sheet. This part of the ice sheet is known as the accumulation zone, where snow piles up but never completely melts. Mass is continually added to the ice sheet in this area and what starts as snow is eventually converted, via compaction, melting and refreezing, into ice which is buried and flows down and out from the middle of the ice sheet toward the edges where it finally melts and/or falls into the sea. </p>
-<p><img alt="Neil in Greenland" src="/images/Greenland.JPG" style="width: 1807px; height: auto; max-width: 100%;"/></p>
-<p>In contrast to the lumpy, stream covered ice topography of the ice margin where I did field work. Much of the accumulation zone is characterized by an endless plain of snow. In 2007, my advisor, Neil Humphrey, and a number of other colleagues/grad students embedded an array of temperature sensors into the first 10 meters of snowpack at several different sites. The sensors recorded temperatures for upwards of a year at each location. I wasn't involved in the data collection, but the details are documented here: <a href="/documents/Harper2010.pdf">Harper 2010</a></p>
-<h2>Data</h2>
-<p><img alt="H1 Profiles" src="/images/H1profiles.svg" style="width: 100%; height: auto; max-width: 100%;"/>
-The figure above shows two temperature profiles from the same site, one in the summer, one in the winter. As one might expect the summer profile shows higher near surface temperatures than the winter profile. Deeper down both temperature profiles converge at a temperature that is somewhat similar to the mean annual temperature for that particular site. The general shape of the temperature profiles can largely be explained from heat conduction theory. I will detail the math in part 2, but basically, heat is conducted into the snow in summer (on average) and out of the snow in the winter. On an annual time scale, the heat going into the first 10 meters of snow roughly balances the heat going out, and the deeper temperatures remain unchanged. Interestingly, the longer the timescale the deeper the effect. So, climatological variations in temperature on mult-decadal timescales are potentially recorded in the ice profile potentially enabling reconstruction of past climates using ice temperature data (Cuffey 2010). In reality, ice deformation creates added complexity, so reconstructing climate from temperature profiles has really only been attempted using boreholes drilled into the ground.</p>
-<h2>Refreezing</h2>
-<p>Although each site in our study is in the accumulation zone of the ice sheet, surface melting is still a fairly common occurence and was a key aspect of my thesis. When significant melting takes place, the water infiltrates into the underlying snow and, usually, refreezes. Even though the surface has reached zero degrees, the underlying snow is colder due to the subzero temperatures present 3/4 of the year. When refreezing occurs, heat is released and a temperature spike is observed in the temperature profile at the level where the refreezing takes place. If enough water is refrozen in the snowpack, profile temperatures in the near surface will be warmed to zero degrees at which point refreezing can no longer occur at that depth. Refreezing adds heat to the snowpack and leads to a temperature profile that is warmer than the theoretical summer profile resulting from conduction alone (see figure). Complicating this phenomenon is the fact that water does not infiltrate into the snow uniformly. Water can pool on layers or be channeled vertically deeper in the snowpack than might be expected. Partial refreezing in isolated areas may even insulate remaining water and keep it liquid year round. There has even been an aquifer of water recently discovered beneath the snow in some parts of Greenland (nature paper). All this is important for various aspects of glaciology and specifically mass balance. Knowing how much water there is and where it is going is key to determing much mass is the ice sheet gaining or losing.</p>
-<p><img alt="Refreezing of meltwater" src="/images/IMG_1871b.jpg" style="width: 768px; height: auto; max-width: 100%;"/></p>
-<h3>Reference</h3>
-<p>Cuffey, Kurt M., and William Stanley Bryce Paterson. The physics of glaciers. Academic Press, 2010.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+</footer><!-- /.post-info -->                <p>An introduction Greenland and snow temperature profiles.</p>
+                <a class="readmore" href="/thesis-research-revisited-greenland-temperature-profiles.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>
