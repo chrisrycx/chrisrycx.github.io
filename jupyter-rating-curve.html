@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="english">
+<head>
+        <meta charset="utf-8" />
+        <title>Jupyter Rating Curve</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">CCScientifico </a></h1>
+                <nav><ul>
+                    <li><a href="/pages/about-me.html">About Me</a></li>
+                    <li><a href="/category/misc.html">Misc</a></li>
+                    <li class="active"><a href="/category/science.html">Science</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/jupyter-rating-curve.html" rel="bookmark"
+           title="Permalink to Jupyter Rating Curve">Jupyter Rating Curve</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2018-03-17T00:00:00-06:00">
+                Published: Sat 17 March 2018
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+        </address>
+<p>In <a href="/category/science.html">Science</a>.</p>
+<p>tags: <a href="/tag/jupyter.html">Jupyter</a> <a href="/tag/discharge.html">discharge</a> <a href="/tag/python.html">Python</a> <a href="/tag/hydrology.html">hydrology</a> </p>
+</footer><!-- /.post-info -->      <p>I worked for several years at USU on the <a href="http://iutahepscor.org">iUTAH</a> project. There I managed a network of water monitoring stations along the Logan river and one component of my job involved measuring streamflow. We wanted to know how much water was flowing past each station in order to answer basic questions like "how much water is lost or gained downstream?" </p>
+<p>It is amazing how much Earth science is simply trying to figure out how much of a particular thing there is in a particular spot. How much water is there? How deep is the snow? How much precipitation falls on the ground? In the case of streamflow, also known as discharge, things get a little tricky because fluid mechanics is complex. For example, water near the surface moves downhill faster than water near the stream bed due to friction, and the flow is highly turbulent, so there are lots of eddies and waves. If the water is channeled through an engineered structure with a specific geometry, the flow can be calculated, but a natural river channel has an irregular shape that changes through time. In this situation the approach is typically to make lots of measurements across the channel and add them all together to get a total flow. While various instruments with different degrees of accuracy have been invented to make these measurements, sometimes ones only option is to hang a water velocity meter from a truck with a big weight (see picture).</p>
+<p><img alt="Truck Crane" src="/images/IMAG0283.jpg" style="width: 2688px; height: auto; max-width: 100%;"/></p>
+<p>I won't detail the various methods used to measure discharge in this post. Rather, my goal here is to present a tool for performing a regression on discharge measurements against the elevation of the water surface, also known as stage. Relating stage to discharge enables you to take something that is easy to measure, water depth, and convert it to something that is difficult to measure, flow. In general, measurement of streamflow is a huge component of hydrology and I don't claim to be an expert. The analysis presented here mostly follows Herschy 2009. But, I do think there is a need for more open source calculation tools, so I hope the python code discussed below is helpful for a working hydrologist, student or researcher.</p>
+<h2>Rating Curve Theory</h2>
+<p>While I expect someone who is interested in using the rating curve notebook to have a little bit of knowledge of open channel hydrology, I also think it is helpful to give a bit of an overview of the theory because it is needed to properly use the notebook. </p>
+<p>A rating curve is simply a regression relating stage and discharge. The classic approach is to fit the data with an equation of the form:</p>
+<div class="math">$$ Q(h) = C(h-a)^{alpha} $$</div>
+<p>Q = discharge (cms), h = stage (m), and a = effective height of zero flow (m)
+C and alpha are parameters derived from the regression, and as discussed below, the value of alpha may give some insight into the factors influencing the relationship between stage and discharge. This equation is generally described as a "power law" because the dependent variable is related to the independent variable by some power. Power law functions are very common in physics and earth science. There is probably some deeper reason for it, but I don't know what it is off the top of my head. But, aside from the commonality of this type of equation, there is some reasoning behind using a power law over some other curve. Afterall, one can fit any curve to any data, the question is always how representative of reality is the curve and is the curve being fit to error rather than true variations. The power law relationship is used because it has the same form as the "manning equation".</p>
+<div class="math">$$ Q = \frac{K}{n} * h^{5/3} * slope ^{1/2} * width $$</div>
+<p>The Manning equation is derived via a conservation of energy analysis of flow in a rectangular shaped channel (Hornberger). The equation components are basically just the driving and resisting forces acting on the water: gravity (slope) and friction. In this equation alpha = 5/3, but a natural channel is rarely rectangular, so one wouldn't expect it to be exactly 5/3 as determined by regression.</p>
+<p>Thus far I neglected to discuss parameter 'a', the effective height of zero flow because it will make more sense after a short discussion on "controls". Different sites will most likely have different rating curves (values of C and alpha) because each site has a different (a least slightly) set of characteristics that influence the flow such as channel shape, bank vegetation, meanders, constrictions, and others (Herschy). These characteristics are known as a "control" since they control the shape of the rating curve. A control can be broadly classified into two groups: section and channel. A section control is a localized somewhat specific feature that has a big influence on flow regardless of what is going on downstream. A waterfall a short distance downstream from a station is one example of a section control because it will be the main feature influencing how flow varies with water depth regardless of what is going on downstream. A channel control exists when the rating curve is determined by collective effects of all the site characteristics as a whole rather than a specific feature.</p>
+<p>Going back to parameter 'a': In the Manning equation the discharge is a function of the depth of the flow, but in an irregularly shaped natural channel the depth is variable across the cross-section. Instead of using depth of flow, the regression is based on the depth of flow above the elevation of zero flow. Intuitively, zero flow might be the elevation of the bottom of the channel, but often it is not, especially for a section control. If a section control is behaving somewhat like a dam, the depth of zero flow would be the lip of the dam, not the depth of the pool. Furthermore, at higher flows a localized feature might be completely submerged and the "effective" elevation of zero flow corresponding to the high flow channel control might not be different yet from lower flow value of 'a'. In that situation, there might be two different rating curves representing the overall river behavior. While 'a' can be estimated in the field, the easiest approach to determining 'a' is to plot the stage-discharge measurements in log-log space. Using a trial and error procedure, the value of 'a' can be estimated by finding the value associated with the stage-discharge values plotting in a straight line (see below). </p>
+<h2>Jupyter Notebook for Rating Curves</h2>
+<p>Now, an overview of the the Jupyter Notebook Template. The template is available on Github *here along with some data files one can use to give it a try. I assume you have some experience with Python and the Jupyter project (links). Input data consists of discharge measurements and associated stage readings for a particular site. The final "output" at the end of the template is an equation of the form Q = C(h-a)^alpha. Each cell in the notebook is described to some extent, but I will elaborate on a few items below. Some cells are blank leaving room for analysis and interpretation of data from a particular site enabling one to share how a particular rating curve came to be.</p>
+<h3><em>Data prep</em></h3>
+<p>Stage is typically measured relative to some datum. At the sites I managed a stage plate (basically a big ruler) was placed at a location that was within the flow year round and at convenient location for visual readings. These stage plate readings were then converted to a height relative a local datum (such as a big rock or bridge bolt) so that the readings would still be valid even if the station configuration changed and the stage plate was moved. I think the USGS measures stage in terms of elevation. Regardless, just keep in mind that the effective height of zero flow will be somewhat similar to the height, relative your datum, of the river thalweg (the deepest part). </p>
+<h3><em>Initial plot</em></h3>
+<p>An initial plot of the stage-discharge data is created in both "linear" and log-log space. The linear plot can help identify outliers or odd features in the data. The log-log can be used to identify any major changes in the slope of the data. This could signify that the control changes substantially at a particular flow and it might be best to construct two separate rating curves rather than one.</p>
+<h3><em>Effective height of zero flow</em></h3>
+<p>The effective height of zero flow should be somewhat similar to the thalweg of the river, but will vary somewhat depending on the nature of the control at the site. At a station with a clear section control, the height of zero flow can be estimated from height measurements of the base of the control (ref). However, it may be easier to use a graphical approach to estimating 'a'. A reasonable value for 'a' will result in a more linear plot of the stage-discharge points while bad values of 'a' will result in the plotted points showing some curvature. Depending on the amount of scatter in the measurements, the best value for 'a' may remain unclear so it is important to verify the final value is realistic. The notebook has a slider for adjusting the value of 'a' within XX range of the lowest stage reading until the best value of 'a' is found.</p>
+<h3><em>Rating Curve Regression</em></h3>
+<p>The final step in the process is simply performing a standard linear regression on the data. It would be nice if error in measurement could somehow be included in the regression with higher accuracy measurements being weighted more than lower accuracy measurements. Unfortunately in my literature search, I didn't see any obviously simple approaches to that problem. The final plot in the notebook shows the points as well as the rating curve and the regression parameters.</p>
+<h1>Reference</h1>
+<p>Herschy, R.W., 2009, Streamflow Measurement, Third Ed.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="http://twitter.com/chrisrycx">Twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
