@@ -26,9 +26,23 @@
 	There's 4 numbers in total,<br>
 	where your done let me know.<br>
 	
-	<input type="number" min="1000" max="9999">
-	<button>Enter</button>
+	<input id="gamenum" type="number" min="1000" max="9999">
+	<button id="checknum">Enter</button>
 	</div>
 	
 </body>
 </html>
+<script>
+	//Respond to button click
+	let testbtn = document.getElementById('checknum')
+	
+	testbtn.onclick = function(){
+		let testnum = document.getElementById('gamenum')
+		console.log(testnum.value)
+		if(testnum.value == 3257){
+			window.location.href = '54321prize.html'
+		}else{
+			testnum.style.color = 'red'
+		}
+	}
+</script>
