@@ -29,7 +29,7 @@ Less snow means decreased revenues which makes maintaining existing ski area inf
 
 <figure>
 
-![](images/Picture005.jpg)
+![]({static}/images/Picture005.jpg)
 
 <figcaption>
 
@@ -55,7 +55,7 @@ Luckily, my experience participating in a machine learning competition earlier t
 
 <figure>
 
-![](images/testimg-edited.png)
+![]({static}/images/testimg-edited.png)
 
 <figcaption>
 
@@ -73,7 +73,7 @@ Given that the 4km SWE data set is a reconstruction, not actual measurements, I 
 
 <figure>
 
-![](images/SnowDepthCompare-1024x571.png)
+![]({static}/images/SnowDepthCompare-1024x571.png)
 
 <figcaption>
 
@@ -87,7 +87,7 @@ Next, I compared the 4 km grid snow depth values at the ski area to snow totals 
 
 <figure>
 
-![](images/TotalSnowCompare.png)
+![]({static}/images/TotalSnowCompare.png)
 
 <figcaption>
 
@@ -107,7 +107,7 @@ When it comes to predicting snow fall in the southwest, El Nino Southern Oscilla
 
 <figure>
 
-![](images/ENSO.png)
+![]({static}/images/ENSO.png)
 
 <figcaption>
 
@@ -123,7 +123,7 @@ Even if the total amount of snow was unchanging over the years, any changes in t
 
 <figure>
 
-![](images/SeasonLength.png)
+![]({static}/images/SeasonLength.png)
 
 <figcaption>
 
@@ -137,7 +137,7 @@ Figure 5 shows how season length has varied through time. I only have a few year
 
 <figure>
 
-![](images/SeasonStartEnd.png)
+![]({static}/images/SeasonStartEnd.png)
 
 <figcaption>
 

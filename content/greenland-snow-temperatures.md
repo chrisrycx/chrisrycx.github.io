@@ -16,7 +16,7 @@ My graduate degree research was focused on glacial hydrology, which is basically
 
 <figure>
 
-![](images/IMG_1683_sm-1024x768.jpg)
+![]({static}/images/IMG_1683_sm-1024x768.jpg)
 
 <figcaption>
 
@@ -42,7 +42,7 @@ In 2007, my advisor, [Neil Humphrey](http://geofaculty.uwyo.edu/neil/), and a nu
 
 <figure>
 
-![](images/greenmap.png)
+![]({static}/images/greenmap.png)
 
 <figcaption>
 
@@ -56,7 +56,7 @@ Figure 3 shows two temperature profiles from the same site: one in the late spri
 
 <figure>
 
-![](images/H1profiles-3.png)
+![]({static}/images/H1profiles-3.png)
 
 <figcaption>
 
@@ -99,7 +99,7 @@ In order to actually use the solution calculated above, we need to define the fr
 
 <figure>
 
-![](images/CPairtemps.png)
+![]({static}/images/CPairtemps.png)
 
 <figcaption>
 
@@ -125,7 +125,7 @@ Unfortunately, the snow profile data from Crawford Point is limited to late June
 
 <figure>
 
-![](images/profileplots-1024x469.png)
+![]({static}/images/profileplots-1024x469.png)
 
 <figcaption>
 

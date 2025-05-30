@@ -25,7 +25,7 @@ The Sandias are lacking direct measurements of daily SWE values. So, I utilized 
 
 <figure>
 
-![](images/SandiaMap-1024x724.png)
+![]({static}/images/SandiaMap-1024x724.png)
 
 <figcaption>
 
@@ -43,7 +43,7 @@ Given the right context and location, photographs of snow in the Sandias, are a 
 
 <figure>
 
-![](images/KerryMinMax.png)
+![]({static}/images/KerryMinMax.png)
 
 <figcaption>
 
@@ -57,7 +57,7 @@ Starting in 2009, Kerry Jones and another meteorologist, Brent Wachter, began ta
 
 <figure>
 
-![](images/PictureRank.png)
+![]({static}/images/PictureRank.png)
 
 <figcaption>
 
@@ -100,7 +100,7 @@ SWE is typically measured using a [stainless steel tube and a scale](https://www
 
 <figure>
 
-![](images/IMG_1154.jpg)
+![]({static}/images/IMG_1154.jpg)
 
 <figcaption>
 
@@ -114,7 +114,7 @@ I wasn’t the only one making snow measurements in the Sandias this past winter
 
 <figure>
 
-![](images/FieldComparison-edited.png)
+![]({static}/images/FieldComparison-edited.png)
 
 <figcaption>
 
@@ -138,7 +138,7 @@ When comparing the model output to point measurements (figure 4), I generally co
 
 <figure>
 
-![](images/ModelCompare_swe.png)
+![]({static}/images/ModelCompare_swe.png)
 
 <figcaption>
 
@@ -154,7 +154,7 @@ There seems to be something particular to the Sandias that is influencing SNODAS
 
 <figure>
 
-![](images/image.png)
+![]({static}/images/image.png)
 
 <figcaption>
 
@@ -168,7 +168,7 @@ The Sandias are situated such that radar from KABX is blocked for a region almos
 
 <figure>
 
-![](images/PajaritoCompare.png)
+![]({static}/images/PajaritoCompare.png)
 
 <figcaption>
 

@@ -20,7 +20,7 @@ Data is always going to need some sort of quality control after it is collected.
 
 <figure>
 
-![](images/IMAG0263-579x1024.jpg)
+![]({static}/images/IMAG0263-579x1024.jpg)
 
 <figcaption>
 
@@ -34,7 +34,7 @@ I have extensive experience with a mostly manual approach to environmental data 
 
 <figure>
 
-![](images/DSCF8386-edited-scaled.jpg)
+![]({static}/images/DSCF8386-edited-scaled.jpg)
 
 <figcaption>
 

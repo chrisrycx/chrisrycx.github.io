@@ -28,7 +28,7 @@ The API front end aims to provide a visual example of how the API works. Anyone 
 
 <figure>
 
-![](images/APIinput-1024x484.png)
+![]({static}/images/APIinput-1024x484.png)
 
 <figcaption>
 
@@ -42,7 +42,7 @@ Data entered into the text box should be in comma separated format with the obse
 
 <figure>
 
-![](images/APIchart.png)
+![]({static}/images/APIchart.png)
 
 <figcaption>
 
@@ -62,7 +62,7 @@ The API code is available on Github ([https://github.com/chrisrycx/EnviroData\_A
 
 <figure>
 
-![](images/APItypes.png)
+![]({static}/images/APItypes.png)
 
 <figcaption>
 
@@ -76,7 +76,7 @@ Coding with FastAPI looks similar to using [Flask](https://flask.palletsprojects
 
 <figure>
 
-![](images/APIendpoint.png)
+![]({static}/images/APIendpoint.png)
 
 <figcaption>
 
@@ -96,7 +96,7 @@ The most basic usage is via the ‘check\_vals’ function. This function takes 
 
 <figure>
 
-![](images/APIenviroqc.png)
+![]({static}/images/APIenviroqc.png)
 
 <figcaption>
 

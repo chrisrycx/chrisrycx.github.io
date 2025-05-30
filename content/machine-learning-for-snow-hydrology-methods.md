@@ -13,7 +13,7 @@ tags:
 
 This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In [Part 1](https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/), I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see [Part 1](https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/) for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.
 
-![](images/Rank.png)
+![]({static}/images/Rank.png)
 
 The SWE prediction locations are specified by the competition, but they are not point locations. Instead predictions must be made for 1km x 1km grid cells. The competition provides historical SWE values at many of the grid cell locations, and these values are meant to be used to help train the machine learning model. Ironically, the hypsometric method only utilizes Snotel data, so much of data provided by the competition went unused. A more sophisticated approach would surely utilize all the available data to make new predictions. Nonetheless, the historical grid cell SWE values can be used to test the accuracy of my model (see [Results](#sweresults)).
 
@@ -33,7 +33,7 @@ QGIS can perform a wide range of analyses on DEM data, and I was lucky to stumbl
 
 <figure>
 
-![](images/zonalstats.png)
+![]({static}/images/zonalstats.png)
 
 <figcaption>
 
@@ -51,7 +51,7 @@ After determining the elevation of each grid cell, I needed to know what Snotel 
 
 <figure>
 
-![](images/geopandas-1024x349.png)
+![]({static}/images/geopandas-1024x349.png)
 
 <figcaption>
 
@@ -75,7 +75,7 @@ Initial testing indicated that, on my computer, calculating all the regressions 
 
 <figure>
 
-![](images/swecalc_func-1024x642.png)
+![]({static}/images/swecalc_func-1024x642.png)
 
 <figcaption>
 
@@ -93,7 +93,7 @@ As with any calculation, it is good to do a sanity check on the output. When I f
 
 <figure>
 
-![](images/MaxSubmission.png)
+![]({static}/images/MaxSubmission.png)
 
 <figcaption>
 
@@ -107,7 +107,7 @@ I went ahead and submitted the predicted values to the competition, including th
 
 <figure>
 
-![](images/image.png)
+![]({static}/images/image.png)
 
 <figcaption>
 
@@ -123,7 +123,7 @@ I can also evaluate my approach using the grid cell training data. As mentioned 
 
 <figure>
 
-![](images/SanJuanRMSE_med-1024x724.png)
+![]({static}/images/SanJuanRMSE_med-1024x724.png)
 
 <figcaption>
 

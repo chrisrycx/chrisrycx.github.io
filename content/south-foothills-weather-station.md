@@ -30,7 +30,7 @@ The rest of this post breaks down the different components of the station, highl
 
 <figure>
 
-![](images/roofstation.png)
+![]({static}/images/roofstation.png)
 
 <figcaption>
 
@@ -53,7 +53,7 @@ Temperature, pressure, and humidity are measured from inside a "radiation shield
 
 <figure>
 
-![](images/MDLandMBJ-1.png)
+![]({static}/images/MDLandMBJ-1.png)
 
 <figcaption>
 
@@ -71,7 +71,7 @@ The MDL-700 is a computer running a customized embedded version of Linux. It has
 
 <figure>
 
-![](images/WxArch.png)
+![]({static}/images/WxArch.png)
 
 <figcaption>
 

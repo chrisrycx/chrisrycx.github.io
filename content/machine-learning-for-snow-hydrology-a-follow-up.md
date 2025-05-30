@@ -25,7 +25,7 @@ There wasn’t just one winner, but winners in several categories including regi
 
 <figure>
 
-![](images/image.png)
+![]({static}/images/image.png)
 
 <figcaption>
 
@@ -49,7 +49,7 @@ Their approach uses a combination of a neural network and interpolation via krig
 
 <figure>
 
-![](images/image-1.png)
+![]({static}/images/image-1.png)
 
 <figcaption>
 
@@ -92,7 +92,7 @@ Another unique approach used by this team is to use a completely new data set, n
 
 <figure>
 
-![](images/image-2.png)
+![]({static}/images/image-2.png)
 
 <figcaption>
 
@@ -118,7 +118,7 @@ It is also interesting to note that real time SWE prediction can be especially t
 
 <figure>
 
-![](images/image-3.png)
+![]({static}/images/image-3.png)
 
 <figcaption>
 

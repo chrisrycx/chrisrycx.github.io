@@ -17,7 +17,7 @@ It is amazing how much Earth Science is simply trying to figure out how much of 
 
 <figure>
 
-![](images/RatingCurveTruck-1024x579.jpg)
+![]({static}/images/RatingCurveTruck-1024x579.jpg)
 
 <figcaption>
 
@@ -54,15 +54,15 @@ Now, an overview of the the Jupyter Notebook Template. The template is available
 
 An initial plot of the stage-discharge data is created in both "linear" and log-log space. The linear plot can help identify outliers or odd features in the data. The log-log can be used to identify any major changes in the slope of the data. This could signify that the control changes substantially at a particular flow and it might be best to construct two separate rating curves rather than one.
 
-![](images/JupInitial.png)
+![]({static}/images/JupInitial.png)
 
 The effective height of zero flow should be somewhat similar to the thalweg of the river, but will vary somewhat depending on the nature of the control at the site. At a station with an obvious section control, the height of zero flow can be estimated from height measurements of the base of the control. However, it may be easier to use a graphical approach to estimating 'a'. A reasonable value for 'a' will result in a more linear plot of the stage-discharge points while bad values of 'a' will result in the plotted points showing some curvature. Depending on the amount of scatter in the measurements, the best value for 'a' may remain unclear so it is important to verify the final value is realistic. The notebook has a slider for adjusting the value of 'a' between the minimum measured stage value and that value minus 1m.
 
-![](images/JupSlider.png)
+![]({static}/images/JupSlider.png)
 
 The final step in the process is simply performing a standard linear regression on the data. It would be nice if error in measurement could somehow be included in the regression with higher accuracy measurements being weighted more than lower accuracy measurements. Unfortunately in my literature search, I didn't see any obviously simple approaches to that problem. The final plot in the notebook shows the points as well as the rating curve and the regression parameters.
 
-![](images/JupFinal.png)
+![]({static}/images/JupFinal.png)
 
 ### References
 

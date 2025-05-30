@@ -13,7 +13,7 @@ The mean annual precipitation in NM is about 14 inches which makes it one the dr
 
 <figure>
 
-![](images/NMWDwebsite-1024x543.png)
+![]({static}/images/NMWDwebsite-1024x543.png)
 
 <figcaption>
 
@@ -49,7 +49,7 @@ Many of the API services I have utilized don’t follow a rigorous standard. In 
 
 <figure>
 
-![SensorThings API Data Model](images/SensorThingsAPI_DatenModel_v1.1-900.png)
+![SensorThings API Data Model]({static}/images/SensorThingsAPI_DatenModel_v1.1-900.png)
 
 <figcaption>
 
@@ -75,7 +75,7 @@ It is worth keeping in mind that the SensorThings standard just defines how the 
 
 <figure>
 
-![](images/image-1024x581.png)
+![]({static}/images/image-1024x581.png)
 
 <figcaption>
 
@@ -95,7 +95,7 @@ The [code for the app](https://github.com/chrisrycx/SensorThingsDemo) is availab
 
 <figure>
 
-![](images/image-1.png)
+![]({static}/images/image-1.png)
 
 <figcaption>
 

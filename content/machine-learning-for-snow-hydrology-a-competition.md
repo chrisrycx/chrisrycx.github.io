@@ -14,13 +14,13 @@ coverImage: "BearRiver.jpg"
 
 Late last December I ran across a machine learning competition hosted by [Driven Data](https://www.drivendata.org/competitions/86/competition-reclamation-snow-water-dev/). The goal of the competition is to predict [snow water equivalent](#swe) at high spatial resolution across the western US. I had never before thought of participating in a machine learning competition, although I had heard of the idea via another platform, [Kaggle](https://www.kaggle.com). However, a machine learning competition involving snow is more up my alley, as I have both professional and personal experience with snow science. Furthermore, I had been wanting to enhance my familiarity with machine learning techniques. I decided to give it a shot.
 
-![](images/snowcast-1024x508.png)
+![]({static}/images/snowcast-1024x508.png)
 
 The competition is funded by the [US Bureau of Reclamation](https://www.usbr.gov/) and includes some significant prizes including $150K for first place. The Bureau of Reclamation manages dams and water systems across the Western US, and works closely with the [Natural Resources Conservation Service](https://www.nrcs.usda.gov) who maintain the Snotel network, a nationwide system of snow monitoring stations. One use of the Snotel Network is to predict stream flow during Spring snow melt which is used for reservoir management and irrigation. With a prize money totaling $500K, it is clear that this sort of analysis is highly valued by water managers and users.
 
 <figure>
 
-![](images/Snotels-and-Grid.png)
+![]({static}/images/Snotels-and-Grid.png)
 
 <figcaption>
 
@@ -56,7 +56,7 @@ Snotel is a network of monitoring stations managed by the NRCS that automaticall
 
 <figure>
 
-![](images/snotel_med-edited.jpg)
+![]({static}/images/snotel_med-edited.jpg)
 
 <figcaption>
 
@@ -72,7 +72,7 @@ I used QGIS for some initial data exploration as well as more in depth analysis 
 
 <figure>
 
-![](images/SWColorado-edited.png)
+![]({static}/images/SWColorado-edited.png)
 
 <figcaption>
 
@@ -86,7 +86,7 @@ Of the 11,000 grid cells, a subset of grid cell locations have data that can be 
 
 <figure>
 
-![](images/SantaFe.png)
+![]({static}/images/SantaFe.png)
 
 <figcaption>
 
@@ -100,7 +100,7 @@ In New Mexico, cells are fewer and much farther apart and there are less Snotel 
 
 <figure>
 
-![](images/SFcell_Snotels.png)
+![]({static}/images/SFcell_Snotels.png)
 
 <figcaption>
 
@@ -128,7 +128,7 @@ The last approach I found for estimating SWE is to use some form of interpolatio
 
 <figure>
 
-![](images/SFhypsometry_anno-edited.png)
+![]({static}/images/SFhypsometry_anno-edited.png)
 
 <figcaption>
 
