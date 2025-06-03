@@ -1,15 +1,8 @@
 ---
 title: "Greenland Snow Temperatures"
 date: 2022-07-22
-categories: 
-  - "hydrology"
-  - "modelling"
-tags: 
-  - "hydrology"
-  - "math"
-  - "modelling"
-  - "snow"
-coverImage: "Greenland.jpg"
+category: snow
+tags: hydrology, math, modelling, snow
 ---
 
 My graduate degree research was focused on glacial hydrology, which is basically trying to figure out how water moves above, below, and through glaciers and ice sheets. Water is important because it affects things like sliding, melting, sub-glacial erosion, and geochemistry. My research utilized temperature measurements from snow on the Greenland ice sheet, and I was lucky enough to travel to SW Greenland in the summer of 2010.

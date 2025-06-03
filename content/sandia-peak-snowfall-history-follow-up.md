@@ -1,18 +1,8 @@
 ---
 title: "Sandia Peak Snowfall History - Follow Up"
 date: 2023-08-08
-categories: 
-  - "climate"
-  - "meteorology"
-  - "modelling"
-  - "snow"
-tags: 
-  - "sandia"
-  - "skiing"
-  - "snodas"
-  - "snow"
-  - "swann"
-coverImage: "PXL_20230405_192311699-scaled.jpg"
+category: snow
+tags: sandia, skiing, snodas, snow, swann
 ---
 
 In my [last blog post](https://crceanalytics.com/2023/01/10/sandia-peak-snowfall-history/), I tried to answer the question:

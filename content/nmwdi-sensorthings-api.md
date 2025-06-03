@@ -1,12 +1,8 @@
 ---
 title: "NMWDI SensorThings API"
 date: 2022-07-07
-categories: 
-  - "api"
-  - "hydrology"
-  - "web-development"
-tags: 
-  - "sensorthings"
+category: data analysis
+tags: sensorthings
 ---
 
 The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the [New Mexico Water Data Initiative](http://newmexicowaterdata.org) (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the [NM Bureau of Geology and Mineral Resources](http://geoinfo.nmt.edu) with the mission of developing a hub for NM water data to facilitate data discovery and access.

@@ -1,16 +1,8 @@
 ---
 title: "Sandia Peak Snowfall History"
 date: 2023-01-10
-categories: 
-  - "climate"
-  - "hydrology"
-  - "meteorology"
-  - "snow"
-tags: 
-  - "sandia"
-  - "skiing"
-  - "snotel"
-coverImage: "Sandia_Jan2023-scaled.jpg"
+category: snow
+tags: sandia, skiing, snotel
 ---
 
 A few months ago I found out my local ski area, [Sandia Peak](http://sandiapeak.com), preemptively chose not to open for the upcoming ski season (2022/2023). It isn’t that unusual for Sandia Peak to stay closed for the season, and they were also closed last season. However, I had thought the decision to stay closed is typically made around January, after the snow pack begins to form. At that point, if the early season snowfall is too low, the season isn’t long enough offset operating costs and it isn’t worth opening. Why was this year different?

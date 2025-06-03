@@ -1,13 +1,8 @@
 ---
 title: "Machine Learning for Snow Hydrology - A Follow Up"
 date: 2022-09-30
-categories: 
-  - "hydrology"
-  - "machine-learning"
-  - "snow"
-tags: 
-  - "gbm"
-  - "snotel"
+category: hydrology
+tags: gbm, snotel
 ---
 
 ### Overview

@@ -1,18 +1,9 @@
 ---
 title: "Predicting Water Supply - Another Machine Learning Competition"
 date: 2024-03-20
-categories: 
-  - "climate"
-  - "hydrology"
-  - "machine-learning"
-  - "meteorology"
-  - "modelling"
-  - "snow"
-tags: 
-  - "drivendata"
-  - "quantile-regression"
-  - "snotel"
-coverImage: "RatingCurveTruck.jpg"
+category: hydrology
+tags: drivendata, quantile-regression, snotel
+summary: A machine learning competition to predict water supply volumes in the Western US.
 ---
 
 [DrivenData](https://drivendata.org) is a website that hosts machine learning competitions, often involving some component of Earth Science or hydrology. In 2022, they hosted a competition sponsored by the US Bureau of Reclamation to predict snow quantity across the Western US. Although I didn’t have much experience with machine learning at the time, I decided to participate in the competition and was pretty surprised to rank 62 out of 1000 using a simple approach. See these three blog posts for more details:
@@ -28,10 +19,6 @@ DrivenData is currently (spring 2024) hosting another Bureau of Reclamation comp
 ![]({static}/images/AllBasins-1024x724.png)
 **Figure 1**: Competition basins (blue) and associated flow volume locations (red).
 
-
-
-
-
 As was the case with the 2022 snow competition, I find that these competitions require the perfect combination of hydrology, mathematics, data engineering, and computing skills for the expertise that I am cultivating. So, I couldn’t resist getting involved. The prize money is also substantial, but I don’t consider myself to be competitive at that level yet.
 
 There are two aspects of this water supply competition that make it particularly challenging (at least from my perspective). The first is a requirement to generate multiple forecasts throughout the winter and spring. Forecasts begin as early as January 1st and earlier forecasts will necessarily have more uncertainty than later forecasts because parameters like peak snowpack are not yet known. Predicting the climate months in advance is also very difficult. Another requirement is to issue “quantile” forecasts which include an estimate of uncertainty in the prediction. For example, instead of predicting a specific flow volume, the forecast is given such that the volume will be above a certain amount (“90% chance total flow volume exceeds 10000 acre-feet”).
@@ -40,17 +27,8 @@ There are two aspects of this water supply competition that make it particularly
 
 Forecasting spring flow volumes has a long history, and, in the US, has primarily been the domain of the Natural Resource Conservation Service (NRCS). The NRCS, whose primary mission is focused on agriculture, seems like an unusual candidate for snow pack monitoring and runoff forecasting, especially given that the USGS is typically in charge of making the flow measurements. However, the need for flow forecasting was driven in part by water users including irrigators. This led the predecessor of the NRCS, the “Bureau of Agricultural Engineering” to take the lead in establishing a snow survey program in the early 20th century (Helms et al., 2008).
 
-<figure>
-
-![]({static}/images/snotel.jpg)
-
-<figcaption>
-
-A SNOTEL site in Utah
-
-</figcaption>
-
-</figure>
+![A SNOTEL site in Utah]({static}/images/snotel.jpg)
+**A SNOTEL site in Utah**
 
 Some of the earliest snow pack measurements in the Western US began in the late 1800’s in California. As early as the 1930’s, there was a need for flow forecasting and the general approach was to relate snow in a given location to flow at a given location. Today, the NRCS uses the “VIPER” system which utilizes watershed specific linear regressions, but is highly flexible in terms of input types and data quantity (see NRCS Technical Note). Surprisingly, VIPER is **Excel** based rather than implemented in a programming language. I am guessing Excel is used because the analysts are more familiar with Excel than a scripting language like Python, but implementing it must have been painful.
 

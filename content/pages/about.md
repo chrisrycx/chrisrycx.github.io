@@ -1,5 +1,5 @@
 ---
-title: "Earth Analytics"
+title: About
 date: 2021-12-15
 ---
 

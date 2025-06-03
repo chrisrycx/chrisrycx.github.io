@@ -1,13 +1,8 @@
 ---
 title: "South Foothills Weather Station"
 date: 2022-08-15
-categories: 
-  - "meteorology"
-  - "web-development"
-tags: 
-  - "climate"
-  - "dyacon"
-  - "linux"
+category: climate
+tags: climate, dyacon, linux
 ---
 
 ### Overview

@@ -1,12 +1,8 @@
 ---
 title: "Automated QC of Environmental Data"
 date: 2022-02-03
-categories: 
-  - "data-quality-control"
-tags: 
-  - "coding"
-  - "open-source"
-  - "quality-control"
+category: data analysis
+tags: coding, open-source, quality-control
 ---
 
 ## Part 2: A Quality Control API

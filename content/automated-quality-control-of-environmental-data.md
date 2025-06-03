@@ -1,8 +1,7 @@
 ---
 title: "Automated Quality Control of Environmental Data"
 date: 2022-01-14
-categories: 
-  - "data-quality-control"
+category: data analysis
 tags: 
   - "instrumentation"
   - "quality-control"

@@ -1,14 +1,8 @@
 ---
 title: "Machine Learning for Snow Hydrology - Methods"
 date: 2022-05-11
-categories: 
-  - "machine-learning"
-tags: 
-  - "machine-learning"
-  - "python"
-  - "qgis"
-  - "snotel"
-  - "snow"
+category: hydrology
+tags: machine-learning, python, qgis, snotel, snow
 ---
 
 This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In [Part 1](https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/), I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see [Part 1](https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/) for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.

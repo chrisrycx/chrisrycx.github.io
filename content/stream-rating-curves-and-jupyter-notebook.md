@@ -1,12 +1,8 @@
 ---
 title: "Stream Rating Curves and Jupyter Notebook"
 date: 2022-06-02
-categories: 
-  - "hydrology"
-tags: 
-  - "hydrology"
-  - "jupyter"
-  - "rating-curve"
+category: hydrology
+tags: hydrology, jupyter, rating-curve
 ---
 
 I wrote this a few years ago on another blog, but I think it is still relevant so I am re-posting it here. The code is still available on Github.

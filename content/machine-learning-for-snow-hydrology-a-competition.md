@@ -1,13 +1,8 @@
 ---
 title: "Machine Learning for Snow Hydrology - A Competition"
 date: 2022-04-07
-categories: 
-  - "machine-learning"
-tags: 
-  - "machine-learning"
-  - "snotel"
-  - "snow"
-coverImage: "BearRiver.jpg"
+category: snow
+tags: machine-learning, snotel, snow
 ---
 
 ## Part 1: Competition Overview
