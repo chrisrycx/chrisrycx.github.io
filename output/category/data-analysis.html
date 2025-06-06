@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>CRC Earth Analytics - data analysis</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">CRC Earth Analytics</a></h1>
+                        <nav><ul>
+                                                <li><a href="/pages/about.html">About</a></li>
+                                                <li><a href="/category/climate.html">climate</a></li>
+                                                <li class="active"><a href="/category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="/category/hydrology.html">hydrology</a></li>
+                                                <li><a href="/category/snow.html">snow</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="/nmwdi-sensorthings-api.html">"NMWDI SensorThings API"</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-07-07T00:00:00-06:00">
+                Published: Thu 07 July 2022
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                </address>
+        <p>In <a href="/category/data-analysis.html">data analysis</a>.</p>
+<p>tags: <a href="/tag/sensorthings.html">sensorthings</a> </p>        
+</footer><!-- /.post-info --><p>The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the <a href="http://newmexicowaterdata.org">New Mexico Water Data Initiative</a> (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the <a href="http://geoinfo.nmt.edu">NM Bureau of Geology and Mineral Resources</a> with the mission of developing a hub for NM water data to facilitate data discovery and access.</p>
+<figure>
+
+![]({static}/images/NMWDwebsite-1024x543.png)
+
+<figcaption>
+
+NM Water Data Website
+
+</figcaption>
+
+</figure>
+
+<p>The types of data accessible via NM Water Data range from climate, to groundwater, to water quality. Much of the data is provided by State and Federal agencies like the NM State Engineer and the USGS, but there are also partnerships with various non-profits. In some cases, the data is available for direct download or there is a link to the data provider's website. Importantly, a subset of the data can be accessed programmatically via a <strong>“Sensor Things” <a href="#whatsanapi">API</a></strong>.</p>
+<p>A SensorThings API follows a standardized approach to designing an API (described further below), and provides a powerful means for quickly accessing and manipulating data. However, I get the impression the SensorThings standard is not yet widely implemented, and it took some time for me to understand how it works. In this blog post I describe what the SensorThings API is, how it works, and how I utilized NMWDI's SensorThings API to create an app (<a href="http://apps.crceanalytics.com/sensorthingsdemo">http://apps.crceanalytics.com/sensorthingsdemo</a>) that displays NM groundwater data.</p>
+<h3>What is an API?</h3>
+<p>API stands for “Application Programming Interface”. Computer programs use APIs to communicate and interact with other programs. I find the term API to be fairly vague, abstract, and seemingly applied to many different situations. However, it helps to think of it as being synonymous with a similar, perhaps more familiar acronym GUI (graphical user interface). A GUI is the buttons and controls that a user interacts with when running a computer program. With an API, the “user” is another program and the interface isn’t graphical, but might be a function or a message following a particular format.</p>
+<p>A web API utilizes the internet as the means of communicating between programs, so the different programs do not need to be on the same computer. Much of the internet is structured with a client-server network, so one computer acts as a client and sends a request to a computer that acts as a server. To send a request, the program needs to know the server hostname and path to desired content. This is what your browser does to request a webpage, and the request information is shown in the URL. For example:</p>
+<p>http://apps.crceanalystics.com/sensorthingsdemo/</p>
+<p>http://<hostname>/<path to content></p>
+<p>The server responds to the request, typically, by returning data. Exactly what to send the server and how it will respond is what defines the API. The hostname and path to a particular API is known as the “endpoint”.</p>
+<p>Web API’s often return data that follow a JSON format. JSON stands for Javascript Object Notation and is simply a way of formatting text so it is easier for computers to parse. While it was created in association with Javascript, it is easily parsed by other programming languages.</p>
+<p>{"examplejson": [ 1, 2, 3 ]}</p>
+<h3>SensorThings API</h3>
+<p>Many of the API services I have utilized don’t follow a rigorous standard. In order to understand how to use such an API, the creator of the API must make instructions available somewhere. In contrast, NMWDI has elected to implement a “<a href="https://www.ogc.org/standards/sensorthings">SensorThings</a>” API. This particular approach to structuring an API is defined by the <a href="https://www.ogc.org/">Open Geospatial Consortium</a> (OGC), an international standards organization for managing and sharing of geospatial data. The SensorThings standard was initially developed in 2015 and continues to be actively updated (see their <a href="https://github.com/opengeospatial/sensorthings">Github page</a>). However, it does not yet appear to be widely adopted, with NMWDI being just the second US based organization shown on a <a href="https://github.com/opengeospatial/sensorthings/blob/master/PublicEndPoints.md">"list of endpoints"</a>.</p>
+<figure>
+
+![SensorThings API Data Model]({static}/images/SensorThingsAPI_DatenModel_v1.1-900.png)
+
+<figcaption>
+
+Figure 1: SensorThings Data Model (from Frost-server documentation)
+
+</figcaption>
+
+</figure>
+
+<p>SensorThings incorporates a “data model” into the API (figure 1) and understanding it is key to utilizing a SensorThings API. The data model describes how all data available from the API is organized and provides a map for accessing data of interest. The data model consists of various entities (like tables in a database) that store both field measurements as well as information about how the measurement was made. Entities include:</p>
+<ul>
+<li>Things - any physical object</li>
+<li>Locations - where the thing is located</li>
+<li>Datastreams - data sets associated with things</li>
+<li>Observations - Data values in data streams</li>
+<li>Sensors - An instrument associated with a datastream</li>
+</ul>
+<p>For example, a “thing” might be a weather station located in NM with various sensors. Datastreams could be temperature, humidity, and wind speed.</p>
+<p>It is worth keeping in mind that the SensorThings standard just defines how the API should be structured and behave. The standard must be implemented in some sort of programming language, and it appears the only implementation, perhaps due to the complexity, is the “<a href="https://github.com/FraunhoferIOSB/FROST-Server">Frost server</a>”, written in Java, apparently by one of the primary authors of the standard itself.</p>
+<h3>Using the API - Demo App</h3>
+<figure>
+
+![]({static}/images/image-1024x581.png)
+
+<figcaption>
+
+Figure 2 - NMWDI SensorThings API Demo App
+
+</figcaption>
+
+</figure>
+
+<p>Working with SensorThings is somewhat analogous to interacting with a relational database where a query is sent as part of the client request. In general though, it is easiest to learn by manually sending requests to the API and assessing the response. I built a simple web application to demonstrate some basic interaction with the NM Water Data SensorThings API: <a href="http://apps.crceanalytics.com/sensorthingsdemo/">http://apps.crceanalytics.com/sensorthingsdemo</a>. The app has three main features: a map showing well locations, a chart showing the time series of well data, and a table giving some details about a particular well (figure 2). Depending on the year, different wells are displayed on the map and different years can be selected. When a well is clicked on the observations are displayed in the chart and information about the well is loaded into the table. Next to each feature is the relevant SensorThings query that was used to load the data. To see the raw data from a query, simply copy the query and load it in a browser:</p>
+<p>Example query: Datastreams(1285)/Thing</p>
+<p>Full URL: <a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Datastreams(1285)/Thing">https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Datastreams(1285)/Thing</a></p>
+<p>The <a href="https://github.com/chrisrycx/SensorThingsDemo">code for the app</a> is available on Github, and utilizes <a href="https://leafletjs.com">Leaflet</a> for mapping and <a href="https://plotly.com/javascript/">Plotly</a> for plotting. The Javascript is mostly just sending a request and parsing the data that comes back so that it can be used in the map and/or plot functions.</p>
+<figure>
+
+![]({static}/images/image-1.png)
+
+<figcaption>
+
+Figure 3 - Code from sensorthings\_map.js showing a request made to the NMWDI Sensorthings API
+
+</figcaption>
+
+</figure>
+
+<p>SensorThings API's have lots of sophisticated data search functionality. Surprisingly, I found basic data access to be the least intuitive (it is the least like interacting with a database). Accessing specific data can be best explained using examples. Here are some queries for location data:</p>
+<ul>
+<li><a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Locations">Locations/</a> - All the locations associated with the data</li>
+<li><a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Locations(1)/Things">Location(1)/Things</a> - All the things associated with location ID=1</li>
+<li>Location(1)/Observations - This will not work because the data model associates observations with Datastreams, not Locations</li>
+</ul>
+<p>Once basic access of the data is understood, the more advanced functionality is easy to add on. For example, the default query to load wells to the map is: “ObservedProperties(1)?\$expand=Datastreams(\$filter=year(phenomenonTime) eq 2022)”. There are sometimes multiple ways to get a particular dataset, and in this case I start with "ObservedProperties(1)" because this limits the data returned to be of type "Depth to water" (determined by trial and error). Then I use the \$expand function, which sort of appends data on to an existing query, to get all Datastreams associated with "Depth to water". Finally, the \$filter function only returns data from wells in a particular year.</p>
+<p>There is much more functionality than I have shown here including an ability to search for data using geospatial information. The most helpful examples I found are on the <a href="https://fraunhoferiosb.github.io/FROST-Server/">Frost Server documentation</a>. Ironically, I found the official <a href="https://www.ogc.org/standards/sensorthings">OGC documentation</a> to be fairly unhelpful, as it is written in a very technical dry manner. Some other resources:</p>
+<ul>
+<li>Wikipedia - <a href="https://en.wikipedia.org/wiki/SensorThings_API">https://en.wikipedia.org/wiki/SensorThings_API</a></li>
+<li>SensorUp - <a href="https://developers.sensorup.com">developers.sensorup.com</a></li>
+<li>YouTube - <a href="https://www.youtube.com/playlist?list=PLUSJC5mjKZ9TQb2sSkqqoikXFHUMKWr25">SensorThings Series</a></li>
+</ul>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="/automated-qc-of-environmental-data.html" rel="bookmark"
+                               title="Permalink to "Automated QC of Environmental Data"">"Automated QC of Environmental Data"</a></h1>
+                    </header>
+
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-02-03T00:00:00-07:00">
+                Published: Thu 03 February 2022
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                </address>
+        <p>In <a href="/category/data-analysis.html">data analysis</a>.</p>
+<p>tags: <a href="/tag/coding.html">coding</a> <a href="/tag/open-source.html">open-source</a> <a href="/tag/quality-control.html">quality-control</a> </p>        
+</footer><!-- /.post-info -->                        <h2>Part 2: A Quality Control API</h2>
+<p>This is the second in a two part series on automated quality control of environmental data. The <a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/">first part</a> gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (<a href="https://api.crceanalytics.com">api.crceanalytics …</a></p>
+                        <a class="readmore" href="/automated-qc-of-environmental-data.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="/automated-quality-control-of-environmental-data.html" rel="bookmark"
+                               title="Permalink to "Automated Quality Control of Environmental Data"">"Automated Quality Control of Environmental Data"</a></h1>
+                    </header>
+
+                    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-01-14T00:00:00-07:00">
+                Published: Fri 14 January 2022
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                </address>
+        <p>In <a href="/category/data-analysis.html">data analysis</a>.</p>
+        
+</footer><!-- /.post-info -->                        <ul>
+<li>"instrumentation"</li>
+<li>"quality-control"</li>
+</ul>
+<hr>
+<h2>Part 1: Quality Control Background</h2>
+<h4>Overview</h4>
+<p>This is the first of a 2 part series on automated quality control of environmental data. This part gives an overview of quality control methods and the second part (under development) details how I used Python to create a demonstration API (<a href="http://api.crceanalytics.com">api …</a></p>
+                        <a class="readmore" href="/automated-quality-control-of-environmental-data.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+                    </ol><!-- /#posts-list -->
+                    </section><!-- /#content -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

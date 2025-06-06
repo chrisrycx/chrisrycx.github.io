@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>CRC Earth Analytics - linux</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">CRC Earth Analytics</a></h1>
+                        <nav><ul>
+                                                <li><a href="/pages/about.html">About</a></li>
+                                                <li><a href="/category/climate.html">climate</a></li>
+                                                <li><a href="/category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="/category/hydrology.html">hydrology</a></li>
+                                                <li><a href="/category/snow.html">snow</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="/south-foothills-weather-station.html">"South Foothills Weather Station"</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-08-15T00:00:00-06:00">
+                Published: Mon 15 August 2022
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                </address>
+        <p>In <a href="/category/climate.html">climate</a>.</p>
+<p>tags: <a href="/tag/climate.html">climate</a> <a href="/tag/dyacon.html">dyacon</a> <a href="/tag/linux.html">linux</a> </p>        
+</footer><!-- /.post-info --><h3>Overview</h3>
+<p>I built a very unusual weather station on my roof. The measurements are pretty standard: wind, temperature, humidity - but everything else is unique, all the way down to the electronics. You can see a subset of the data, updated every 10 minutes at <a href="http://apps.crceanalytics.com/wxstation">apps.crceanalytics.com/wxstation</a>.</p>
+<p>It is far from the easiest or cheapest approach to monitoring the weather. Furthermore, my neighbor already has a publicly accessible station. Nonetheless, the station serves a number of purposes:</p>
+<ul>
+<li>
+<p>Sensor testing and development</p>
+</li>
+<li>
+<p>A platform for demonstrating data analysis and data visualization</p>
+</li>
+<li>
+<p>A way to enhance my electronics and embedded software skills</p>
+</li>
+</ul>
+<p>I worked for a number of years at <a href="https://dyacon.com">Dyacon</a>, and continue to provide ongoing services including software development and sensor evaluation. For that reason, I have several different Dyacon sensors that I can deploy for either long term monitoring or short term testing. The most unique Dyacon product is the "MDL-700" (figure 2) which makes up the "brains" of the station. The MDL (Modular Data Logger) is a Linux based computer that communicates with the sensors and provides local data logging. It is no longer on the market, but feel free to contact me if you are interested in one.</p>
+<p>The rest of this post breaks down the different components of the station, highlighting certain details. The software running everything is largely hidden from view, but figure 3 provides a general summary of the wide variety of programs and scripts holding everything together. This is a "<a href="https://en.wikipedia.org/wiki/Solution_stack">full stack</a>" weather station meaning that I built everything from the MDL-700 operating system (sort of) to the data visualization website.</p>
+<h3>Sensors</h3>
+<figure>
+
+![]({static}/images/roofstation.png)
+
+<figcaption>
+
+Figure 1: Roof top weather station
+
+</figcaption>
+
+</figure>
+
+<table>
+<thead>
+<tr>
+<th>Measurements</th>
+<th>Sensor</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wind speed/direction</td>
+<td>Dyacon WSD-1</td>
+<td></td>
+</tr>
+<tr>
+<td>Wind speed/direction</td>
+<td>Calypso Ultrasonic</td>
+<td>Testing, not always active/installed</td>
+</tr>
+<tr>
+<td>Temperature, Humidity, Pressure</td>
+<td>Dyacon TPH-1</td>
+<td>Inside RM Young radiation shield</td>
+</tr>
+<tr>
+<td>Temperature, Humidity, Pressure</td>
+<td>Dyacon TPH-1</td>
+<td>Inside Dyacon radiation shield</td>
+</tr>
+</tbody>
+</table>
+<p>Temperature, pressure, and humidity are measured from inside a "radiation shield". A radiation shield blocks both direct and reflected sunlight from hitting the temperature sensor, which would bias the measurement warm. I have a couple different versions that I am comparing. Note that it isn't typical to measure air temperature and humidity at rooftop level. It would be better to have these instruments at 2 meters above the ground. The wind measurements are also likely to be affected by the wind interaction with the roof. However, for my purposes it is convenient to locate all sensors in one place.</p>
+<h3>MDL-700</h3>
+<figure>
+
+![]({static}/images/MDLandMBJ-1.png)
+
+<figcaption>
+
+Figure 2 - MDL-700 and Modbus Junction Box
+
+</figcaption>
+
+</figure>
+
+<p>Sensors are connected to the MDL-700 using <a href="https://en.wikipedia.org/wiki/RS-485">RS-485</a> serial communication. Additionally, all sensors utilize the <a href="https://en.wikipedia.org/wiki/Modbus">Modbus</a> protocol to transfer data. Modbus defines how messages are exchanged between the sensor and the MDL. These messages control what data is sent and when. Modbus is a "bus" protocol, meaning many sensors can be wired together in order to send all messages along a single cable. The Dyacon Modbus Junction Box provides a simple means of connecting all the sensors together and then back to a single port on the MDL.</p>
+<p>The MDL-700 is a computer running a customized embedded version of Linux. It has been designed to be paired with various expansion modules. The Serial Port Expansion Module (seen above) has 8 ports that can utilize RS-232, RS-485 or SDI-12 communication schemes. An embedded cell phone can also be added, making it possible to transfer data over cell networks. I connect to the MDL via my local computer network.</p>
+<h3>Software Architecture</h3>
+<figure>
+
+![]({static}/images/WxArch.png)
+
+<figcaption>
+
+Figure 3: Software Stack
+
+</figcaption>
+
+</figure>
+
+<p>With the exception of some of the hardware drivers, all the software on both the MDL and the web server is open source. One of the original goals of the MDL was to create an open source data logger. By making everything open source, the MDL can be customized to whatever the hardware will support. However, the downside of having complete versatility is that there is a lot of software that must be developed for specific behavior. In many cases the open source software already exists to implement a project. For example, the web server (figure 3) has many components that work together to render the <a href="http://apps.crceanalytics.com/wxstation">South Foothills Weather</a> web page. Luckily, the entire software stack consists of active, popular open source projects. In contrast, I was unable to find open source data logging software that fit my goals (Let me know if you know of something!). That lead me to development <a href="https://github.com/chrisrycx/DataBear">DataBear</a>.</p>
+<p>DataBear is my attempt at creating open source data logging software that can be used on different platforms (like a Raspberry Pi). Developing DataBear was a great learning experience, and it is actively running on the MDL. However, I would not claim it is ready for widespread use. Nonetheless anyone is free to fork it on Github and see if it is useful.</p>
+<p>Python is also used in the MDL display. At a low level, the display is controlled simply by sending bits to a particular device file. I used the <a href="https://python-pillow.org/">Pillow</a> library to create figures which get converted to a stream of bytes before being loaded to the display. This functionality is part of another open source library I developed: <a href="https://github.com/dyacon/pyMDL">pyMDL</a>. Unlike DataBear, this library is specific to the MDL and provides some hardware configuration in addition to controlling the display.</p>
+<p>Getting the data off the MDL required just a simple script to grab data from the SQLite database and send it to the server. However, the server must be set up to receive the data and for that I am utilizing <a href="https://fastapi.tiangolo.com/">FastAPI</a>.</p>
+<h3>Full Stack Weather</h3>
+<p>So there is a brief tour of a full stack weather station. There is a whole lot that can be written about each of the components I mentioned. Feel free to send me feedback about what you would like to learn more about.</p>                    </article>
+                </aside><!-- /#featured -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>

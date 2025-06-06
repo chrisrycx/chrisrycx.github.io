@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="english">
+        <head>
+                        <meta charset="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <meta name="generator" content="Pelican" />
+                        <title>CRC Earth Analytics - coding</title>
+                        <link rel="stylesheet" href="/theme/css/main.css" />
+        </head>
+
+        <body id="index" class="home">
+                <header id="banner" class="body">
+                        <h1><a href="/">CRC Earth Analytics</a></h1>
+                        <nav><ul>
+                                                <li><a href="/pages/about.html">About</a></li>
+                                                <li><a href="/category/climate.html">climate</a></li>
+                                                <li><a href="/category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="/category/hydrology.html">hydrology</a></li>
+                                                <li><a href="/category/snow.html">snow</a></li>
+                        </ul></nav>
+                </header><!-- /#banner -->
+
+                <aside id="featured" class="body">
+                    <article>
+                        <h1 class="entry-title"><a href="/automated-qc-of-environmental-data.html">"Automated QC of Environmental Data"</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2022-02-03T00:00:00-07:00">
+                Published: Thu 03 February 2022
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                </address>
+        <p>In <a href="/category/data-analysis.html">data analysis</a>.</p>
+<p>tags: <a href="/tag/coding.html">coding</a> <a href="/tag/open-source.html">open-source</a> <a href="/tag/quality-control.html">quality-control</a> </p>        
+</footer><!-- /.post-info --><h2>Part 2: A Quality Control API</h2>
+<p>This is the second in a two part series on automated quality control of environmental data. The <a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/">first part</a> gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (<a href="https://api.crceanalytics.com">api.crceanalytics.com</a>) to automatically flag uploaded data using some of the techniques described in Part 1.</p>
+<h4>Motivation</h4>
+<p>A couple years ago I began work on a Python package: EnviroDataQC (<a href="https://github.com/chrisrycx/EnviroDataQC">https://github.com/chrisrycx/EnviroDataQC</a>) that I could use to perform automated quality control on meteorological data being uploaded to <a href="https://dyacon.net">DyaconLive</a>, a web portal for <a href="https://dyacon.com">Dyacon</a> weather stations. The library didn’t need to be overly complex, I just wanted a way to perform range and behavioral checks in a few different contexts without having to re-write quality control code every time. Recently, I thought it might be interesting to build an API that would connect to EnviroDataQC, creating a means for anyone, anywhere to quickly perform data QC. I built a prototype limited to air temperature data at <a href="http://api.crceanalytics.com">api.crceanalytics.com</a> and gave it a simple, interactive front end. I think the concept could be taken a lot further eventually.</p>
+<h4>API Walk Thru</h4>
+<p>The API front end aims to provide a visual example of how the API works. Anyone visiting the site can submit data for quality control following a few simple steps:</p>
+<ol>
+<li>A user inputs data into a text box (Figure 1).</li>
+<li>Data is submitted to the API and the response is displayed beside the input.</li>
+<li>Unless there is an error, the data will come back with flags indicating data quality.</li>
+<li>The data is plotted in a chart below the input and any flags are displayed on top of the original data (Figure 2).</li>
+</ol>
+<figure>
+
+![]({static}/images/APIinput-1024x484.png)
+
+<figcaption>
+
+Figure 1: Data entry and returned JSON response
+
+</figcaption>
+
+</figure>
+
+<p>Data entered into the text box should be in comma separated format with the observation time followed by the air temperature value (°C). The input data gets reformatted to JSON as required by the API (<a href="http://api.crceanalytics.com/docs">See API docs</a>), but I figured it would be easier to copy and paste data from a CSV for general testing and experimentation. The response JSON is displayed beside the input and the input data is returned along with quality flags. The flag values are 0, 1, or 2 representing “good”, “suspicious” and “bad” values. Below the input, the data and flags are plotted to show how data spikes and "flatlining" (data persistance) are identified.</p>
+<figure>
+
+![]({static}/images/APIchart.png)
+
+<figcaption>
+
+Figure 2: Chart displaying data and flags
+
+</figcaption>
+
+</figure>
+
+<p>Although the input can be loaded with any data (limited to 200 rows), default data is pre-loaded into the inputs. Figure 2 shows the data plotted along with the flags returned by the API. Large spikes are flagged as ‘bad’ as well as sections of unchanging data that persist for more than 35 minutes. There are also "suspicious" flags adjacent to the larger spikes, as well as identifying a smaller spike. Configuration settings in EnviroDataQC determine what gets flagged.</p>
+<h4>API Implementation</h4>
+<p>The API is implemented with Python on the back end and utilizes <a href="https://fastapi.tiangolo.com/">FastAPI</a>. FastAPI lives up to it’s name and makes API creation really easy. I also found the "<a href="https://training.talkpython.fm/courses/getting-started-with-fastapi">Modern APIs with FastAPI</a>" course at TalkPython super helpful. Since, EnviroDataQC was already built, the actual coding of the API fits into one short script. Most of the time spent on this project actually went into the front end and testing some different front end plotting libraries.</p>
+<p>The API code is available on Github (<a href="https://github.com/chrisrycx/EnviroData_API">https://github.com/chrisrycx/EnviroData_API</a>) for those interested in creating a similar project. Furthermore, documentation for the API is generated automatically by FastAPI via Swagger (<a href="https://swagger.io/">https://swagger.io/</a>) and is accessed via <a href="http://api.crceanalytics.com/docs">http://api.crceanalytics.com/docs</a>. I found a number of FastAPI features perfect for this project. First, FastAPI uses <a href="https://pydantic-docs.helpmanual.io/">Pydantic</a> which enforces "type hinting" in Python. For an API that is receiving data, it is important that the incoming data is of a particular type and format so that it can be processed or return an informative error. In the API code, I create a “temperatures” type (figure 3) that contains lists of datetimes and floats corresponding to incoming temperature data that has a value and time stamp. I was even able to limit the number of items, so that a user could not upload too much data.</p>
+<figure>
+
+![]({static}/images/APItypes.png)
+
+<figcaption>
+
+Figure 3: Code defining types used by API
+
+</figcaption>
+
+</figure>
+
+<p>Coding with FastAPI looks similar to using <a href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a>. Application behavior is specified with functions that are connected to a particular route (such as api.crceanalytics.com/check_data/2m_air_temperature) using a decorator (figure 4). Inside the function, the incoming data is parsed and checked using EnviroDataQC functions. Then the response is returned. FastAPI can also render templates, so the back end API code is also used for the front end demonstration page. Total back end code is only around 250 lines.</p>
+<figure>
+
+![]({static}/images/APIendpoint.png)
+
+<figcaption>
+
+Figure 4: The API endpoint handling function.
+
+</figcaption>
+
+</figure>
+
+<h4>EnviroDataQC</h4>
+<p>Data quality is checked using EnviroDataQC, a Python library I developed while working at Dyacon. EnviroDataQC is an initial attempt at implementing the concepts discussed in <a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/">Part 1</a> of this series. Data quality is checked with respect to range, rate of change, and persistence (which I tend to call “flatlining”). Additionally, there are some wind consistency checks and a function that attempts to consolidate hourly quality flags into daily values. The package can be PIP installed:</p>
+<p><code>&gt; pip install envirodataqc</code></p>
+<p>The most basic usage is via the ‘check_vals’ function. This function takes a Pandas series and returns a Dataframe with the original data as well as the flags. The type of variable (air temperature, humidity, ect.) is also specified in the function call and must match a variable type listed in the configuration file (QCconfig.py). A couple interesting features of EnviroDataQC that I haven’t seen elsewhere are flags for suspicious values (as opposed to just flagging data as 'bad'), as well as an algorithm for consolidating quality flags. Often times data looks strange, but plausible, so flagging it as suspicious enables one to efficiently focus on certain parts of the data for review rather than wasting time reviewing data that is clearly bad. Consolidation of flags is also somewhat unique, and my initial take on the problem is built into the ‘daily_quality’ function. At Dyacon, I was taking 10 minute data with quality flags and reducing it to daily data, such as a daily mean temperature. The daily value needs to have a quality rating that is somehow related to the 10 minute quality flags. I came up with a scheme based on intuition that categorizes the daily values as good, suspicious, and bad based on the number of flags and gaps in the input data (figure 5).</p>
+<figure>
+
+![]({static}/images/APIenviroqc.png)
+
+<figcaption>
+
+Figure 5: Function from EnviroDataQC defining how quality flags are consolidated to daily values
+
+</figcaption>
+
+</figure>
+
+<h4>Other software tools</h4>
+<p>I searched for other open source software tools that perform automated and/or manual quality control of data, but didn't find that many options. This is surprising given the increased need for data quality control (Campbell et al 2013). It could be that there are general purpose QC libraries that could be applied to environmental data, but haven’t yet become popular in the environmental domain. Another possibility is that QC is not yet standardized enough to drive a need for solutions more sophisticated than spreadsheets and custom scripts (this reason is given by Horsburgh et al. 2015).</p>
+<p>Nonetheless, there are some existing open source tools worth testing. My former colleagues at USU developed <a href="https://github.com/ODM2/ODMToolsPython">ODM tools</a>, an interactive GUI for manual data QC. Another similar product I have seen mentioned is the <a href="https://gce-lter.marsci.uga.edu/gce_toolbox/">GCE toolbox</a>, however, this library is a Matlab Extension and is therefore not really open source. Another tool developed by Amber Jones and others at USU is <a href="https://github.com/AmberSJones/PyHydroQC">PyHydroQC</a>, which is focused on hydrology but appears to have similar functionality to EnviroDataQC, except it does much more by including machine learning methods.</p>
+<h4>Conclusion</h4>
+<p>That concludes this two part series on automated QC of environmental data. Let me know in the comments if you have any feedback or have recommendations for open source QC software.</p>
+<h2>References</h2>
+<p>Campbell, John L., et al. "Quantity is nothing without quality: Automated QA/QC for streaming environmental sensor data." BioScience 63.7 (2013): 574-585.</p>
+<p>Horsburgh, Jeffery S., et al. "Open source software for visualization and quality control of continuous hydrologic and water quality sensor data." Environmental Modelling &amp; Software 70 (2015): 32-44.</p>                    </article>
+                </aside><!-- /#featured -->
+                <section id="extras" class="body">
+                                <div class="blogroll">
+                                        <h2>links</h2>
+                                        <ul>
+                                                        <li><a href="https://getpelican.com/">Pelican</a></li>
+                                                        <li><a href="https://www.python.org/">Python.org</a></li>
+                                                        <li><a href="https://palletsprojects.com/p/jinja/">Jinja2</a></li>
+                                                        <li><a href="#">You can modify those links in your config file</a></li>
+                                        </ul>
+                                </div><!-- /.blogroll -->
+                                <div class="social">
+                                        <h2>social</h2>
+                                        <ul>
+
+                                                        <li><a href="#">You can add links in your config file</a></li>
+                                                        <li><a href="#">Another social link</a></li>
+                                        </ul>
+                                </div><!-- /.social -->
+                </section><!-- /#extras -->
+
+                <footer id="contentinfo" class="body">
+                        <address id="about" class="vcard body">
+                                Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+                        </address><!-- /#about -->
+
+                        <p>The theme is by <a rel="nofollow" href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                </footer><!-- /#contentinfo -->
+
+        </body>
+</html>
