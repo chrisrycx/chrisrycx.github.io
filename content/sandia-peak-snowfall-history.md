@@ -49,11 +49,7 @@ Luckily, my experience participating in a machine learning competition earlier t
 
 ![]({static}/images/testimg-edited.png)
 
-<figcaption>
-
-Figure 1 - 4km snow grid overlay on map of Sandia Ski Area. The blue colors represent SWE values in each grid on 3/20/2005. SWE totaled 394 mm in the grid cell over the ski area on that date.
-
-</figcaption>
+*Figure 1 - 4km snow grid overlay on map of Sandia Ski Area. The blue colors represent SWE values in each grid on 3/20/2005. SWE totaled 394 mm in the grid cell over the ski area on that date.*
 
 </figure>
 

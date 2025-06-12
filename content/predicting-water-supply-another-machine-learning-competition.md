@@ -52,17 +52,8 @@ A simple model of basin hydrology, created using conservation of mass, is quite 
 
 For each basin, over the course of the flow season: Inputs – Outputs = Change in Basin Storage
 
-<figure>
-
 ![]({static}/images/basin_diagram.png)
-
-<figcaption>
-
-Figure 2 - Diagram of watershed inputs and outputs
-
-</figcaption>
-
-</figure>
+**Figure 2**: Diagram of watershed inputs and outputs
 
 Inputs are precipitation in the form of rain or snow. By definition, there are no surface flows of water into the basin. It is assumed that groundwater is also not moving in or out of the basin perimeter (which might not be true in some situations). Outputs include evapotranspiration (ET), sublimation, and, of course, streamflow at the basin outlet, which is the target of the competition. Water can be stored within the basin as snow, surface water, or groundwater. After all of the basin inputs and outputs are accounted for, we can solve for the target variable “flow volume”.
 
@@ -74,31 +65,13 @@ If all the variables in equation 1 were known, the flow volume could simply be c
 
 My approach to these DrivenData competitions has basically been to start as simply as possible and add on complexity depending on performance and available time. Unfortunately, I only seem to have time to do the bare minimum. On the other hand, I continue to be surprised by how good a job a simple model can do. In this case, I just use linear regression to relate snowpack (SWE) to river flows. That is essentially what the NRCS already does, but instead of using Snotel measurements as direct inputs, I utilize the NOAA snow model [SNODAS](https://nsidc.org/data/g02158/versions/1) to estimate total basin SWE. While I found problems with SNODAS in prior projects, it still seemed like a good option given that it has output covering each of the basins, including one basin extending into Canada. The total amount of SWE in a basin provides a more direct relationship between snow and river flow as compared to SWE at one or two locations, and eliminates the need for Principle Component Analysis. Considering only snow is a major simplification of equation 1, but it is a reasonable starting point assuming snowpack is the dominant factor.
 
-<figure>
-
 ![]({static}/images/snowvsvolume-1024x386.png)
-
-<figcaption>
-
-Figure 3 - Season start SWE vs total flow volume for three different basins
-
-</figcaption>
-
-</figure>
+**Figure 3**: Season start SWE vs total flow volume for three different basins
 
 My machine learning model actually consists of two linear regression models. The first regression relates total SWE in the basin at the start of the flow season to total flow volume for each basin. Figure 3 shows the relationship between Season Start SWE and total flow volume for three different basins in the competition. Despite the fact that there is Snotel data going back to the 1970's (older?), SNODAS has only been available since 2005. So, only 9 data point are available in each watershed for determining the regression (odd years are withheld for testing). This is a major weakness to my approach.
 
-<figure>
-
 ![]({static}/images/snowvssnow-1024x412.png)
-
-<figcaption>
-
-Figure 4 - SWE on a given date vs SWE on April 1.
-
-</figcaption>
-
-</figure>
+**Figure 4** Snow vs snow comparison plot
 
 A second linear regression is needed to predict the start of season total SWE from snowpack on a given date. I create a new regression for each basin and forecast date (figure 4). As can be seen in figure 4, earlier forecasts have more uncertainty because it is hard to predict based on historical data whether a low snowpack will recover (or vice versa) looking ahead from January. Luckily, there is enough inertia in the system that deeper snowpacks early in the year often lead to big snowpacks by the start of flow season.
 
@@ -116,17 +89,11 @@ SNODAS data is automatically retrieved from NOAA, but many steps are required to
 
 Once all the training data has been extracted, I can begin computing the various linear regressions that make up the model. Rather than computing a single seasonal flow prediction at each site on the forecast dates, the competition requires “quantile predictions”. Quantile regression still produces a linear function relating input (such as snow) to output (flow volume), however, the regression line for a given quantile will be shifted and/or rotated to form upper or lower bounds on the training data. Figure 5 shows the quantile regression lines used in the Pecos River Basin. Unlike regular least squares linear regression, there is no analytical solution for quantile regression. I used the [SciKit Learn](https://scikit-learn.org/stable/modules/linear_model.html#quantile-regression) Python Package which includes a quantile regression solver. It uses a SciPy optimization algorithm to find a solution.
 
-<figure>
 
 ![]({static}/images/quantileregression.png)
+**Figure 5**: Quantile regression on Pecos River Basin data
 
-<figcaption>
 
-Figure 5: Quantile regression on Pecos River Basin data
-
-</figcaption>
-
-</figure>
 
 ### Results
 

@@ -7,17 +7,9 @@ tags: hydrology, math, modelling, snow
 
 My graduate degree research was focused on glacial hydrology, which is basically trying to figure out how water moves above, below, and through glaciers and ice sheets. Water is important because it affects things like sliding, melting, sub-glacial erosion, and geochemistry. My research utilized temperature measurements from snow on the Greenland ice sheet, and I was lucky enough to travel to SW Greenland in the summer of 2010.
 
-<figure>
-
 ![]({static}/images/IMG_1683_sm-1024x768.jpg)
 
-<figcaption>
-
-Figure 1 - SW Greenland Ice Sheet
-
-</figcaption>
-
-</figure>
+*Figure 1 - SW Greenland Ice Sheet*
 
 The Greenland ice sheet is about the size of the western US and is roughly 2 miles thick in the middle ([promice.dk](https://www.promice.org)). Our work in 2010 took place on the ice surface near the margin. This area is characterized by a hummocky, rough textured surface with copious amounts of melt water streams and occasional crevasses (figure 1). We used a hot water drill to punch holes through the ~100m thick ice. The holes gave us access to perform various hydrological experiments. I attempted to trace dye beneath the ice, but ultimately had too many equipment failures to come back with usable data. I was disappointed, but had a good time nonetheless.
 
@@ -33,31 +25,15 @@ For my thesis, I switched gears from dye tracing to assessing snow temperature d
 
 In 2007, my advisor, [Neil Humphrey](http://geofaculty.uwyo.edu/neil/), and a number of other colleagues/grad students embedded an array of temperature sensors into the first 10 meters of snow pack at several different sites (figure 2). In contrast to the lumpy, stream covered ice topography of the ice margin where I did field work (figure 1), the area where the sensors were buried looks more like an endless plain of snow. This part of the ice sheet is known as the accumulation zone, where snow piles up but never completely melts. Mass is continually added to the ice sheet in this area, and what starts as snow is eventually converted, via compaction, melting and refreezing, into ice which is buried and flows down and out from the middle of the ice sheet toward the edges where it finally melts and/or falls into the sea. The sensors recorded temperatures for upwards of a year at each location, and the details documented here: [Harper 2010](http://crceanalytics.com/wp-content/uploads/2022/07/Harper2010.pdf).
 
-<figure>
-
 ![]({static}/images/greenmap.png)
 
-<figcaption>
-
-Figure 2: Location of snow temperature sensors in Greenland
-
-</figcaption>
-
-</figure>
+*Figure 2: Location of snow temperature sensors in Greenland*
 
 Figure 3 shows two temperature profiles from the same site: one in the late spring and one in the late summer. As one might expect, the summer profile shows higher near surface temperatures than the winter profile. Deeper down both temperature profiles converge at a temperature that is somewhat similar to the mean annual temperature for that particular site. Qualitatively, heat from the sun is conducted into the snow in summer (on average) warming the upper snow pack. In the winter that heat is then conducted back out of the snow pack, cooling it substantially. On an annual time scale, the heat going into the first 10 meters of snow roughly balances the heat going out, and the deeper temperatures remain unchanged. Interestingly, the longer the timescale the deeper the effect. So, climatological variations in temperature on multi-decadal timescales are potentially recorded in the ice profile, enabling reconstruction of past climates using ice temperature data (Cuffey and Patterson 2010). In reality, ice deformation creates added complexity, so reconstructing climate from temperature profiles has really only been attempted using boreholes drilled into the ground.
 
-<figure>
-
 ![]({static}/images/H1profiles-3.png)
 
-<figcaption>
-
-Figure 3: Data from site H1
-
-</figcaption>
-
-</figure>
+*Figure 3: Data from site H1*
 
 ### Heat Conduction Theory
 
@@ -90,17 +66,9 @@ $$ T(d,t) = A \\exp(-d\\sqrt{w/2k})\\sin(wt - d\\sqrt{w/2k}) $$ (Cuffey and Patt
 
 In order to actually use the solution calculated above, we need to define the frequency (w) and, amplitude (A) of the surface temperature sin wave, as well as, plug in a snow thermal conductivity. While we could come up with a sin wave using measured snow surface temperatures, I thought it would be more interesting to use a completely separate data set from the snow profile temperatures. At one of the temperature profile sites, Crawford Point, another research group ([Greenland Climate Network](http://cires1.colorado.edu/science/groups/steffen//gcnet/)) has a long running weather station. Using air temperature data from the weather station (air and surface temperatures are reasonably close), we can calculate theoretical temperature profiles to compare to the measured profiles. This approach has a number of benefits that I think are scientifically more rigorous. Using separate datasets ensures that the calculated profiles are not biased toward the measured profiles. It is vaguely circular to calculate temperature profiles from measured data and then compare the results to those same measurements. The measured surface temperatures in the temperature profiles are also highly suspect. Surface melting, accumulations, and solar radiation warming the sensor directly all contribute to increased uncertainty/bias in near surface temperature measurements.
 
-<figure>
-
 ![]({static}/images/CPairtemps.png)
 
-<figcaption>
-
-Figure 4: Air temperatures at Crawford Point and a best fit sin wave
-
-</figcaption>
-
-</figure>
+*Figure 4: Air temperatures at Crawford Point and a best fit sin wave*
 
 In figure 4, I plotted a "best fit" (just eyeballed) sin wave to air temperature data from 2007. Note that the average temperature is around -15C and that the air temperatures only reach near freezing mid summer - ice sheets are cold! The equation of this sin wave is:
 
@@ -116,17 +84,9 @@ Diffusivity (k) is calculated from conductivity using a snow density of 700 (kg/
 
 Unfortunately, the snow profile data from Crawford Point is limited to late June thru October 2007, so we cannot compare mid winter profiles. Nonetheless, figure 5 shows three comparison plots from the beginning, middle, and end of the data set. In general, the match between theory and data is by no means perfect, but does reflect the general shape of the data. In both theory and data, the 10m temperature is relatively stable with time and is very similar to the mean annual air temperature. Both curves show a subtle pattern of a temperature wave that travels from the surface into the snow pack over the course of the four month period. To put it another way, the increase and decrease in temperatures in the near surface over the summer is also present in the lower profile, but it occurs later and has a smaller magnitude.
 
-<figure>
-
 ![]({static}/images/profileplots-1024x469.png)
 
-<figcaption>
-
-Figure 5: Three plots showing theoretical profile vs measured
-
-</figcaption>
-
-</figure>
+*Figure 5: Three plots showing theoretical profile vs measured*
 
 One feature that does stand out is the top 1m of snow in 6/27/2007. Here there is a sharp bend in the data and even above zero temperature readings. Surface melting in this area has likely exposed the top one or two temperature sensors to solar radiation which heats the sensor itself above that of the underlying snow. Regardless, at each point in time, the observed temperatures in the near surface snow are higher than predicted by theory. The explanation for this is something I mentioned briefly earlier: melt water refreezing. In the summer, the surface melt soaks into the cold underlying snow and refreezes. The refreezing releases heat and warms the surrounding snow pack until it eventually reaches 0 C, as is seen in the data from 6/27/2007.
 

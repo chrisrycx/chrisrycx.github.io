@@ -23,17 +23,9 @@ The rest of this post breaks down the different components of the station, highl
 
 ### Sensors
 
-<figure>
-
 ![]({static}/images/roofstation.png)
 
-<figcaption>
-
-Figure 1: Roof top weather station
-
-</figcaption>
-
-</figure>
+*Figure 1: Roof top weather station*
 
 | Measurements | Sensor | Comments |
 | --- | --- | --- |
@@ -46,17 +38,9 @@ Temperature, pressure, and humidity are measured from inside a "radiation shield
 
 ### MDL-700
 
-<figure>
-
 ![]({static}/images/MDLandMBJ-1.png)
 
-<figcaption>
-
-Figure 2 - MDL-700 and Modbus Junction Box
-
-</figcaption>
-
-</figure>
+*Figure 2 - MDL-700 and Modbus Junction Box*
 
 Sensors are connected to the MDL-700 using [RS-485](https://en.wikipedia.org/wiki/RS-485) serial communication. Additionally, all sensors utilize the [Modbus](https://en.wikipedia.org/wiki/Modbus) protocol to transfer data. Modbus defines how messages are exchanged between the sensor and the MDL. These messages control what data is sent and when. Modbus is a "bus" protocol, meaning many sensors can be wired together in order to send all messages along a single cable. The Dyacon Modbus Junction Box provides a simple means of connecting all the sensors together and then back to a single port on the MDL.
 
@@ -64,17 +48,9 @@ The MDL-700 is a computer running a customized embedded version of Linux. It has
 
 ### Software Architecture
 
-<figure>
-
 ![]({static}/images/WxArch.png)
 
-<figcaption>
-
-Figure 3: Software Stack
-
-</figcaption>
-
-</figure>
+*Figure 3: Software Stack*
 
 With the exception of some of the hardware drivers, all the software on both the MDL and the web server is open source. One of the original goals of the MDL was to create an open source data logger. By making everything open source, the MDL can be customized to whatever the hardware will support. However, the downside of having complete versatility is that there is a lot of software that must be developed for specific behavior. In many cases the open source software already exists to implement a project. For example, the web server (figure 3) has many components that work together to render the [South Foothills Weather](http://apps.crceanalytics.com/wxstation) web page. Luckily, the entire software stack consists of active, popular open source projects. In contrast, I was unable to find open source data logging software that fit my goals (Let me know if you know of something!). That lead me to development [DataBear](https://github.com/chrisrycx/DataBear).
 

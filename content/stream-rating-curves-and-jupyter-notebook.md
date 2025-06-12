@@ -11,17 +11,9 @@ I worked for several years at USU on the [iUTAH](http://iutahepscor.org) project
 
 It is amazing how much Earth Science is simply trying to figure out how much of a particular thing there is in a particular spot. How much water is there? How deep is the snow? How much precipitation falls on the ground? In the case of stream flow, also known as discharge, things get a little tricky because fluid mechanics is complex. For example, water near the surface moves downhill faster than water near the stream bed due to friction. Furthermore, the flow is highly turbulent, so there are lots of eddies and waves. If the water is channeled through an engineered structure with a specific geometry, the flow can be calculated, but a natural river channel has an irregular shape that changes through time. In this situation the typical approach is to make lots of measurements across the channel and add them all together to get a total flow. While various instruments with different degrees of accuracy have been invented to make these measurements, sometimes ones only option is to hang a water velocity meter from a truck with a big weight (see figure 1).
 
-<figure>
-
 ![]({static}/images/RatingCurveTruck-1024x579.jpg)
 
-<figcaption>
-
-Figure 1 - A simple crane in the back of a truck used to lower a velocity sensor into the water
-
-</figcaption>
-
-</figure>
+*Figure 1 - A simple crane in the back of a truck used to lower a velocity sensor into the water*
 
 I won't detail the various methods used to measure discharge in this post. Rather, my goal here is to present a tool for performing a regression on discharge measurements against the elevation of the water surface, also known as stage. Relating stage to discharge (a "rating curve") enables you to take something that is easy to measure, water depth, and convert it to something that is difficult to measure, flow. In general, measurement of stream flow is a huge component of hydrology and I don't claim to be an expert. The analysis presented here mostly follows Herschy 2008. But, I do think there is a need for more open source calculation tools, so I hope the python code discussed below is helpful for a working hydrologist, student, or researcher.
 
@@ -52,13 +44,19 @@ An initial plot of the stage-discharge data is created in both "linear" and log-
 
 ![]({static}/images/JupInitial.png)
 
+*Initial plot of the stage-discharge data in linear and log-log space*
+
 The effective height of zero flow should be somewhat similar to the thalweg of the river, but will vary somewhat depending on the nature of the control at the site. At a station with an obvious section control, the height of zero flow can be estimated from height measurements of the base of the control. However, it may be easier to use a graphical approach to estimating 'a'. A reasonable value for 'a' will result in a more linear plot of the stage-discharge points while bad values of 'a' will result in the plotted points showing some curvature. Depending on the amount of scatter in the measurements, the best value for 'a' may remain unclear so it is important to verify the final value is realistic. The notebook has a slider for adjusting the value of 'a' between the minimum measured stage value and that value minus 1m.
 
 ![]({static}/images/JupSlider.png)
 
+*Slider for adjusting the value of 'a'*
+
 The final step in the process is simply performing a standard linear regression on the data. It would be nice if error in measurement could somehow be included in the regression with higher accuracy measurements being weighted more than lower accuracy measurements. Unfortunately in my literature search, I didn't see any obviously simple approaches to that problem. The final plot in the notebook shows the points as well as the rating curve and the regression parameters.
 
 ![]({static}/images/JupFinal.png)
+
+*Final plot showing the rating curve and regression parameters*
 
 ### References
 
