@@ -1,5 +1,5 @@
 ---
-title: "Automated QC of Environmental Data"
+title: Automated QC of Environmental Data
 date: 2022-02-03
 category: data analysis
 tags: coding, open-source, quality-control
@@ -22,31 +22,16 @@ The API front end aims to provide a visual example of how the API works. Anyone 
 3. Unless there is an error, the data will come back with flags indicating data quality.
 4. The data is plotted in a chart below the input and any flags are displayed on top of the original data (Figure 2).
 
-<figure>
 
 ![]({static}/images/APIinput-1024x484.png)
+**Figure 1**: Data entry and returned JSON response
 
-<figcaption>
-
-Figure 1: Data entry and returned JSON response
-
-</figcaption>
-
-</figure>
 
 Data entered into the text box should be in comma separated format with the observation time followed by the air temperature value (°C). The input data gets reformatted to JSON as required by the API ([See API docs](http://api.crceanalytics.com/docs)), but I figured it would be easier to copy and paste data from a CSV for general testing and experimentation. The response JSON is displayed beside the input and the input data is returned along with quality flags. The flag values are 0, 1, or 2 representing “good”, “suspicious” and “bad” values. Below the input, the data and flags are plotted to show how data spikes and "flatlining" (data persistance) are identified.
 
-<figure>
 
 ![]({static}/images/APIchart.png)
-
-<figcaption>
-
-Figure 2: Chart displaying data and flags
-
-</figcaption>
-
-</figure>
+**Figure 2**: Chart displaying data and flags
 
 Although the input can be loaded with any data (limited to 200 rows), default data is pre-loaded into the inputs. Figure 2 shows the data plotted along with the flags returned by the API. Large spikes are flagged as ‘bad’ as well as sections of unchanging data that persist for more than 35 minutes. There are also "suspicious" flags adjacent to the larger spikes, as well as identifying a smaller spike. Configuration settings in EnviroDataQC determine what gets flagged.
 
@@ -56,31 +41,14 @@ The API is implemented with Python on the back end and utilizes [FastAPI](https:
 
 The API code is available on Github ([https://github.com/chrisrycx/EnviroData\_API](https://github.com/chrisrycx/EnviroData_API)) for those interested in creating a similar project. Furthermore, documentation for the API is generated automatically by FastAPI via Swagger ([https://swagger.io/](https://swagger.io/)) and is accessed via [http://api.crceanalytics.com/docs](http://api.crceanalytics.com/docs). I found a number of FastAPI features perfect for this project. First, FastAPI uses [Pydantic](https://pydantic-docs.helpmanual.io/) which enforces "type hinting" in Python. For an API that is receiving data, it is important that the incoming data is of a particular type and format so that it can be processed or return an informative error. In the API code, I create a “temperatures” type (figure 3) that contains lists of datetimes and floats corresponding to incoming temperature data that has a value and time stamp. I was even able to limit the number of items, so that a user could not upload too much data.
 
-<figure>
-
 ![]({static}/images/APItypes.png)
-
-<figcaption>
-
-Figure 3: Code defining types used by API
-
-</figcaption>
-
-</figure>
+**Figure 3**: Code defining types used by API
 
 Coding with FastAPI looks similar to using [Flask](https://flask.palletsprojects.com/en/2.0.x/). Application behavior is specified with functions that are connected to a particular route (such as api.crceanalytics.com/check\_data/2m\_air\_temperature) using a decorator (figure 4). Inside the function, the incoming data is parsed and checked using EnviroDataQC functions. Then the response is returned. FastAPI can also render templates, so the back end API code is also used for the front end demonstration page. Total back end code is only around 250 lines.
 
-<figure>
-
 ![]({static}/images/APIendpoint.png)
+**Figure 4**: The API endpoint handling function.
 
-<figcaption>
-
-Figure 4: The API endpoint handling function.
-
-</figcaption>
-
-</figure>
 
 #### EnviroDataQC
 
@@ -90,17 +58,9 @@ Data quality is checked using EnviroDataQC, a Python library I developed while w
 
 The most basic usage is via the ‘check\_vals’ function. This function takes a Pandas series and returns a Dataframe with the original data as well as the flags. The type of variable (air temperature, humidity, ect.) is also specified in the function call and must match a variable type listed in the configuration file (QCconfig.py). A couple interesting features of EnviroDataQC that I haven’t seen elsewhere are flags for suspicious values (as opposed to just flagging data as 'bad'), as well as an algorithm for consolidating quality flags. Often times data looks strange, but plausible, so flagging it as suspicious enables one to efficiently focus on certain parts of the data for review rather than wasting time reviewing data that is clearly bad. Consolidation of flags is also somewhat unique, and my initial take on the problem is built into the ‘daily\_quality’ function. At Dyacon, I was taking 10 minute data with quality flags and reducing it to daily data, such as a daily mean temperature. The daily value needs to have a quality rating that is somehow related to the 10 minute quality flags. I came up with a scheme based on intuition that categorizes the daily values as good, suspicious, and bad based on the number of flags and gaps in the input data (figure 5).
 
-<figure>
-
 ![]({static}/images/APIenviroqc.png)
+**Figure 5**: Function from EnviroDataQC defining how quality flags are consolidated to daily values
 
-<figcaption>
-
-Figure 5: Function from EnviroDataQC defining how quality flags are consolidated to daily values
-
-</figcaption>
-
-</figure>
 
 #### Other software tools
 

@@ -1,5 +1,5 @@
 ---
-title: "Machine Learning for Snow Hydrology - A Competition"
+title: Machine Learning for Snow Hydrology - A Competition
 date: 2022-04-07
 category: snow
 tags: machine-learning, snotel, snow
@@ -13,17 +13,10 @@ Late last December I ran across a machine learning competition hosted by [Driven
 
 The competition is funded by the [US Bureau of Reclamation](https://www.usbr.gov/) and includes some significant prizes including $150K for first place. The Bureau of Reclamation manages dams and water systems across the Western US, and works closely with the [Natural Resources Conservation Service](https://www.nrcs.usda.gov) who maintain the Snotel network, a nationwide system of snow monitoring stations. One use of the Snotel Network is to predict stream flow during Spring snow melt which is used for reservoir management and irrigation. With a prize money totaling $500K, it is clear that this sort of analysis is highly valued by water managers and users.
 
-<figure>
 
 ![]({static}/images/Snotels-and-Grid.png)
+**Figure 1**: Snotel Locations (yellow) and grid cells (black dots)
 
-<figcaption>
-
-Figure 1: Snotel Locations (yellow) and grid cells (black dots)
-
-</figcaption>
-
-</figure>
 
 Winning the competition is definitely challenging. SWE predictions must be submitted for thousands of 1km x 1km grid cells located across the Western US (figure 1), with high density clusters of cells located in the Rocky Mountains and Sierra Nevada. Each prediction corresponds to a particular date, and several weeks worth of predictions are made for each grid cell. The competition is divided into two stages: "development" and "evaluation". In the development stage, each competitor is tasked with developing a model that makes SWE predictions at a subset of grid cells using some combination of the following as inputs:
 
@@ -49,61 +42,32 @@ SWE: 18 cm3 / 1cm2 (arbitrary area) = 18cm ~ 7 inches
 
 Snotel is a network of monitoring stations managed by the NRCS that automatically measures SWE (figure 2). To do this, the stations use a “snow pillow” which is basically a fluid filled bag positioned under the snow. Pressure on the bag determines the weight of the snow and other sensors determine the depth. SWE is calculated from these raw measurements and transmitted via satellite back to a database. The Snotel measurements are key inputs for predicting high resolution SWE, but in many places the stations are few and far between.
 
-<figure>
 
 ![]({static}/images/snotel_med-edited.jpg)
+**Figure 2**: A Snotel site in Utah
 
-<figcaption>
-
-Figure 2: A Snotel site in Utah
-
-</figcaption>
-
-</figure>
 
 ### Competition Data Exploration
 
 I used QGIS for some initial data exploration as well as more in depth analysis (more details given in a future blog post). Figure 2 shows the grid cells located in southwestern Colorado. In general, cells are clustered over mountain ranges, as might be expected, but the cells are not a uniform grid. This may be due to the availability of field data or perhaps the cells in the competition are meant to be distributed somewhat randomly across different areas of focus. Snotel sites are also shown in Figure 2 (orange dots) and are much more sparse than the grid cells.
 
-<figure>
 
 ![]({static}/images/SWColorado-edited.png)
+**Figure 2** - Grid cells and Snotel sites in SW Colorado
 
-<figcaption>
-
-Figure 2 - Grid cells and Snotel sites in SW Colorado
-
-</figcaption>
-
-</figure>
 
 Of the 11,000 grid cells, a subset of grid cell locations have data that can be used for model training. Another subset has no training data, but are areas where predictions are made for submission. Some of the cells are both training and submission cells. I identified which cells were of the different types using a Python script and then displayed the cell type on the map using different colors: green = training, red = submission, blue = both. In some places, training cells are located in separate clusters from submission cells, while in others there are cells of each type clustered together (see figure 2). Again, it is unclear why the competition is structured in this way, but the takeaway seems to be that any model will need to applied to a wide variety of latitudes, elevations, aspects, and mountain ranges.
 
-<figure>
 
 ![]({static}/images/SantaFe.png)
-
-<figcaption>
-
-Figure 3 - Snotel sites and grid cells near Santa Fe, NM
-
-</figcaption>
-
-</figure>
+**Figure 3** - Snotel sites and grid cells near Santa Fe, NM
 
 In New Mexico, cells are fewer and much farther apart and there are less Snotel stations. For example, one of the grid cells in western NM doesn’t even have a Snotel within 300 km of the cell location. However, there is a NM grid cell (ID 9c43...) in the Sangre de Cristo mountains between Santa Fe and Taos located near 6 different Snotel sites (figure 3). Since I am familiar with this area, I thought it would be a good location to get a better sense for how the training data compares to the Snotel data. I located all the Snotel sites within 50km of the grid cell and plotted a time series of both the grid cell and Snotel data (figure 4). The grid cell data is most similar to the “Elk Cabin” Snotel site which is actually farther away than several other sites. The closest site, Gallegos Peak, typically has much more SWE than the grid cell. This indicates elevation is playing a more significant role in SWE values than location.
 
-<figure>
 
 ![]({static}/images/SFcell_Snotels.png)
+**Figure 4** - Time series of SWE values at sites near Santa Fe, NM
 
-<figcaption>
-
-Figure 4 - Time series of SWE values at sites near Santa Fe, NM
-
-</figcaption>
-
-</figure>
 
 ### My Approach
 
@@ -121,17 +85,11 @@ The second method calculates SWE by first estimating the snow density at a locat
 
 The last approach I found for estimating SWE is to use some form of interpolation (Schneider and Molotch, 2016, Fassnacht et al. 2003). With interpolation, high spatial resolution SWE values are calculated from sparse SWE measurements (such as Snotel measurements). For example, Bair et al. 2016 use 3D bilinear interpolation as one of several methods they compared. Fassnacht et al. 2003 also compare some different interpolation methods and detail the “hypsometric method”. [Hypsometric](https://en.wikipedia.org/wiki/Hypsometric) is a term related to the measurement of heights, and this method utilizes Snotel measurements to create a regression against elevation. This regression is then used to predict the SWE at different elevations in a given area. For example, figure 5 shows a plot of SWE values as a function of elevation from the six Snotel sites near Santa Fe, NM on a randomly chosen date in the dataset (2016-04-05). A regression is fit to the points and a predicted value of SWE is obtained from the elevation of the grid cell. Since the grid cell elevation is ~2700m the predicted SWE is about 2 inches. This method, and most other interpolation methods, can be used in real time if the input values, such as Snotel SWE measurements, are collected in real time.
 
-<figure>
+
 
 ![]({static}/images/SFhypsometry_anno-edited.png)
+**Figure 5** - A regression based on SWE at different elevations on 2016-04-05
 
-<figcaption>
-
-Figure 5 - A regression based on SWE at different elevations on 2016-04-05
-
-</figcaption>
-
-</figure>
 
 Given the simplicity and support in the literature for the hypsometric method, I decided to give it a try. In [Part 2](https://crceanalytics.com/2022/05/11/machine-learning-for-snow-hydrology-methods/) of this blog post, I describe how I implemented the approach and the results after I submitted my predictions to the competition. I did much better than I thought I would!
 

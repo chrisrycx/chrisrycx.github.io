@@ -7,17 +7,12 @@ tags: sensorthings
 
 The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the [New Mexico Water Data Initiative](http://newmexicowaterdata.org) (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the [NM Bureau of Geology and Mineral Resources](http://geoinfo.nmt.edu) with the mission of developing a hub for NM water data to facilitate data discovery and access.
 
-<figure>
+
 
 ![]({static}/images/NMWDwebsite-1024x543.png)
-
-<figcaption>
-
 NM Water Data Website
 
-</figcaption>
 
-</figure>
 
 The types of data accessible via NM Water Data range from climate, to groundwater, to water quality. Much of the data is provided by State and Federal agencies like the NM State Engineer and the USGS, but there are also partnerships with various non-profits. In some cases, the data is available for direct download or there is a link to the data provider's website. Importantly, a subset of the data can be accessed programmatically via a **“Sensor Things” [API](#whatsanapi)**.
 

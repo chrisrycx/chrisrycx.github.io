@@ -1,10 +1,8 @@
 ---
-title: "Automated Quality Control of Environmental Data"
+title: Automated Quality Control of Environmental Data
 date: 2022-01-14
 category: data analysis
-tags: 
-  - "instrumentation"
-  - "quality-control"
+tags: instrumentation, quality-control
 ---
 
 ## Part 1: Quality Control Background
@@ -17,31 +15,17 @@ This is the first of a 2 part series on automated quality control of environment
 
 Data is always going to need some sort of quality control after it is collected. This is especially true of environmental data collected from autonomous sensors placed in challenging environments. Sensors often break or experience electrical problems that lead to gaps in data and/or anomalous readings. Furthermore, bad data may also result from calibration or maintenance performed while the sensor is operating. Preventative maintenance and ongoing data monitoring, practices known as quality assurance (Campbell et al., 2013), help to reduce that amount of problematic data collected. However, as sensor technology gets cheaper, much more data is collected and manual methods for identifying suspicious and bad data becomes increasingly difficult and subjective (Jones et al., 2018). Automation of data quality control is going to be increasing important for ensuring high quality environmental data.
 
-<figure>
 
 ![]({static}/images/IMAG0263-579x1024.jpg)
+**Figure 1**: An iUTAH station buried in snow.
 
-<figcaption>
-
-An iUTAH station buried in snow.
-
-</figcaption>
-
-</figure>
 
 I have extensive experience with a mostly manual approach to environmental data quality control. For several years, I managed a network of monitoring stations for the iUTAH project ([https://iutahepscor.org](https://iutahepscor.org), Jones et al., 2017). I deployed both meteorological (see picture above) and hydrological instrumentation at ~10 different sites and data was recorded, typically, every 15 minutes for each sensor. Thousands of data points were transmitted back to a central database for long term storage each day. The database itself did have some simple data checks used to alert me to problems, but most of the data required manual review, a process which was both tedious and time consuming. Sometimes a sensor would break and bad data would be obvious, but other times a problem would go unnoticed for weeks. For example, hydrological instrumentation would often become dirty, buried, or, in the winter, frozen under ice (see picture below). In any of these situations, the data might appear normal when in actuality, it is no longer representative of the average value for the river. This kind of problem is largely solved by frequent site visits for cleaning.
 
-<figure>
 
 ![]({static}/images/DSCF8386-edited-scaled.jpg)
+**Figure 2**: iUTAH aquatic instrumentation embedded in ice
 
-<figcaption>
-
-iUTAH aquatic instrumentation embedded in ice
-
-</figcaption>
-
-</figure>
 
 We utilized a key piece of software, ODM tools ([https://github.com/ODM2/ODMToolsPython](https://github.com/ODM2/ODMToolsPython), Horsburgh et al., 2015), which consists of a graphical user interface to visualize and manipulate data. Data visualization is essential for manual data quality control, as one is guaranteed to miss problematic data simply by looking at numbers in a file. With ODM tools, time series data can be selected, flagged, and changed. Flagging, as opposed to outright removal of data, is important because a suspicious anomaly could turn out to be a significant event. The changes are also saved to a Python script so there is a record that can be reviewed later if needed. My one critique is that ODM tools must be used with an ODM2 database ([http://www.odm2.org/](http://www.odm2.org/)), hence the name, and I have found ODM2 to be overly complex. Nonetheless, I have yet to run across open source software that is similar to ODM tools.
 
@@ -59,21 +43,15 @@ My colleagues and I were able to manually quality control a significant portion 
 
 Since every station and network of stations is different, the details of implementing the different checks will vary and data might not even be available to complete consistency tests. For example, there is no way to check if data is spatially consistent if there is only data from one location available. Some networks, by design, have duplicate instrumentation and long term climate records, enabling more reliable range and self consistency checks. Specific QC standards are still evolving (Fiebrich et al., 2020). Nonetheless, in order to give a sense for what QC tests might look like, table below gives an example of QC test thresholds from Fiebrich et al., 2010 for a few environmental variables.
 
-<figure>
 
 | Variable | Range | Behavior |
-| --- | --- | --- |
-| Air Temperature | \-30C < T < 50C | \-9 C/5 min < dT/dt < 6 C/5 min |
-| Air Pressure | 800 hPa < P < 1050 hPa | \-4 hPa/5 min < dP/dt < 5 hPa/5 min |
-| Humidity | 3% < RH < 103% | \-23 %/5 min < dRH/dt < 23%/5 min |
-
-<figcaption>
+| :--- | :--- | :--- |
+| Air Temperature | -30C < T < 50C | -9 C/5 min < dT/dt < 6 C/5 min |
+| Air Pressure | 800 hPa < P < 1050 hPa | -4 hPa/5 min < dP/dt < 5 hPa/5 min |
+| Humidity | 3% < RH < 103% | -23 %/5 min < dRH/dt < 23%/5 min |
 
 A few variables and QC test thresholds from Fiebrich et al., 2010
 
-</figcaption>
-
-</figure>
 
 Some methods used for self consistency tests are measurement specific. For example, wind speed is usually measured in conjunction with wind direction. When the wind speed is zero, the wind direction should not be varying and conversely, when the wind direction is changing, wind speed should be above zero. Wind speed has an interesting statistical behavior that has been used for anomaly detection in the past (DeGaetano, 1997). While working at Dyacon ([dyacon.com](http://dyacon.com)), I investigated using ratios of average and maximum wind speed to try and detect problems with wind sensor bearings, but I never settled on a particular technique.
 
