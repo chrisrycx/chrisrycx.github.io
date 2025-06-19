@@ -1,5 +1,5 @@
 ---
-title: "South Foothills Weather Station"
+title: South Foothills Weather Station
 date: 2022-08-15
 category: climate
 tags: climate, dyacon, linux
@@ -7,7 +7,7 @@ tags: climate, dyacon, linux
 
 ### Overview
 
-I built a very unusual weather station on my roof. The measurements are pretty standard: wind, temperature, humidity - but everything else is unique, all the way down to the electronics. You can see a subset of the data, updated every 10 minutes at [apps.crceanalytics.com/wxstation](http://apps.crceanalytics.com/wxstation).
+I built a very unusual weather station on my roof. The measurements are pretty standard: wind, temperature, humidity - but everything else is unique, all the way down to the electronics. You can see a subset of the data, updated every 10 minutes at apps.crceanalytics.com/wxstation (sorry no longer running).
 
 It is far from the easiest or cheapest approach to monitoring the weather. Furthermore, my neighbor already has a publicly accessible station. Nonetheless, the station serves a number of purposes:
 
@@ -52,7 +52,7 @@ The MDL-700 is a computer running a customized embedded version of Linux. It has
 
 *Figure 3: Software Stack*
 
-With the exception of some of the hardware drivers, all the software on both the MDL and the web server is open source. One of the original goals of the MDL was to create an open source data logger. By making everything open source, the MDL can be customized to whatever the hardware will support. However, the downside of having complete versatility is that there is a lot of software that must be developed for specific behavior. In many cases the open source software already exists to implement a project. For example, the web server (figure 3) has many components that work together to render the [South Foothills Weather](http://apps.crceanalytics.com/wxstation) web page. Luckily, the entire software stack consists of active, popular open source projects. In contrast, I was unable to find open source data logging software that fit my goals (Let me know if you know of something!). That lead me to development [DataBear](https://github.com/chrisrycx/DataBear).
+With the exception of some of the hardware drivers, all the software on both the MDL and the web server is open source. One of the original goals of the MDL was to create an open source data logger. By making everything open source, the MDL can be customized to whatever the hardware will support. However, the downside of having complete versatility is that there is a lot of software that must be developed for specific behavior. In many cases the open source software already exists to implement a project. For example, the web server (figure 3) has many components that work together to render the South Foothills Weather web page (6/19/2025 - sorry no longer active). Luckily, the entire software stack consists of active, popular open source projects. In contrast, I was unable to find open source data logging software that fit my goals (Let me know if you know of something!). That lead me to development [DataBear](https://github.com/chrisrycx/DataBear).
 
 DataBear is my attempt at creating open source data logging software that can be used on different platforms (like a Raspberry Pi). Developing DataBear was a great learning experience, and it is actively running on the MDL. However, I would not claim it is ready for widespread use. Nonetheless anyone is free to fork it on Github and see if it is useful.
 

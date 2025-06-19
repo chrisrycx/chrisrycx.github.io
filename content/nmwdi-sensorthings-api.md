@@ -1,5 +1,5 @@
 ---
-title: "NMWDI SensorThings API"
+title: NMWDI SensorThings API
 date: 2022-07-07
 category: data analysis
 tags: sensorthings
@@ -16,7 +16,7 @@ NM Water Data Website
 
 The types of data accessible via NM Water Data range from climate, to groundwater, to water quality. Much of the data is provided by State and Federal agencies like the NM State Engineer and the USGS, but there are also partnerships with various non-profits. In some cases, the data is available for direct download or there is a link to the data provider's website. Importantly, a subset of the data can be accessed programmatically via a **“Sensor Things” [API](#whatsanapi)**.
 
-A SensorThings API follows a standardized approach to designing an API (described further below), and provides a powerful means for quickly accessing and manipulating data. However, I get the impression the SensorThings standard is not yet widely implemented, and it took some time for me to understand how it works. In this blog post I describe what the SensorThings API is, how it works, and how I utilized NMWDI's SensorThings API to create an app ([http://apps.crceanalytics.com/sensorthingsdemo](http://apps.crceanalytics.com/sensorthingsdemo)) that displays NM groundwater data.
+A SensorThings API follows a standardized approach to designing an API (described further below), and provides a powerful means for quickly accessing and manipulating data. However, I get the impression the SensorThings standard is not yet widely implemented, and it took some time for me to understand how it works. In this blog post I describe what the SensorThings API is, how it works, and how I utilized NMWDI's SensorThings API to create an app http://apps.crceanalytics.com/sensorthingsdemo (sorry, no longer active) that displays NM groundwater data.
 
 ### What is an API?
 
@@ -38,17 +38,10 @@ Web API’s often return data that follow a JSON format. JSON stands for Javascr
 
 Many of the API services I have utilized don’t follow a rigorous standard. In order to understand how to use such an API, the creator of the API must make instructions available somewhere. In contrast, NMWDI has elected to implement a “[SensorThings](https://www.ogc.org/standards/sensorthings)” API. This particular approach to structuring an API is defined by the [Open Geospatial Consortium](https://www.ogc.org/) (OGC), an international standards organization for managing and sharing of geospatial data. The SensorThings standard was initially developed in 2015 and continues to be actively updated (see their [Github page](https://github.com/opengeospatial/sensorthings)). However, it does not yet appear to be widely adopted, with NMWDI being just the second US based organization shown on a ["list of endpoints"](https://github.com/opengeospatial/sensorthings/blob/master/PublicEndPoints.md).
 
-<figure>
 
-![SensorThings API Data Model]({static}/images/SensorThingsAPI_DatenModel_v1.1-900.png)
+![SensorThings API Data Model]({static}/images/SensorThings_API_data_model.png)
+**Figure 1**: SensorThings Data Model (from Frost-server documentation)
 
-<figcaption>
-
-Figure 1: SensorThings Data Model (from Frost-server documentation)
-
-</figcaption>
-
-</figure>
 
 SensorThings incorporates a “data model” into the API (figure 1) and understanding it is key to utilizing a SensorThings API. The data model describes how all data available from the API is organized and provides a map for accessing data of interest. The data model consists of various entities (like tables in a database) that store both field measurements as well as information about how the measurement was made. Entities include:
 
@@ -64,19 +57,11 @@ It is worth keeping in mind that the SensorThings standard just defines how the 
 
 ### Using the API - Demo App
 
-<figure>
-
 ![]({static}/images/image-1024x581.png)
+**Figure 2** - NMWDI SensorThings API Demo App
 
-<figcaption>
 
-Figure 2 - NMWDI SensorThings API Demo App
-
-</figcaption>
-
-</figure>
-
-Working with SensorThings is somewhat analogous to interacting with a relational database where a query is sent as part of the client request. In general though, it is easiest to learn by manually sending requests to the API and assessing the response. I built a simple web application to demonstrate some basic interaction with the NM Water Data SensorThings API: [http://apps.crceanalytics.com/sensorthingsdemo](http://apps.crceanalytics.com/sensorthingsdemo/). The app has three main features: a map showing well locations, a chart showing the time series of well data, and a table giving some details about a particular well (figure 2). Depending on the year, different wells are displayed on the map and different years can be selected. When a well is clicked on the observations are displayed in the chart and information about the well is loaded into the table. Next to each feature is the relevant SensorThings query that was used to load the data. To see the raw data from a query, simply copy the query and load it in a browser:
+Working with SensorThings is somewhat analogous to interacting with a relational database where a query is sent as part of the client request. In general though, it is easiest to learn by manually sending requests to the API and assessing the response. I built a simple web application to demonstrate some basic interaction with the NM Water Data SensorThings API: http://apps.crceanalytics.com/sensorthingsdemo (No longer active). The app has three main features: a map showing well locations, a chart showing the time series of well data, and a table giving some details about a particular well (figure 2). Depending on the year, different wells are displayed on the map and different years can be selected. When a well is clicked on the observations are displayed in the chart and information about the well is loaded into the table. Next to each feature is the relevant SensorThings query that was used to load the data. To see the raw data from a query, simply copy the query and load it in a browser:
 
 Example query: Datastreams(1285)/Thing
 
@@ -84,17 +69,9 @@ Full URL: [https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Datastreams(1285
 
 The [code for the app](https://github.com/chrisrycx/SensorThingsDemo) is available on Github, and utilizes [Leaflet](https://leafletjs.com) for mapping and [Plotly](https://plotly.com/javascript/) for plotting. The Javascript is mostly just sending a request and parsing the data that comes back so that it can be used in the map and/or plot functions.
 
-<figure>
 
-![]({static}/images/image-1.png)
-
-<figcaption>
-
-Figure 3 - Code from sensorthings\_map.js showing a request made to the NMWDI Sensorthings API
-
-</figcaption>
-
-</figure>
+![Missing]({static}/images/X)
+**Figure 3** - Code from sensorthings_map.js showing a request made to the NMWDI Sensorthings API
 
 SensorThings API's have lots of sophisticated data search functionality. Surprisingly, I found basic data access to be the least intuitive (it is the least like interacting with a database). Accessing specific data can be best explained using examples. Here are some queries for location data:
 

@@ -1,5 +1,5 @@
 ---
-title: "Predicting Water Supply - Another Machine Learning Competition"
+title: Predicting Water Supply - Another Machine Learning Competition
 date: 2024-03-20
 category: hydrology
 tags: drivendata, quantile-regression, snotel
