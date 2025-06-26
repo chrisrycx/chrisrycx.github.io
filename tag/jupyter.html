@@ -5,38 +5,39 @@
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
                         <title>CRC Earth Analytics - jupyter</title>
-                        <link rel="stylesheet" href="/theme/css/main.css" />
+                        <link rel="stylesheet" href="www.crceanalytics.com/theme/css/main.css" />
+                                <link href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="CRC Earth Analytics Atom Feed" />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="/">CRC Earth Analytics</a></h1>
+                        <h1><a href="www.crceanalytics.com/">CRC Earth Analytics</a></h1>
                         <nav><ul>
-                                                <li><a href="/pages/about.html">About</a></li>
-                                                <li><a href="/category/climate.html">climate</a></li>
-                                                <li><a href="/category/data-analysis.html">data analysis</a></li>
-                                                <li><a href="/category/hydrology.html">hydrology</a></li>
-                                                <li><a href="/category/snow.html">snow</a></li>
+                                                <li><a href="www.crceanalytics.com/pages/about-me.html">About Me</a></li>
+                                                <li><a href="www.crceanalytics.com/category/climate.html">climate</a></li>
+                                                <li><a href="www.crceanalytics.com/category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="www.crceanalytics.com/category/hydrology.html">hydrology</a></li>
+                                                <li><a href="www.crceanalytics.com/category/snow.html">snow</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="/stream-rating-curves-and-jupyter-notebook.html">Stream Rating Curves and Jupyter Notebook</a></h1>
+                        <h1 class="entry-title"><a href="www.crceanalytics.com/stream-rating-curves-and-jupyter-notebook.html">Stream Rating Curves and Jupyter Notebook</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2022-06-02T00:00:00-06:00">
                 Published: Thu 02 June 2022
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                        By                                 <a class="url fn" href="www.crceanalytics.com/author/chris-cox.html">Chris Cox</a>
                 </address>
-        <p>In <a href="/category/hydrology.html">hydrology</a>.</p>
-<p>tags: <a href="/tag/hydrology.html">hydrology</a> <a href="/tag/jupyter.html">jupyter</a> <a href="/tag/rating-curve.html">rating-curve</a> </p>        
+        <p>In <a href="www.crceanalytics.com/category/hydrology.html">hydrology</a>.</p>
+<p>tags: <a href="www.crceanalytics.com/tag/hydrology.html">hydrology</a> <a href="www.crceanalytics.com/tag/jupyter.html">jupyter</a> <a href="www.crceanalytics.com/tag/rating-curve.html">rating-curve</a> </p>        
 </footer><!-- /.post-info --><p>I wrote this a few years ago on another blog, but I think it is still relevant so I am re-posting it here. The code is still available on Github.</p>
 <p>I worked for several years at USU on the <a href="http://iutahepscor.org">iUTAH</a> project. While there I managed a network of water monitoring stations along the Logan river, and one component of my job involved measuring stream flow. We wanted to know how much water was flowing past each station in order to answer basic questions like "how much water is lost or gained downstream?"</p>
 <p>It is amazing how much Earth Science is simply trying to figure out how much of a particular thing there is in a particular spot. How much water is there? How deep is the snow? How much precipitation falls on the ground? In the case of stream flow, also known as discharge, things get a little tricky because fluid mechanics is complex. For example, water near the surface moves downhill faster than water near the stream bed due to friction. Furthermore, the flow is highly turbulent, so there are lots of eddies and waves. If the water is channeled through an engineered structure with a specific geometry, the flow can be calculated, but a natural river channel has an irregular shape that changes through time. In this situation the typical approach is to make lots of measurements across the channel and add them all together to get a total flow. While various instruments with different degrees of accuracy have been invented to make these measurements, sometimes ones only option is to hang a water velocity meter from a truck with a big weight (see figure 1).</p>
-<p><img alt="" src="/images/RatingCurveTruck-1024x579.jpg">
+<p><img alt="" src="www.crceanalytics.com/images/RatingCurveTruck-1024x579.jpg">
 <strong>Figure 1</strong> - A simple crane in the back of a truck used to lower a velocity sensor into the water</p>
 <p>I won't detail the various methods used to measure discharge in this post. Rather, my goal here is to present a tool for performing a regression on discharge measurements against the elevation of the water surface, also known as stage. Relating stage to discharge (a "rating curve") enables you to take something that is easy to measure, water depth, and convert it to something that is difficult to measure, flow. In general, measurement of stream flow is a huge component of hydrology and I don't claim to be an expert. The analysis presented here mostly follows Herschy 2008. But, I do think there is a need for more open source calculation tools, so I hope the python code discussed below is helpful for a working hydrologist, student, or researcher.</p>
 <h3>Rating Curve Theory</h3>
@@ -52,13 +53,13 @@ C and alpha are parameters derived from the regression, and as discussed below, 
 <h3>Jupyter Notebook</h3>
 <p>Now, an overview of the the Jupyter Notebook Template. The template is available on <a href="https://github.com/chrisrycx/JupyterRatingCurve">Github</a> along with some data one can use to give it a try. I assume you have some experience with Python and the <a href="http://jupyter.org/">Jupyter project</a>. Input data consists of discharge measurements and associated stage readings for a particular site. The final "output" at the end of the template is an equation of the form <span class="math">\(Q = C(h-a)^{\\alpha}\)</span>. Each cell in the notebook is described to some extent, but I will elaborate on a few items below. Some cells are blank leaving room for analysis and interpretation of data from a particular site enabling one to share how a particular rating curve came to be.</p>
 <p>An initial plot of the stage-discharge data is created in both "linear" and log-log space. The linear plot can help identify outliers or odd features in the data. The log-log can be used to identify any major changes in the slope of the data. This could signify that the control changes substantially at a particular flow and it might be best to construct two separate rating curves rather than one.</p>
-<p><img alt="" src="/images/JupInitial.png">
+<p><img alt="" src="www.crceanalytics.com/images/JupInitial.png">
 Initial plot of the stage-discharge data in linear and log-log space</p>
 <p>The effective height of zero flow should be somewhat similar to the thalweg of the river, but will vary somewhat depending on the nature of the control at the site. At a station with an obvious section control, the height of zero flow can be estimated from height measurements of the base of the control. However, it may be easier to use a graphical approach to estimating 'a'. A reasonable value for 'a' will result in a more linear plot of the stage-discharge points while bad values of 'a' will result in the plotted points showing some curvature. Depending on the amount of scatter in the measurements, the best value for 'a' may remain unclear so it is important to verify the final value is realistic. The notebook has a slider for adjusting the value of 'a' between the minimum measured stage value and that value minus 1m.</p>
-<p><img alt="" src="/images/JupSlider.png">
+<p><img alt="" src="www.crceanalytics.com/images/JupSlider.png">
 Slider for adjusting the value of 'a'</p>
 <p>The final step in the process is simply performing a standard linear regression on the data. It would be nice if error in measurement could somehow be included in the regression with higher accuracy measurements being weighted more than lower accuracy measurements. Unfortunately in my literature search, I didn't see any obviously simple approaches to that problem. The final plot in the notebook shows the points as well as the rating curve and the regression parameters.</p>
-<p><img alt="" src="/images/JupFinal.png">
+<p><img alt="" src="www.crceanalytics.com/images/JupFinal.png">
 Final plot showing the rating curve and regression parameters</p>
 <h3>References</h3>
 <p>Herschy, R. W., 2008, Streamflow measurement. CRC press.</p>
@@ -136,8 +137,10 @@ Final plot showing the rating curve and regression parameters</p>
                                 <div class="social">
                                         <h2>social</h2>
                                         <ul>
+                                                        <li><a href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                                                         <li><a href="https://fosstodon.org/@chrisrycx">Mastodon</a></li>
+                                                        <li><a href="https://www.linkedin.com/in/chrisrycx/">LinkedIn</a></li>
                                         </ul>
                                 </div><!-- /.social -->
                 </section><!-- /#extras -->

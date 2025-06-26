@@ -5,36 +5,37 @@
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
                         <title>CRC Earth Analytics - python</title>
-                        <link rel="stylesheet" href="/theme/css/main.css" />
+                        <link rel="stylesheet" href="www.crceanalytics.com/theme/css/main.css" />
+                                <link href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="CRC Earth Analytics Atom Feed" />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="/">CRC Earth Analytics</a></h1>
+                        <h1><a href="www.crceanalytics.com/">CRC Earth Analytics</a></h1>
                         <nav><ul>
-                                                <li><a href="/pages/about.html">About</a></li>
-                                                <li><a href="/category/climate.html">climate</a></li>
-                                                <li><a href="/category/data-analysis.html">data analysis</a></li>
-                                                <li><a href="/category/hydrology.html">hydrology</a></li>
-                                                <li><a href="/category/snow.html">snow</a></li>
+                                                <li><a href="www.crceanalytics.com/pages/about-me.html">About Me</a></li>
+                                                <li><a href="www.crceanalytics.com/category/climate.html">climate</a></li>
+                                                <li><a href="www.crceanalytics.com/category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="www.crceanalytics.com/category/hydrology.html">hydrology</a></li>
+                                                <li><a href="www.crceanalytics.com/category/snow.html">snow</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="/machine-learning-for-snow-hydrology-methods.html">Machine Learning for Snow Hydrology - Methods</a></h1>
+                        <h1 class="entry-title"><a href="www.crceanalytics.com/machine-learning-for-snow-hydrology-methods.html">Machine Learning for Snow Hydrology - Methods</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2022-05-11T00:00:00-06:00">
                 Published: Wed 11 May 2022
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                        By                                 <a class="url fn" href="www.crceanalytics.com/author/chris-cox.html">Chris Cox</a>
                 </address>
-        <p>In <a href="/category/hydrology.html">hydrology</a>.</p>
-<p>tags: <a href="/tag/machine-learning.html">machine-learning</a> <a href="/tag/python.html">python</a> <a href="/tag/qgis.html">qgis</a> <a href="/tag/snotel.html">snotel</a> <a href="/tag/snow.html">snow</a> </p>        
+        <p>In <a href="www.crceanalytics.com/category/hydrology.html">hydrology</a>.</p>
+<p>tags: <a href="www.crceanalytics.com/tag/machine-learning.html">machine-learning</a> <a href="www.crceanalytics.com/tag/python.html">python</a> <a href="www.crceanalytics.com/tag/qgis.html">qgis</a> <a href="www.crceanalytics.com/tag/snotel.html">snotel</a> <a href="www.crceanalytics.com/tag/snow.html">snow</a> </p>        
 </footer><!-- /.post-info --><p>This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In <a href="https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/">Part 1</a>, I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see <a href="https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/">Part 1</a> for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.</p>
-<p><img alt="" src="/images/Rank.png"></p>
+<p><img alt="" src="www.crceanalytics.com/images/Rank.png"></p>
 <p>The SWE prediction locations are specified by the competition, but they are not point locations. Instead predictions must be made for 1km x 1km grid cells. The competition provides historical SWE values at many of the grid cell locations, and these values are meant to be used to help train the machine learning model. Ironically, the hypsometric method only utilizes Snotel data, so much of data provided by the competition went unused. A more sophisticated approach would surely utilize all the available data to make new predictions. Nonetheless, the historical grid cell SWE values can be used to test the accuracy of my model (see <a href="#sweresults">Results</a>).</p>
 <p>To implement the method, I needed to complete three major steps:</p>
 <ul>
@@ -46,12 +47,12 @@
 <h3>Grid Cell Elevations</h3>
 <p>The competition provided the spatial geometry (size and location as GeoJSON) for each 1km by 1km grid cell, as well as, historical SWE values for a subset of grid cells (it isn’t clear how this historical SWE data was derived). However, elevations are not provided, and furthermore, the topography inside a particular grid cell could vary quite a bit. Since, a single elevation is the input for my approach, I needed a way of determining an average elevation for each grid cell. Digital elevation models (DEM) are files that contain elevation data for a region. These files, which vary in resolution, can be analyzed using a Python library like <a href="https://rasterio.readthedocs.io/en/latest/">Rasterio</a>, or using GIS software. One type of analysis, known as "zonal statistics", is used to calculate an average DEM value within a specified region (like a grid cell). I used zonal statistics to determine an elevation value for each cell.</p>
 <p>QGIS can perform a wide range of analyses on DEM data, and I was lucky to stumble across a <a href="https://plugins.qgis.org/plugins/OpenTopography-DEM-Downloader/">plug-in</a> that connects to <a href="https://opentopography.org/">Open Topography</a>, an organization that provides a variety of elevation data from NASA and various satellite campaigns. I ended up downloading 15 arc second “<a href="https://portal.opentopography.org/datasetMetadata?otCollectionID=OT.122019.4326.1">shuttle radar topography mission</a> +”(SRTM+) which has global coverage and a resolution of around 500m. The plug in conveniently enables you to download only a subset of the worldwide data set corresponding to the extent of the grid cells.</p>
-<p><img alt="" src="/images/zonalstats.png">
+<p><img alt="" src="www.crceanalytics.com/images/zonalstats.png">
 <strong>Figure 1</strong>: The QGIS Zonal Statistics tool</p>
 <p>QGIS has a tool to calculate zonal statistics in the Processing Toolbox (Processing Menu -&gt; Toolbox -&gt; Raster Analysis). The DEM and grid cell layers are specified and then a new layer is output by the tool that contains each grid cell ID and corresponding elevation calculated as an average value from the elevations inside the cell. The data is then exported to CSV to be used in the SWE prediction model.</p>
 <h3>Snotel Sites</h3>
 <p>After determining the elevation of each grid cell, I needed to know what Snotel sites to associate with each grid cell. The Snotel sites associated with a grid cell are used to build a linear regression for predicting SWE values for that grid cell. It therefore makes intuitive sense to use Snotel sites located close to the grid cell. Initially, I decided to use all the Snotel sites within 50km of each grid cell. However, some grid cells have no Snotel sites within this range, and furthermore, several Snotel sites are needed to create a reasonable regression. Using a search radius of 300 km, I was able to associate at least 6 Snotel sites with each grid cell.</p>
-<p><img alt="" src="/images/geopandas-1024x349.png">
+<p><img alt="" src="www.crceanalytics.com/images/geopandas-1024x349.png">
 <strong>Figure 2</strong>: Section of SnotelSearch.ipynb (see github) showing spatial join output</p>
 <p>I used Python, specifically <a href="http://geopandas.org">Geopandas</a>, to identify what Snotel sites are within the search radius for each cell. Geopandas is like <a href="http://pandas.pydata.org">Pandas</a>, but adds support for spatial analysis on vector geometries (points, lines, polygons). There are methods that can be used to determine the relationship between different geometries such as line intersections or if one element is inside of another. One of the most powerful features is a "spatial join". A spatial join is like a table join, but combines data sets based on spatial relationships. Instead of having to use a loop to check if each Snotel site is within 50km of each grid cell, a spatial join can accomplish the same goal, but, presumably, with a much more efficient algorithm.</p>
 <p>The work flow for associating Snotels with grid cells was surprisingly simple. First I created a “buffer” around each grid cell (figure 2) with a radius equal to my search radius (50km or 300km). This is a built in method in Geopandas, and it creates a new 50km radius polygon for each grid cell. Then I perform a spatial join to identify which Snotel sites are inside each buffer. Finally, I output the resulting data set for use in the regression analysis.</p>
@@ -59,19 +60,19 @@
 <p>The last step in making SWE predictions is to actually “run the model” or perform the regression calculations for every grid cell. Each regression is specific to a particular date, and the competition specifies 57 different dates on which to predict SWE - that is 57 dates for each grid cell:</p>
 <p>Total regressions to calculate = 9062 grid cells x 57 days = 516534</p>
 <p>Initial testing indicated that, on my computer, calculating all the regressions for a single grid cell took around 1 sec. At that rate, it would take about 2 and a half hours to compute all the SWE predictions. In order to speed things up, I tried to execute the regressions in parallel. After all, each regression is independent of the next, so there is no reason to compute them one at a time. Unfortunately, the computer I am using only has two cores, meaning I can only compute two regressions at the same time. Nonetheless, the parallel approach does half the amount of time needed for the computation.</p>
-<p><img alt="" src="/images/swecalc_func-1024x642.png">
+<p><img alt="" src="www.crceanalytics.com/images/swecalc_func-1024x642.png">
 <strong>Figure 3</strong>: swecalc function from SWEModel_V0.3.py</p>
 <p>I implemented the model using Python, including the <a href="https://docs.python.org/3/library/multiprocessing.html">Multiprocessing</a> library to run parallel computations. The code is organized such that there is a function (figure 3) that takes a grid cell ID, a date, and a list of Snotel sites as input and returns a SWE value. The Snotel sites input in conjunction with a grid cell are determined from the 50km data set unless there is less than three Snotel sites available, in which case the 300km data set is used. Inside the function, the regression is calculated for the input date using <a href="https://scikit-learn.org/stable/index.html">Sci-Kit Learn</a>. In some cases, there are Snotel sites that don't have data for a particular data. This reduces the number of Snotel sites that can be used to create a regression, and when less than two sites are available, the function returns a NaN (“Not a Number”). This situation was rare, but did result in a number of NaN SWE values. Since these values cannot be submitted to the competition, they were filled by simply copying values from adjacent dates.</p>
 <h3>Results</h3>
 <p>As with any calculation, it is good to do a sanity check on the output. When I first ran the model, there were a few sites with SWE values corresponding to snow depths on the order of 60ft. I went back and found some anomalous spikes in some of the Snotel data. These were probably bad values that were accidentally included in the Snotel data set, and I removed them and re-ran the model. Overall, the values seemed more reasonable, but I made a plot comparing maximum Snotel values to maximum predicted SWE values (figure 4). This approach is a bit unusual since the maximum Snotel value on a particular date might not be a Snotel site that is near the maximum predicted SWE value. Nonetheless, it gives some sense of what might be reasonable for a maximum SWE value. Many of the predicted values are much larger than the maximum Snotel values, and some are upwards of 200 inches SWE (roughly 30ft of snow). Sturm et al. 2010 compiles over 25,000 SWE observations with the maximum being around 120 inches. So, these predictions are likely large overestimates.</p>
-<p><img alt="" src="/images/MaxSubmission.png">
+<p><img alt="" src="www.crceanalytics.com/images/MaxSubmission.png">
 <strong>Figure 4</strong>: Maximum SWE values from model compared to maximum Snotel SWE values</p>
 <p>I went ahead and submitted the predicted values to the competition, including the unrealistic values reaching 200 inches. To my surprise, out of about 900 submissions, mine ranked 62. The metric used to evaluate a submission is the Root Mean Square Error. This metric compares my predictions to known values, takes the difference (residuals), and then performs a sum of squares:</p>
-<p><img alt="" src="/images/image.png">
+<p><img alt="" src="www.crceanalytics.com/images/image.png">
 RMSE Equation from drivendata.org</p>
 <p>My submission has an RMSE of 9.3921 while the competition leader has a RMSE of 2.86.</p>
 <p>I can also evaluate my approach using the grid cell training data. As mentioned before, a subset of grid cells have historical data that is meant to be used to train the machine learning model. Since my approach only utilizes Snotel measurements, I can use the historical data to test my model accuracy. I re-ran the model to predict the historical data values and then compared to the actual values. This time, I calculated a RMSE for each grid cell in order to see if there is a pattern to the accuracy of model output. Figure 5 shows the RMSE for each site in the San Juan mountains of southern CO. My impression is that lower elevation predictions are more accurate, but the pattern is not very clear.</p>
-<p><img alt="" src="/images/SanJuanRMSE_med-1024x724.png">
+<p><img alt="" src="www.crceanalytics.com/images/SanJuanRMSE_med-1024x724.png">
 Figure 5: Grid cell specific RMSE values in the San Juan mountains of CO</p>
 <h4>Ongoing Competition</h4>
 <p>As of May 2022, the <a href="https://www.drivendata.org/competitions/90/competition-reclamation-snow-water-eval/">Evaluation Stage</a> of the competition is still ongoing. In contrast to the "development stage" (which I competed in), the evaluation stage tests models using live data and awards prizes totaling $500,000. The current leader is showing a RMSE of 3.4541. I look forward to seeing the winning approaches after the competition ends.</p>
@@ -89,8 +90,10 @@ Figure 5: Grid cell specific RMSE values in the San Juan mountains of CO</p>
                                 <div class="social">
                                         <h2>social</h2>
                                         <ul>
+                                                        <li><a href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                                                         <li><a href="https://fosstodon.org/@chrisrycx">Mastodon</a></li>
+                                                        <li><a href="https://www.linkedin.com/in/chrisrycx/">LinkedIn</a></li>
                                         </ul>
                                 </div><!-- /.social -->
                 </section><!-- /#extras -->

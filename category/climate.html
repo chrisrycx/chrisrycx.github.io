@@ -5,34 +5,35 @@
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
                         <title>CRC Earth Analytics - climate</title>
-                        <link rel="stylesheet" href="/theme/css/main.css" />
+                        <link rel="stylesheet" href="www.crceanalytics.com/theme/css/main.css" />
+                                <link href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="CRC Earth Analytics Atom Feed" />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="/">CRC Earth Analytics</a></h1>
+                        <h1><a href="www.crceanalytics.com/">CRC Earth Analytics</a></h1>
                         <nav><ul>
-                                                <li><a href="/pages/about.html">About</a></li>
-                                                <li class="active"><a href="/category/climate.html">climate</a></li>
-                                                <li><a href="/category/data-analysis.html">data analysis</a></li>
-                                                <li><a href="/category/hydrology.html">hydrology</a></li>
-                                                <li><a href="/category/snow.html">snow</a></li>
+                                                <li><a href="www.crceanalytics.com/pages/about-me.html">About Me</a></li>
+                                                <li class="active"><a href="www.crceanalytics.com/category/climate.html">climate</a></li>
+                                                <li><a href="www.crceanalytics.com/category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="www.crceanalytics.com/category/hydrology.html">hydrology</a></li>
+                                                <li><a href="www.crceanalytics.com/category/snow.html">snow</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="/south-foothills-weather-station.html">South Foothills Weather Station</a></h1>
+                        <h1 class="entry-title"><a href="www.crceanalytics.com/south-foothills-weather-station.html">South Foothills Weather Station</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2022-08-15T00:00:00-06:00">
                 Published: Mon 15 August 2022
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="/author/chris-cox.html">Chris Cox</a>
+                        By                                 <a class="url fn" href="www.crceanalytics.com/author/chris-cox.html">Chris Cox</a>
                 </address>
-        <p>In <a href="/category/climate.html">climate</a>.</p>
-<p>tags: <a href="/tag/climate.html">climate</a> <a href="/tag/dyacon.html">dyacon</a> <a href="/tag/linux.html">linux</a> </p>        
+        <p>In <a href="www.crceanalytics.com/category/climate.html">climate</a>.</p>
+<p>tags: <a href="www.crceanalytics.com/tag/climate.html">climate</a> <a href="www.crceanalytics.com/tag/dyacon.html">dyacon</a> <a href="www.crceanalytics.com/tag/linux.html">linux</a> </p>        
 </footer><!-- /.post-info --><h3>Overview</h3>
 <p>I built a very unusual weather station on my roof. The measurements are pretty standard: wind, temperature, humidity - but everything else is unique, all the way down to the electronics. You can see a subset of the data, updated every 10 minutes at apps.crceanalytics.com/wxstation (sorry no longer running).</p>
 <p>It is far from the easiest or cheapest approach to monitoring the weather. Furthermore, my neighbor already has a publicly accessible station. Nonetheless, the station serves a number of purposes:</p>
@@ -50,7 +51,7 @@
 <p>I worked for a number of years at <a href="https://dyacon.com">Dyacon</a>, and continue to provide ongoing services including software development and sensor evaluation. For that reason, I have several different Dyacon sensors that I can deploy for either long term monitoring or short term testing. The most unique Dyacon product is the "MDL-700" (figure 2) which makes up the "brains" of the station. The MDL (Modular Data Logger) is a Linux based computer that communicates with the sensors and provides local data logging. It is no longer on the market, but feel free to contact me if you are interested in one.</p>
 <p>The rest of this post breaks down the different components of the station, highlighting certain details. The software running everything is largely hidden from view, but figure 3 provides a general summary of the wide variety of programs and scripts holding everything together. This is a "<a href="https://en.wikipedia.org/wiki/Solution_stack">full stack</a>" weather station meaning that I built everything from the MDL-700 operating system (sort of) to the data visualization website.</p>
 <h3>Sensors</h3>
-<p><img alt="" src="/images/roofstation.png"></p>
+<p><img alt="" src="www.crceanalytics.com/images/roofstation.png"></p>
 <p><em>Figure 1: Roof top weather station</em></p>
 <table>
 <thead>
@@ -85,12 +86,12 @@
 </table>
 <p>Temperature, pressure, and humidity are measured from inside a "radiation shield". A radiation shield blocks both direct and reflected sunlight from hitting the temperature sensor, which would bias the measurement warm. I have a couple different versions that I am comparing. Note that it isn't typical to measure air temperature and humidity at rooftop level. It would be better to have these instruments at 2 meters above the ground. The wind measurements are also likely to be affected by the wind interaction with the roof. However, for my purposes it is convenient to locate all sensors in one place.</p>
 <h3>MDL-700</h3>
-<p><img alt="" src="/images/MDLandMBJ-1.png"></p>
+<p><img alt="" src="www.crceanalytics.com/images/MDLandMBJ-1.png"></p>
 <p><em>Figure 2 - MDL-700 and Modbus Junction Box</em></p>
 <p>Sensors are connected to the MDL-700 using <a href="https://en.wikipedia.org/wiki/RS-485">RS-485</a> serial communication. Additionally, all sensors utilize the <a href="https://en.wikipedia.org/wiki/Modbus">Modbus</a> protocol to transfer data. Modbus defines how messages are exchanged between the sensor and the MDL. These messages control what data is sent and when. Modbus is a "bus" protocol, meaning many sensors can be wired together in order to send all messages along a single cable. The Dyacon Modbus Junction Box provides a simple means of connecting all the sensors together and then back to a single port on the MDL.</p>
 <p>The MDL-700 is a computer running a customized embedded version of Linux. It has been designed to be paired with various expansion modules. The Serial Port Expansion Module (seen above) has 8 ports that can utilize RS-232, RS-485 or SDI-12 communication schemes. An embedded cell phone can also be added, making it possible to transfer data over cell networks. I connect to the MDL via my local computer network.</p>
 <h3>Software Architecture</h3>
-<p><img alt="" src="/images/WxArch.png"></p>
+<p><img alt="" src="www.crceanalytics.com/images/WxArch.png"></p>
 <p><em>Figure 3: Software Stack</em></p>
 <p>With the exception of some of the hardware drivers, all the software on both the MDL and the web server is open source. One of the original goals of the MDL was to create an open source data logger. By making everything open source, the MDL can be customized to whatever the hardware will support. However, the downside of having complete versatility is that there is a lot of software that must be developed for specific behavior. In many cases the open source software already exists to implement a project. For example, the web server (figure 3) has many components that work together to render the South Foothills Weather web page (6/19/2025 - sorry no longer active). Luckily, the entire software stack consists of active, popular open source projects. In contrast, I was unable to find open source data logging software that fit my goals (Let me know if you know of something!). That lead me to development <a href="https://github.com/chrisrycx/DataBear">DataBear</a>.</p>
 <p>DataBear is my attempt at creating open source data logging software that can be used on different platforms (like a Raspberry Pi). Developing DataBear was a great learning experience, and it is actively running on the MDL. However, I would not claim it is ready for widespread use. Nonetheless anyone is free to fork it on Github and see if it is useful.</p>
@@ -109,8 +110,10 @@
                                 <div class="social">
                                         <h2>social</h2>
                                         <ul>
+                                                        <li><a href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
 
                                                         <li><a href="https://fosstodon.org/@chrisrycx">Mastodon</a></li>
+                                                        <li><a href="https://www.linkedin.com/in/chrisrycx/">LinkedIn</a></li>
                                         </ul>
                                 </div><!-- /.social -->
                 </section><!-- /#extras -->

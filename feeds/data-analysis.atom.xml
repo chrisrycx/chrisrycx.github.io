@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>CRC Earth Analytics - data analysis</title><link href="www.crceanalytics.com/" rel="alternate"></link><link href="www.crceanalytics.com/feeds/data-analysis.atom.xml" rel="self"></link><id>www.crceanalytics.com/</id><updated>2022-07-07T00:00:00-06:00</updated><entry><title>NMWDI SensorThings API</title><link href="www.crceanalytics.com/nmwdi-sensorthings-api.html" rel="alternate"></link><published>2022-07-07T00:00:00-06:00</published><updated>2022-07-07T00:00:00-06:00</updated><author><name>Chris Cox</name></author><id>tag:None,2022-07-07:www.crceanalytics.com/nmwdi-sensorthings-api.html</id><summary type="html">&lt;p&gt;The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting …&lt;/p&gt;</summary><content type="html">&lt;p&gt;The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the &lt;a href="http://newmexicowaterdata.org"&gt;New Mexico Water Data Initiative&lt;/a&gt; (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the &lt;a href="http://geoinfo.nmt.edu"&gt;NM Bureau of Geology and Mineral Resources&lt;/a&gt; with the mission of developing a hub for NM water data to facilitate data discovery and access.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/NMWDwebsite-1024x543.png"&gt;
+NM Water Data Website&lt;/p&gt;
+&lt;p&gt;The types of data accessible via NM Water Data range from climate, to groundwater, to water quality. Much of the data is provided by State and Federal agencies like the NM State Engineer and the USGS, but there are also partnerships with various non-profits. In some cases, the data is available for direct download or there is a link to the data provider's website. Importantly, a subset of the data can be accessed programmatically via a &lt;strong&gt;“Sensor Things” &lt;a href="#whatsanapi"&gt;API&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;A SensorThings API follows a standardized approach to designing an API (described further below), and provides a powerful means for quickly accessing and manipulating data. However, I get the impression the SensorThings standard is not yet widely implemented, and it took some time for me to understand how it works. In this blog post I describe what the SensorThings API is, how it works, and how I utilized NMWDI's SensorThings API to create an app http://apps.crceanalytics.com/sensorthingsdemo (sorry, no longer active) that displays NM groundwater data.&lt;/p&gt;
+&lt;h3&gt;What is an API?&lt;/h3&gt;
+&lt;p&gt;API stands for “Application Programming Interface”. Computer programs use APIs to communicate and interact with other programs. I find the term API to be fairly vague, abstract, and seemingly applied to many different situations. However, it helps to think of it as being synonymous with a similar, perhaps more familiar acronym GUI (graphical user interface). A GUI is the buttons and controls that a user interacts with when running a computer program. With an API, the “user” is another program and the interface isn’t graphical, but might be a function or a message following a particular format.&lt;/p&gt;
+&lt;p&gt;A web API utilizes the internet as the means of communicating between programs, so the different programs do not need to be on the same computer. Much of the internet is structured with a client-server network, so one computer acts as a client and sends a request to a computer that acts as a server. To send a request, the program needs to know the server hostname and path to desired content. This is what your browser does to request a webpage, and the request information is shown in the URL. For example:&lt;/p&gt;
+&lt;p&gt;http://apps.crceanalystics.com/sensorthingsdemo/&lt;/p&gt;
+&lt;p&gt;http://&lt;hostname&gt;/&lt;path to content&gt;&lt;/p&gt;
+&lt;p&gt;The server responds to the request, typically, by returning data. Exactly what to send the server and how it will respond is what defines the API. The hostname and path to a particular API is known as the “endpoint”.&lt;/p&gt;
+&lt;p&gt;Web API’s often return data that follow a JSON format. JSON stands for Javascript Object Notation and is simply a way of formatting text so it is easier for computers to parse. While it was created in association with Javascript, it is easily parsed by other programming languages.&lt;/p&gt;
+&lt;p&gt;{"examplejson": [ 1, 2, 3 ]}&lt;/p&gt;
+&lt;h3&gt;SensorThings API&lt;/h3&gt;
+&lt;p&gt;Many of the API services I have utilized don’t follow a rigorous standard. In order to understand how to use such an API, the creator of the API must make instructions available somewhere. In contrast, NMWDI has elected to implement a “&lt;a href="https://www.ogc.org/standards/sensorthings"&gt;SensorThings&lt;/a&gt;” API. This particular approach to structuring an API is defined by the &lt;a href="https://www.ogc.org/"&gt;Open Geospatial Consortium&lt;/a&gt; (OGC), an international standards organization for managing and sharing of geospatial data. The SensorThings standard was initially developed in 2015 and continues to be actively updated (see their &lt;a href="https://github.com/opengeospatial/sensorthings"&gt;Github page&lt;/a&gt;). However, it does not yet appear to be widely adopted, with NMWDI being just the second US based organization shown on a &lt;a href="https://github.com/opengeospatial/sensorthings/blob/master/PublicEndPoints.md"&gt;"list of endpoints"&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="SensorThings API Data Model" src="www.crceanalytics.com/images/SensorThings_API_data_model.png"&gt;
+&lt;strong&gt;Figure 1&lt;/strong&gt;: SensorThings Data Model (from Frost-server documentation)&lt;/p&gt;
+&lt;p&gt;SensorThings incorporates a “data model” into the API (figure 1) and understanding it is key to utilizing a SensorThings API. The data model describes how all data available from the API is organized and provides a map for accessing data of interest. The data model consists of various entities (like tables in a database) that store both field measurements as well as information about how the measurement was made. Entities include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Things - any physical object&lt;/li&gt;
+&lt;li&gt;Locations - where the thing is located&lt;/li&gt;
+&lt;li&gt;Datastreams - data sets associated with things&lt;/li&gt;
+&lt;li&gt;Observations - Data values in data streams&lt;/li&gt;
+&lt;li&gt;Sensors - An instrument associated with a datastream&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For example, a “thing” might be a weather station located in NM with various sensors. Datastreams could be temperature, humidity, and wind speed.&lt;/p&gt;
+&lt;p&gt;It is worth keeping in mind that the SensorThings standard just defines how the API should be structured and behave. The standard must be implemented in some sort of programming language, and it appears the only implementation, perhaps due to the complexity, is the “&lt;a href="https://github.com/FraunhoferIOSB/FROST-Server"&gt;Frost server&lt;/a&gt;”, written in Java, apparently by one of the primary authors of the standard itself.&lt;/p&gt;
+&lt;h3&gt;Using the API - Demo App&lt;/h3&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/image-1024x581.png"&gt;
+&lt;strong&gt;Figure 2&lt;/strong&gt; - NMWDI SensorThings API Demo App&lt;/p&gt;
+&lt;p&gt;Working with SensorThings is somewhat analogous to interacting with a relational database where a query is sent as part of the client request. In general though, it is easiest to learn by manually sending requests to the API and assessing the response. I built a simple web application to demonstrate some basic interaction with the NM Water Data SensorThings API: http://apps.crceanalytics.com/sensorthingsdemo (No longer active). The app has three main features: a map showing well locations, a chart showing the time series of well data, and a table giving some details about a particular well (figure 2). Depending on the year, different wells are displayed on the map and different years can be selected. When a well is clicked on the observations are displayed in the chart and information about the well is loaded into the table. Next to each feature is the relevant SensorThings query that was used to load the data. To see the raw data from a query, simply copy the query and load it in a browser:&lt;/p&gt;
+&lt;p&gt;Example query: Datastreams(1285)/Thing&lt;/p&gt;
+&lt;p&gt;Full URL: &lt;a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Datastreams(1285)/Thing"&gt;https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Datastreams(1285)/Thing&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/chrisrycx/SensorThingsDemo"&gt;code for the app&lt;/a&gt; is available on Github, and utilizes &lt;a href="https://leafletjs.com"&gt;Leaflet&lt;/a&gt; for mapping and &lt;a href="https://plotly.com/javascript/"&gt;Plotly&lt;/a&gt; for plotting. The Javascript is mostly just sending a request and parsing the data that comes back so that it can be used in the map and/or plot functions.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Missing" src="www.crceanalytics.com/images/X"&gt;
+&lt;strong&gt;Figure 3&lt;/strong&gt; - Code from sensorthings_map.js showing a request made to the NMWDI Sensorthings API&lt;/p&gt;
+&lt;p&gt;SensorThings API's have lots of sophisticated data search functionality. Surprisingly, I found basic data access to be the least intuitive (it is the least like interacting with a database). Accessing specific data can be best explained using examples. Here are some queries for location data:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Locations"&gt;Locations/&lt;/a&gt; - All the locations associated with the data&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Locations(1)/Things"&gt;Location(1)/Things&lt;/a&gt; - All the things associated with location ID=1&lt;/li&gt;
+&lt;li&gt;Location(1)/Observations - This will not work because the data model associates observations with Datastreams, not Locations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once basic access of the data is understood, the more advanced functionality is easy to add on. For example, the default query to load wells to the map is: “ObservedProperties(1)?\&lt;span class="math"&gt;\(expand=Datastreams(\\\)&lt;/span&gt;filter=year(phenomenonTime) eq 2022)”. There are sometimes multiple ways to get a particular dataset, and in this case I start with "ObservedProperties(1)" because this limits the data returned to be of type "Depth to water" (determined by trial and error). Then I use the \&lt;span class="math"&gt;\(expand function, which sort of appends data on to an existing query, to get all Datastreams associated with "Depth to water". Finally, the \\\)&lt;/span&gt;filter function only returns data from wells in a particular year.&lt;/p&gt;
+&lt;p&gt;There is much more functionality than I have shown here including an ability to search for data using geospatial information. The most helpful examples I found are on the &lt;a href="https://fraunhoferiosb.github.io/FROST-Server/"&gt;Frost Server documentation&lt;/a&gt;. Ironically, I found the official &lt;a href="https://www.ogc.org/standards/sensorthings"&gt;OGC documentation&lt;/a&gt; to be fairly unhelpful, as it is written in a very technical dry manner. Some other resources:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Wikipedia - &lt;a href="https://en.wikipedia.org/wiki/SensorThings_API"&gt;https://en.wikipedia.org/wiki/SensorThings_API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;SensorUp - &lt;a href="https://developers.sensorup.com"&gt;developers.sensorup.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;YouTube - &lt;a href="https://www.youtube.com/playlist?list=PLUSJC5mjKZ9TQb2sSkqqoikXFHUMKWr25"&gt;SensorThings Series&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</content><category term="data analysis"></category><category term="sensorthings"></category></entry><entry><title>Automated QC of Environmental Data</title><link href="www.crceanalytics.com/automated-qc-of-environmental-data.html" rel="alternate"></link><published>2022-02-03T00:00:00-07:00</published><updated>2022-02-03T00:00:00-07:00</updated><author><name>Chris Cox</name></author><id>tag:None,2022-02-03:www.crceanalytics.com/automated-qc-of-environmental-data.html</id><summary type="html">&lt;h2&gt;Part 2: A Quality Control API&lt;/h2&gt;
+&lt;p&gt;This is the second in a two part series on automated quality control of environmental data. The &lt;a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/"&gt;first part&lt;/a&gt; gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (&lt;a href="https://api.crceanalytics.com"&gt;api.crceanalytics …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Part 2: A Quality Control API&lt;/h2&gt;
+&lt;p&gt;This is the second in a two part series on automated quality control of environmental data. The &lt;a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/"&gt;first part&lt;/a&gt; gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (&lt;a href="https://api.crceanalytics.com"&gt;api.crceanalytics.com&lt;/a&gt;) to automatically flag uploaded data using some of the techniques described in Part 1.&lt;/p&gt;
+&lt;h4&gt;Motivation&lt;/h4&gt;
+&lt;p&gt;A couple years ago I began work on a Python package: EnviroDataQC (&lt;a href="https://github.com/chrisrycx/EnviroDataQC"&gt;https://github.com/chrisrycx/EnviroDataQC&lt;/a&gt;) that I could use to perform automated quality control on meteorological data being uploaded to &lt;a href="https://dyacon.net"&gt;DyaconLive&lt;/a&gt;, a web portal for &lt;a href="https://dyacon.com"&gt;Dyacon&lt;/a&gt; weather stations. The library didn’t need to be overly complex, I just wanted a way to perform range and behavioral checks in a few different contexts without having to re-write quality control code every time. Recently, I thought it might be interesting to build an API that would connect to EnviroDataQC, creating a means for anyone, anywhere to quickly perform data QC. I built a prototype limited to air temperature data at &lt;a href="http://api.crceanalytics.com"&gt;api.crceanalytics.com&lt;/a&gt; and gave it a simple, interactive front end. I think the concept could be taken a lot further eventually.&lt;/p&gt;
+&lt;h4&gt;API Walk Thru&lt;/h4&gt;
+&lt;p&gt;The API front end aims to provide a visual example of how the API works. Anyone visiting the site can submit data for quality control following a few simple steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;A user inputs data into a text box (Figure 1).&lt;/li&gt;
+&lt;li&gt;Data is submitted to the API and the response is displayed beside the input.&lt;/li&gt;
+&lt;li&gt;Unless there is an error, the data will come back with flags indicating data quality.&lt;/li&gt;
+&lt;li&gt;The data is plotted in a chart below the input and any flags are displayed on top of the original data (Figure 2).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/APIinput-1024x484.png"&gt;
+&lt;strong&gt;Figure 1&lt;/strong&gt;: Data entry and returned JSON response&lt;/p&gt;
+&lt;p&gt;Data entered into the text box should be in comma separated format with the observation time followed by the air temperature value (°C). The input data gets reformatted to JSON as required by the API (&lt;a href="http://api.crceanalytics.com/docs"&gt;See API docs&lt;/a&gt;), but I figured it would be easier to copy and paste data from a CSV for general testing and experimentation. The response JSON is displayed beside the input and the input data is returned along with quality flags. The flag values are 0, 1, or 2 representing “good”, “suspicious” and “bad” values. Below the input, the data and flags are plotted to show how data spikes and "flatlining" (data persistance) are identified.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/APIchart.png"&gt;
+&lt;strong&gt;Figure 2&lt;/strong&gt;: Chart displaying data and flags&lt;/p&gt;
+&lt;p&gt;Although the input can be loaded with any data (limited to 200 rows), default data is pre-loaded into the inputs. Figure 2 shows the data plotted along with the flags returned by the API. Large spikes are flagged as ‘bad’ as well as sections of unchanging data that persist for more than 35 minutes. There are also "suspicious" flags adjacent to the larger spikes, as well as identifying a smaller spike. Configuration settings in EnviroDataQC determine what gets flagged.&lt;/p&gt;
+&lt;h4&gt;API Implementation&lt;/h4&gt;
+&lt;p&gt;The API is implemented with Python on the back end and utilizes &lt;a href="https://fastapi.tiangolo.com/"&gt;FastAPI&lt;/a&gt;. FastAPI lives up to it’s name and makes API creation really easy. I also found the "&lt;a href="https://training.talkpython.fm/courses/getting-started-with-fastapi"&gt;Modern APIs with FastAPI&lt;/a&gt;" course at TalkPython super helpful. Since, EnviroDataQC was already built, the actual coding of the API fits into one short script. Most of the time spent on this project actually went into the front end and testing some different front end plotting libraries.&lt;/p&gt;
+&lt;p&gt;The API code is available on Github (&lt;a href="https://github.com/chrisrycx/EnviroData_API"&gt;https://github.com/chrisrycx/EnviroData_API&lt;/a&gt;) for those interested in creating a similar project. Furthermore, documentation for the API is generated automatically by FastAPI via Swagger (&lt;a href="https://swagger.io/"&gt;https://swagger.io/&lt;/a&gt;) and is accessed via &lt;a href="http://api.crceanalytics.com/docs"&gt;http://api.crceanalytics.com/docs&lt;/a&gt;. I found a number of FastAPI features perfect for this project. First, FastAPI uses &lt;a href="https://pydantic-docs.helpmanual.io/"&gt;Pydantic&lt;/a&gt; which enforces "type hinting" in Python. For an API that is receiving data, it is important that the incoming data is of a particular type and format so that it can be processed or return an informative error. In the API code, I create a “temperatures” type (figure 3) that contains lists of datetimes and floats corresponding to incoming temperature data that has a value and time stamp. I was even able to limit the number of items, so that a user could not upload too much data.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/APItypes.png"&gt;
+&lt;strong&gt;Figure 3&lt;/strong&gt;: Code defining types used by API&lt;/p&gt;
+&lt;p&gt;Coding with FastAPI looks similar to using &lt;a href="https://flask.palletsprojects.com/en/2.0.x/"&gt;Flask&lt;/a&gt;. Application behavior is specified with functions that are connected to a particular route (such as api.crceanalytics.com/check_data/2m_air_temperature) using a decorator (figure 4). Inside the function, the incoming data is parsed and checked using EnviroDataQC functions. Then the response is returned. FastAPI can also render templates, so the back end API code is also used for the front end demonstration page. Total back end code is only around 250 lines.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/APIendpoint.png"&gt;
+&lt;strong&gt;Figure 4&lt;/strong&gt;: The API endpoint handling function.&lt;/p&gt;
+&lt;h4&gt;EnviroDataQC&lt;/h4&gt;
+&lt;p&gt;Data quality is checked using EnviroDataQC, a Python library I developed while working at Dyacon. EnviroDataQC is an initial attempt at implementing the concepts discussed in &lt;a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/"&gt;Part 1&lt;/a&gt; of this series. Data quality is checked with respect to range, rate of change, and persistence (which I tend to call “flatlining”). Additionally, there are some wind consistency checks and a function that attempts to consolidate hourly quality flags into daily values. The package can be PIP installed:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;&amp;gt; pip install envirodataqc&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The most basic usage is via the ‘check_vals’ function. This function takes a Pandas series and returns a Dataframe with the original data as well as the flags. The type of variable (air temperature, humidity, ect.) is also specified in the function call and must match a variable type listed in the configuration file (QCconfig.py). A couple interesting features of EnviroDataQC that I haven’t seen elsewhere are flags for suspicious values (as opposed to just flagging data as 'bad'), as well as an algorithm for consolidating quality flags. Often times data looks strange, but plausible, so flagging it as suspicious enables one to efficiently focus on certain parts of the data for review rather than wasting time reviewing data that is clearly bad. Consolidation of flags is also somewhat unique, and my initial take on the problem is built into the ‘daily_quality’ function. At Dyacon, I was taking 10 minute data with quality flags and reducing it to daily data, such as a daily mean temperature. The daily value needs to have a quality rating that is somehow related to the 10 minute quality flags. I came up with a scheme based on intuition that categorizes the daily values as good, suspicious, and bad based on the number of flags and gaps in the input data (figure 5).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/APIenviroqc.png"&gt;
+&lt;strong&gt;Figure 5&lt;/strong&gt;: Function from EnviroDataQC defining how quality flags are consolidated to daily values&lt;/p&gt;
+&lt;h4&gt;Other software tools&lt;/h4&gt;
+&lt;p&gt;I searched for other open source software tools that perform automated and/or manual quality control of data, but didn't find that many options. This is surprising given the increased need for data quality control (Campbell et al 2013). It could be that there are general purpose QC libraries that could be applied to environmental data, but haven’t yet become popular in the environmental domain. Another possibility is that QC is not yet standardized enough to drive a need for solutions more sophisticated than spreadsheets and custom scripts (this reason is given by Horsburgh et al. 2015).&lt;/p&gt;
+&lt;p&gt;Nonetheless, there are some existing open source tools worth testing. My former colleagues at USU developed &lt;a href="https://github.com/ODM2/ODMToolsPython"&gt;ODM tools&lt;/a&gt;, an interactive GUI for manual data QC. Another similar product I have seen mentioned is the &lt;a href="https://gce-lter.marsci.uga.edu/gce_toolbox/"&gt;GCE toolbox&lt;/a&gt;, however, this library is a Matlab Extension and is therefore not really open source. Another tool developed by Amber Jones and others at USU is &lt;a href="https://github.com/AmberSJones/PyHydroQC"&gt;PyHydroQC&lt;/a&gt;, which is focused on hydrology but appears to have similar functionality to EnviroDataQC, except it does much more by including machine learning methods.&lt;/p&gt;
+&lt;h4&gt;Conclusion&lt;/h4&gt;
+&lt;p&gt;That concludes this two part series on automated QC of environmental data. Let me know in the comments if you have any feedback or have recommendations for open source QC software.&lt;/p&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;p&gt;Campbell, John L., et al. "Quantity is nothing without quality: Automated QA/QC for streaming environmental sensor data." BioScience 63.7 (2013): 574-585.&lt;/p&gt;
+&lt;p&gt;Horsburgh, Jeffery S., et al. "Open source software for visualization and quality control of continuous hydrologic and water quality sensor data." Environmental Modelling &amp;amp; Software 70 (2015): 32-44.&lt;/p&gt;</content><category term="data analysis"></category><category term="coding"></category><category term="open-source"></category><category term="quality-control"></category></entry><entry><title>Automated Quality Control of Environmental Data</title><link href="www.crceanalytics.com/automated-quality-control-of-environmental-data.html" rel="alternate"></link><published>2022-01-14T00:00:00-07:00</published><updated>2022-01-14T00:00:00-07:00</updated><author><name>Chris Cox</name></author><id>tag:None,2022-01-14:www.crceanalytics.com/automated-quality-control-of-environmental-data.html</id><summary type="html">&lt;h2&gt;Part 1: Quality Control Background&lt;/h2&gt;
+&lt;h4&gt;Overview&lt;/h4&gt;
+&lt;p&gt;This is the first of a 2 part series on automated quality control of environmental data. This part gives an overview of quality control methods and the second part (under development) details how I used Python to create a demonstration API (&lt;a href="http://api.crceanalytics.com"&gt;api.crceanalytics.com …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;h2&gt;Part 1: Quality Control Background&lt;/h2&gt;
+&lt;h4&gt;Overview&lt;/h4&gt;
+&lt;p&gt;This is the first of a 2 part series on automated quality control of environmental data. This part gives an overview of quality control methods and the second part (under development) details how I used Python to create a demonstration API (&lt;a href="http://api.crceanalytics.com"&gt;api.crceanalytics.com&lt;/a&gt;) that performs automated QC on uploaded air temperature data.&lt;/p&gt;
+&lt;h4&gt;Environmental Data Quality Control&lt;/h4&gt;
+&lt;p&gt;Data is always going to need some sort of quality control after it is collected. This is especially true of environmental data collected from autonomous sensors placed in challenging environments. Sensors often break or experience electrical problems that lead to gaps in data and/or anomalous readings. Furthermore, bad data may also result from calibration or maintenance performed while the sensor is operating. Preventative maintenance and ongoing data monitoring, practices known as quality assurance (Campbell et al., 2013), help to reduce that amount of problematic data collected. However, as sensor technology gets cheaper, much more data is collected and manual methods for identifying suspicious and bad data becomes increasingly difficult and subjective (Jones et al., 2018). Automation of data quality control is going to be increasing important for ensuring high quality environmental data.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/IMAG0263-579x1024.jpg"&gt;
+&lt;strong&gt;Figure 1&lt;/strong&gt;: An iUTAH station buried in snow.&lt;/p&gt;
+&lt;p&gt;I have extensive experience with a mostly manual approach to environmental data quality control. For several years, I managed a network of monitoring stations for the iUTAH project (&lt;a href="https://iutahepscor.org"&gt;https://iutahepscor.org&lt;/a&gt;, Jones et al., 2017). I deployed both meteorological (see picture above) and hydrological instrumentation at ~10 different sites and data was recorded, typically, every 15 minutes for each sensor. Thousands of data points were transmitted back to a central database for long term storage each day. The database itself did have some simple data checks used to alert me to problems, but most of the data required manual review, a process which was both tedious and time consuming. Sometimes a sensor would break and bad data would be obvious, but other times a problem would go unnoticed for weeks. For example, hydrological instrumentation would often become dirty, buried, or, in the winter, frozen under ice (see picture below). In any of these situations, the data might appear normal when in actuality, it is no longer representative of the average value for the river. This kind of problem is largely solved by frequent site visits for cleaning.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="www.crceanalytics.com/images/DSCF8386-edited-scaled.jpg"&gt;
+&lt;strong&gt;Figure 2&lt;/strong&gt;: iUTAH aquatic instrumentation embedded in ice&lt;/p&gt;
+&lt;p&gt;We utilized a key piece of software, ODM tools (&lt;a href="https://github.com/ODM2/ODMToolsPython"&gt;https://github.com/ODM2/ODMToolsPython&lt;/a&gt;, Horsburgh et al., 2015), which consists of a graphical user interface to visualize and manipulate data. Data visualization is essential for manual data quality control, as one is guaranteed to miss problematic data simply by looking at numbers in a file. With ODM tools, time series data can be selected, flagged, and changed. Flagging, as opposed to outright removal of data, is important because a suspicious anomaly could turn out to be a significant event. The changes are also saved to a Python script so there is a record that can be reviewed later if needed. My one critique is that ODM tools must be used with an ODM2 database (&lt;a href="http://www.odm2.org/"&gt;http://www.odm2.org/&lt;/a&gt;), hence the name, and I have found ODM2 to be overly complex. Nonetheless, I have yet to run across open source software that is similar to ODM tools.&lt;/p&gt;
+&lt;h4&gt;Automated QC&lt;/h4&gt;
+&lt;p&gt;My colleagues and I were able to manually quality control a significant portion of the data collected by iUTAH, but automated techniques are likely mandatory for larger projects. Automated quality control of data collected by environmental instrumentation is a fairly active area of study since at least the 1980’s and is commonly implemented on meteorological monitoring networks such as the Oklahoma Mesonet (Fiebrich et al., 2010, 2020). Several sources describe common methods for automated data assessment (Fiebrich et al., 2010, Campbell et al., 2013, Durre et al., 2010, Estevez et al., 2011). These methods typically fall into these categories:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Range Tests - Check if data value is within a plausible range.&lt;/li&gt;
+&lt;li&gt;Behavior Tests&lt;ul&gt;
+&lt;li&gt;Step change - Check if the rate of change between values is plausible (spiking, jumps).&lt;/li&gt;
+&lt;li&gt;Flatlining - Data values are overly stable and unchanging.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Consistency Tests&lt;ul&gt;
+&lt;li&gt;Self consistency - Data is consistent between duplicate sensors or related sensors.&lt;/li&gt;
+&lt;li&gt;Spatial consistency - Data is consistent with measurements from nearby stations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Since every station and network of stations is different, the details of implementing the different checks will vary and data might not even be available to complete consistency tests. For example, there is no way to check if data is spatially consistent if there is only data from one location available. Some networks, by design, have duplicate instrumentation and long term climate records, enabling more reliable range and self consistency checks. Specific QC standards are still evolving (Fiebrich et al., 2020). Nonetheless, in order to give a sense for what QC tests might look like, table below gives an example of QC test thresholds from Fiebrich et al., 2010 for a few environmental variables.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="text-align: left;"&gt;Variable&lt;/th&gt;
+&lt;th style="text-align: left;"&gt;Range&lt;/th&gt;
+&lt;th style="text-align: left;"&gt;Behavior&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;"&gt;Air Temperature&lt;/td&gt;
+&lt;td style="text-align: left;"&gt;-30C &amp;lt; T &amp;lt; 50C&lt;/td&gt;
+&lt;td style="text-align: left;"&gt;-9 C/5 min &amp;lt; dT/dt &amp;lt; 6 C/5 min&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;"&gt;Air Pressure&lt;/td&gt;
+&lt;td style="text-align: left;"&gt;800 hPa &amp;lt; P &amp;lt; 1050 hPa&lt;/td&gt;
+&lt;td style="text-align: left;"&gt;-4 hPa/5 min &amp;lt; dP/dt &amp;lt; 5 hPa/5 min&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style="text-align: left;"&gt;Humidity&lt;/td&gt;
+&lt;td style="text-align: left;"&gt;3% &amp;lt; RH &amp;lt; 103%&lt;/td&gt;
+&lt;td style="text-align: left;"&gt;-23 %/5 min &amp;lt; dRH/dt &amp;lt; 23%/5 min&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;A few variables and QC test thresholds from Fiebrich et al., 2010&lt;/p&gt;
+&lt;p&gt;Some methods used for self consistency tests are measurement specific. For example, wind speed is usually measured in conjunction with wind direction. When the wind speed is zero, the wind direction should not be varying and conversely, when the wind direction is changing, wind speed should be above zero. Wind speed has an interesting statistical behavior that has been used for anomaly detection in the past (DeGaetano, 1997). While working at Dyacon (&lt;a href="http://dyacon.com"&gt;dyacon.com&lt;/a&gt;), I investigated using ratios of average and maximum wind speed to try and detect problems with wind sensor bearings, but I never settled on a particular technique.&lt;/p&gt;
+&lt;p&gt;Another interesting example of a self consistency test is in the measurement of incoming solar radiation. Because the amount of solar radiation reaching the earth is fairly consistent (&lt;a href="https://en.wikipedia.org/wiki/Solar_constant"&gt;https://en.wikipedia.org/wiki/Solar_constant&lt;/a&gt;), the surface radiation at a given location can be calculated based on geometry and time of day. Topography and the atmosphere make the calculation complex, but ignoring those factors still provides a kind of upper bound on incoming solar radiation known as “clear sky radiation” (&lt;a href="http://www.clearskycalculator.com/"&gt;http://www.clearskycalculator.com/&lt;/a&gt;). However, I have found that clouds can sometimes create conditions where the clear sky radiation is briefly exceeded.&lt;/p&gt;
+&lt;p&gt;Automated assessment of a given measurement is challenging, but it is also very challenging to deal with missing data. Environmental data typically isn’t measured continuously. Rather measurements are taken at some frequency, like once every 10 seconds. The rate at which data should be collected depends on both what is being measured and sensor characteristics (Brock and Richardson, 2001). Therefore, missing data is defined with respect to a measurement that should have taken place but did not. This can often result from an electrical or communication problem, or it might be due to removal of values that are clearly wrong. The approach to “imputing” missing data will vary by analysis goals.&lt;/p&gt;
+&lt;p&gt;When it comes to automated QC of data, missing data can make automated calculation of statistics like mean, max, and minimum challenging. For example, at Dyacon I built a web interface for displaying daily air temperature statistics calculated from 10 minute weather station observations. It is easy to calculate an average value, but how do you assess the quality of the average value when some data is missing? Does it matter if data is missing from part of the day or lots of times through out the day? Febriech et al., 2020 gives some guidelines for how hourly and daily statistics should be calculated, but I also get the impression there is still a lack of clear standards.&lt;/p&gt;
+&lt;h4&gt;Part 2&lt;/h4&gt;
+&lt;p&gt;In part 2 (under development) of this series, I describe how I have implemented some of these QC concepts into a Python library: &lt;a href="https://github.com/chrisrycx/EnviroDataQC"&gt;EnviroDataQC&lt;/a&gt;. Furthermore, I demonstrate how the package can be used in an API so that anyone can automatically perform an automated check of air temperature data (&lt;a href="http://api.crceanalytics.com"&gt;api.crceanalytics.com&lt;/a&gt;).&lt;/p&gt;
+&lt;h4&gt;References&lt;/h4&gt;
+&lt;p&gt;Brock, Fred V., and Scott J. Richardson. &lt;em&gt;Meteorological measurement systems&lt;/em&gt;. Oxford University Press, USA, 2001.&lt;/p&gt;
+&lt;p&gt;Campbell, John L., et al. "Quantity is nothing without quality: Automated QA/QC for streaming environmental sensor data." &lt;em&gt;BioScience&lt;/em&gt; 63.7 (2013): 574-585.&lt;/p&gt;
+&lt;p&gt;DeGaetano, Arthur T. "A quality-control routine for hourly wind observations." &lt;em&gt;Journal of Atmospheric and Oceanic Technology&lt;/em&gt; 14.2 (1997): 308-317.&lt;/p&gt;
+&lt;p&gt;Durre, Imke, et al. "Comprehensive automated quality assurance of daily surface observations." &lt;em&gt;Journal of Applied Meteorology and Climatology&lt;/em&gt; 49.8 (2010): 1615-1633.&lt;/p&gt;
+&lt;p&gt;Estévez, J., P. Gavilán, and Juan Vicente Giráldez. "Guidelines on validation procedures for meteorological data from automatic weather stations." &lt;em&gt;Journal of Hydrology&lt;/em&gt; 402.1-2 (2011): 144-154.&lt;/p&gt;
+&lt;p&gt;Fiebrich, Christopher A., et al. "Quality assurance procedures for mesoscale meteorological data." &lt;em&gt;Journal of Atmospheric and Oceanic Technology&lt;/em&gt; 27.10 (2010): 1565-1582.&lt;/p&gt;
+&lt;p&gt;Fiebrich, Christopher A., et al. "Toward the standardization of mesoscale meteorological networks." &lt;em&gt;Journal of Atmospheric and Oceanic Technology&lt;/em&gt; 37.11 (2020): 2033-2049.&lt;/p&gt;
+&lt;p&gt;Horsburgh, Jeffery S., et al. "Open source software for visualization and quality control of continuous hydrologic and water quality sensor data." &lt;em&gt;Environmental Modelling &amp;amp; Software&lt;/em&gt; 70 (2015): 32-44.&lt;/p&gt;
+&lt;p&gt;Jones, Amber Spackman, et al. "Designing and implementing a network for sensing water quality and hydrology across mountain to urban transitions." &lt;em&gt;JAWRA Journal of the American Water Resources Association&lt;/em&gt; 53.5 (2017): 1095-1120.&lt;/p&gt;
+&lt;p&gt;Jones, Amber Spackman, Jeffery S. Horsburgh, and David P. Eiriksson. "Assessing subjectivity in environmental sensor data post processing via a controlled experiment." &lt;em&gt;Ecological Informatics&lt;/em&gt; 46 (2018): 86-96.&lt;/p&gt;</content><category term="data analysis"></category><category term="instrumentation"></category><category term="quality-control"></category></entry></feed>
