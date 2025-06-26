@@ -23,6 +23,7 @@ LINKS = (
 # Social widget
 SOCIAL = (
     ("Mastodon", "https://fosstodon.org/@chrisrycx"),
+    ("LinkedIn", "https://www.linkedin.com/in/chrisrycx/")
 )
 
 DEFAULT_PAGINATION = 10
