@@ -5,27 +5,27 @@
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
                         <title>Sandia Peak Snowfall History - Follow Up</title>
-                        <link rel="stylesheet" href="www.crceanalytics.com/theme/css/main.css" />
+                        <link rel="stylesheet" href="./theme/css/main.css" />
                                 <link href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="CRC Earth Analytics Atom Feed" />
     <meta name="description" content="In my last blog post, I tried to answer the question: How has snowfall at Sandia Peak Ski Area changed over the years? Ultimately, I want to know..." />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="www.crceanalytics.com/">CRC Earth Analytics</a></h1>
+                        <h1><a href="./">CRC Earth Analytics</a></h1>
                         <nav><ul>
-                                                <li><a href="www.crceanalytics.com/pages/about-me.html">About Me</a></li>
-                                                <li><a href="www.crceanalytics.com/category/climate.html">climate</a></li>
-                                                <li><a href="www.crceanalytics.com/category/data-analysis.html">data analysis</a></li>
-                                                <li><a href="www.crceanalytics.com/category/hydrology.html">hydrology</a></li>
-                                                <li class="active"><a href="www.crceanalytics.com/category/snow.html">snow</a></li>
+                                                <li><a href="./pages/about-me.html">About Me</a></li>
+                                                <li><a href="./category/climate.html">climate</a></li>
+                                                <li><a href="./category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="./category/hydrology.html">hydrology</a></li>
+                                                <li class="active"><a href="./category/snow.html">snow</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
   <section id="content" class="body">
     <article>
       <header>
         <h1 class="entry-title">
-          <a href="www.crceanalytics.com/sandia-peak-snowfall-history-follow-up.html" rel="bookmark"
+          <a href="./sandia-peak-snowfall-history-follow-up.html" rel="bookmark"
              title="Permalink to Sandia Peak Snowfall History - Follow Up">Sandia Peak Snowfall History - Follow Up</a></h1>
       </header>
 
@@ -36,23 +36,23 @@
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="www.crceanalytics.com/author/chris-cox.html">Chris Cox</a>
+                        By                                 <a class="url fn" href="./author/chris-cox.html">Chris Cox</a>
                 </address>
-        <p>In <a href="www.crceanalytics.com/category/snow.html">snow</a>.</p>
-<p>tags: <a href="www.crceanalytics.com/tag/sandia.html">sandia</a> <a href="www.crceanalytics.com/tag/skiing.html">skiing</a> <a href="www.crceanalytics.com/tag/snodas.html">snodas</a> <a href="www.crceanalytics.com/tag/snow.html">snow</a> <a href="www.crceanalytics.com/tag/swann.html">swann</a> </p>        
+        <p>In <a href="./category/snow.html">snow</a>.</p>
+<p>tags: <a href="./tag/sandia.html">sandia</a> <a href="./tag/skiing.html">skiing</a> <a href="./tag/snodas.html">snodas</a> <a href="./tag/snow.html">snow</a> <a href="./tag/swann.html">swann</a> </p>        
 </footer><!-- /.post-info -->        <p>In my <a href="https://crceanalytics.com/2023/01/10/sandia-peak-snowfall-history/">last blog post</a>, I tried to answer the question:</p>
 <p>How has snowfall at Sandia Peak Ski Area changed over the years?</p>
 <p>Ultimately, I want to know how climate change is affecting the future of skiing in the Sandias and to develop some sense of what weather patterns are associated with particularly good or bad years. With that in mind, I focused my initial research on assessing daily <a href="#swe">SWE</a> values at the Ski Area. Unlike daily snowfall or total seasonal snowfall, daily SWE represents the actual amount of snow on the ground, including the effects of melting, sublimation, and redistribution from wind. Furthermore, since SWE is fundamentally a measure of water quantity, this analysis not only describes the overall quality of the snow for skiing, it is also equally useful from a hydrologic perspective.</p>
 <p>The Sandias are lacking direct measurements of daily SWE values. So, I utilized a reconstruction of both SWE and snow depth from a model developed by the University of Arizona called <a href="https://climate.arizona.edu/snowview/">SWANN</a>. (Note that in the prior blog post I referred to the dataset as the “4km snow grid” because my only source for the data at that time, the <a href="https://nsidc.org/data/nsidc-0719/versions/1">NSIDC</a>, didn’t have a specific name for the dataset). While the methodology for developing the model output seemed robust (Broxton et al., 2016), it was still an open question as to how accurate the model was in the Sandias specifically. Indeed, a reasonable criticism was that the dataset suffers from problematic model inputs. Specifically, radar based estimates of precipitation over the Sandias are bias low because the radar beam located west of the area is blocked by the west face of the Sandias causing a radar “blind spot” right where the ski area is located (more on this below). To better assess the performance of SWANN at Sandia Peak Ski Area, I decided to make some comparisons with actual field data, as well as, a second snow pack model developed by the National Weather Service called SNODAS.</p>
-<p><img alt="" src="www.crceanalytics.com/images/SandiaMap-1024x724.png">
+<p><img alt="" src="./images/SandiaMap-1024x724.png">
 <strong>Figure 1</strong> - Map of locations and grid cells</p>
 <p>One surefire way of getting direct measurements from the field is to do them yourself. So, I made several measurements in March and April of this year (2023) at the ski area using my own "DIY" approach. I also collaborated with Kerry Jones (<a href="https://twitter.com/peakwx">@peakwx</a>) and Brian Guyer, two experienced meteorologists. Kerry has a number of historical images of snow along the Crest Road (NM 536) that I used to get a semi-quantitative estimate of snow depth. Finally, it turns out there is a relatively new research weather station in the Sandias near the Ski Area that I wasn't aware of until just this last spring. The station was recently upgraded, and it has been measuring snow depth since fall of 2022. None of these comparison datasets extend back in time beyond about 2005, but they are nonetheless a good starting point for evaluating SWANN in the Sandias from a wide variety of perspectives.</p>
 <h3>Field Photos</h3>
 <p>Given the right context and location, photographs of snow in the Sandias, are a useful comparison to snow pack models. Lacking a ruler of some sort in the picture, the precise depth of snow may not be easy to extract from the image. However, relative snow depths from pictures taken at the same location can be assessed based on static features in the landscape, like trees.</p>
-<p><img alt="" src="www.crceanalytics.com/images/KerryMinMax.png">
+<p><img alt="" src="./images/KerryMinMax.png">
 <strong>Figure 2</strong>: Minimum (rank 1) and maximum (rank 14) ranked pictures</p>
 <p>Starting in 2009, Kerry Jones and another meteorologist, Brent Wachter, began taking photographs of the snow adjacent to the road near the crest (see figure 2). A few images are captured each year around early February, and most feature a trailhead sign, giving a fixed reference from which to compare two different years. I ranked each of Kerry’s photographs from lowest snow to highest (1 to 14) and then compared snow depths extracted from the SWANN and SNODAS models for the same date (figure 3).</p>
-<p><img alt="" src="www.crceanalytics.com/images/PictureRank.png">
+<p><img alt="" src="./images/PictureRank.png">
 <strong>Figure 3</strong>: Picture rank vs model rank for snow depth on same date as picture.</p>
 <p>Note that the SNODAS snow depths are from the SNODAS grid cell encompassing the picture location (labeled SND1 in figure 1). However, the SWANN snow depths are from the grid cell located just east of the picture location (labeled SWN1 in figure 1). The SWANN grid cell encompassing the picture location (SWN2) includes the high relief topography of the west face of the Sandias and is likely to be less representative of snow conditions at the picture location than the grid cell to the east.</p>
 <p>While the picture ranking and snow model ranking have a fair amount of scatter, there is still a good correlation between the two indicating the models are faithfully representing good and bad years. Much of the scatter is likely due to the difficulty in ranking pictures with moderate levels of snowfall. In contrast to figure 2, where it is easy to distinguish which date has deeper snow, most of the comparisons between pictures were a bit subjective.</p>
@@ -120,10 +120,10 @@
 </table>
 <p><strong>Table 1</strong>: A selection of field measurements</p>
 <p>SWE is typically measured using a <a href="https://www.youtube.com/watch?v=nFRsca4mFm8&amp;list=LL&amp;index=1">stainless steel tube and a scale</a>. My methodology was less refined, but sufficient for this analysis. I simply used a section of pvc pipe to extract a snow core that I put in a bottle and brought home for melting. I couldn’t extract the whole core at once, and each successive section of snow, no doubt, introduced error. Furthermore, I only made one measurement per site visit, so there is no information about local spatial variability. Nonetheless, my sense is that there is enough precision in my field measurements for general comparisons with other sites and to assess SWANN and SNODAS model performance.</p>
-<p><img alt="" src="www.crceanalytics.com/images/IMG_1154.jpg">
+<p><img alt="" src="./images/IMG_1154.jpg">
 SWE measurement using PVC pipe at mid-mountain site.</p>
 <p>I wasn’t the only one making snow measurements in the Sandias this past winter. Adrian Marziliano is a PhD candidate at UNM working with Professor <a href="https://webbhydrology.weebly.com/">Ryan Web</a>. His research focuses on satellite-based snow measurements with field work in the San Juan Mountains of Colorado. Adrian has also been working in the Sandias maintaining a weather station near the 10K trailhead. This station has recently (fall 2022) been equipped with a snow depth sensor. Additionally, Adrian has been conducting manual snow depth measurements on a snow course adjacent to the station. Adrian was kind enough to share several snow depth and SWE measurements from the 2021/2022 and 2022/2023 seasons, as well as, 15 minute snow depth data from the 10K station from last season. As of this writing, the station data more recent than February 2023 has yet to be collected.</p>
-<p><img alt="" src="www.crceanalytics.com/images/FieldComparison-edited.png">
+<p><img alt="" src="./images/FieldComparison-edited.png">
 <strong>Figure 4</strong>: Model and field data comparisons</p>
 <p>Figures 4 shows depth and SWE comparisons between both models and field measurements. It is important to note that the field measurements and model locations do not all overlap (see figure 1). For example, my "Foster Murphy" field site is approximately 1 mile from the 10K station, but is still within the SWANN SWN1 grid cell. Despite these differences, I think the distances and topography of the area are such that it is still reasonable to compare the different datasets to assess model performance.</p>
 <p>There are several interesting takeaways from the comparisons. As might be expected, Adrian’s depth measurements match those measured by the snow depth sensor at the 10K station. Furthermore, the high resolution station data shows changes in depth that are very similar to the SWANN data and, to a lesser extent, the SNODAS data. The 2021/2022 SWANN data is arguably less similar to Adrian’s field measurements than in 2022/2023, but it is still more representative than SNODAS.</p>
@@ -131,14 +131,14 @@ SWE measurement using PVC pipe at mid-mountain site.</p>
 <h3>Model Comparisons</h3>
 <p>Given the substantial differences between SWANN and SNODAS models, I decided it would be useful to investigate what might be the cause. As detailed in my previous blog post, SWANN is a 4km gridded snow model built by the University of Arizona. In contrast, SNODAS is a 1km snow model built and run by NOAA’s <a href="https://www.nohrsc.noaa.gov/">NOHRSC</a>. It covers the entire continental US and parts of Canada, runs on an hourly time step and produces a wide variety of outputs including SWE and snow depth, as well as, more unique outputs like snow temperature (see NOHRSC, 2004). SNODAS utilizes large amounts of real world data like SNOTEL measurements and meteorological observations to run a multi-layered snow model: SNTHERM (Barrett, 2003). The snow model simulates relevant snow pack processes like melt water infiltration. Interestingly, forecasters with NOHRSC actively participate in SNODAS operation by making corrections to the model based on model performance with respect to field data.</p>
 <p>When comparing the model output to point measurements (figure 4), I generally compared the field measurement to the closest model grid cell (see figure 1). However, when comparing the models for longer time periods, I figured it would be best to re-sample the 1km SNODAS data to the 4 km grid size of SWANN. That way if there happened to be some local anomaly at the 1km scale it wouldn’t bias the comparison. To perform the resampling, I took a simple approach of averaging all the 1km SNODAS grid cell values inside the overlapping 4km SWANN grid cell.</p>
-<p><img alt="" src="www.crceanalytics.com/images/ModelCompare_swe.png">
+<p><img alt="" src="./images/ModelCompare_swe.png">
 <strong>Figure 5</strong>: SWANN compared to SNODAS (resampled)</p>
 <p>As was the case with the point comparisons, the SNODAS data is much lower than the SWANN data for both SWE and snow depth (figure 5). Some years the difference is glaring, with SNODAS showing no snow on the ground while SWANN is showing 16 inches SWE. Overall the mean absolute difference in SWE is 1.76 in with a standard deviation of 2.54 in (summertime values removed). For comparison, Broxton et al. 2016 show a mean absolute difference of 2.75 in SWE comparing SNODAS to SWANN in the northern Rockies, but that analysis looked at spatial differences not differences through time. I browsed the literature to see if there were any known geographical biases in SNODAS. In general, SNODAS can be difficult to independently evaluate because much of the field data commonly used to evaluate snow models gets assimilated into SNODAS. Hedrick et al. 2015 assessed SNODAS performance in northern Colorado using both lidar and in situ field measurements. Their findings also focused on spatial differences and were mostly consistent with prior work that indicated SNODAS under predicted snow depth in alpine environments due to the influence of trees and complex topography.</p>
 <p>There seems to be something particular to the Sandias that is influencing SNODAS, and I suspect it is the very thing that originally inspired this follow-up investigation: radar beam blockage. Radar is a focused beam of radio or microwaves with a width of about 1 degree rotating in a circle to scan a 360 degree view for about 120 miles (see <a href="https://www.noaa.gov/jetstream/vcp_max">https://www.noaa.gov/jetstream/vcp_max</a>). As the radar rotates, the beam sweeps through predefined horizontal and vertical coverage patterns to obtain a volumetric analysis of the atmosphere. If the position of the radar transmitter is such that the beam encounters topography during it’s scan, it is effectively blocked from viewing any area behind the obstacle as a function of the beam angle and distance from the transmitter.</p>
-<p><img alt="" src="www.crceanalytics.com/images/image.png">
+<p><img alt="" src="./images/image.png">
 <strong>Figure 6</strong></p>
 <p>The Sandias are situated such that radar from KABX is blocked for a region almost directly over the ski area. Figure 6 shows radar coverage at 3000 feet above ground level in green. There is a clear gap in coverage behind (east of) the Sandias (<a href="https://www.ncei.noaa.gov/maps/radar/">https://www.ncei.noaa.gov/maps/radar/</a>). I couldn't find a coverage map for heights below 3000 feet, but it is clear the beam won't be "seeing" the back side of the Sandias. This is especially problematic for winter storms and shallow convection (Kerry Jones per comm.) Not only is radar important for identifying where precipitation is taking place, it is also used to estimate the amount of precipitation that has fallen. Theses total precipitation estimates are integrated into meteorological models like the <a href="https://rapidrefresh.noaa.gov/hrrr/">HRRR</a> which is then used by SNODAS for determining snow pack (<a href="https://www.nohrsc.noaa.gov/technology/">https://www.nohrsc.noaa.gov/technology/</a>). In contrast to SNODAS, SWANN doesn't use radar for precipitation estimates. Instead precipitation is provided by PRISM which essentially does sophisticated interpolation of station measurements (Daly and Bryant, 2013).</p>
-<p><img alt="" src="www.crceanalytics.com/images/PajaritoCompare.png">
+<p><img alt="" src="./images/PajaritoCompare.png">
 <strong>Figure 7</strong> - SWANN and SNODAS near Pajarito Ski Area</p>
 <p>As a final check, I decided to compare SNODAS (re-sampled) and SWANN near Pajarito Ski Area in the Jemez mountains, just west of Los Alamos. Here the radar beam is not blocked by terrain, and the aspect and terrain is somewhat similar to that of the Sandias. Clearly the difference between the two model snow depths is much smaller (figure 7) at this site than in the Sandias.</p>
 <h3>Conclusion</h3>

@@ -5,44 +5,44 @@
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                         <meta name="generator" content="Pelican" />
                         <title>CRC Earth Analytics - instrumentation</title>
-                        <link rel="stylesheet" href="www.crceanalytics.com/theme/css/main.css" />
+                        <link rel="stylesheet" href="../theme/css/main.css" />
                                 <link href="www.crceanalytics.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="CRC Earth Analytics Atom Feed" />
         </head>
 
         <body id="index" class="home">
                 <header id="banner" class="body">
-                        <h1><a href="www.crceanalytics.com/">CRC Earth Analytics</a></h1>
+                        <h1><a href="../">CRC Earth Analytics</a></h1>
                         <nav><ul>
-                                                <li><a href="www.crceanalytics.com/pages/about-me.html">About Me</a></li>
-                                                <li><a href="www.crceanalytics.com/category/climate.html">climate</a></li>
-                                                <li><a href="www.crceanalytics.com/category/data-analysis.html">data analysis</a></li>
-                                                <li><a href="www.crceanalytics.com/category/hydrology.html">hydrology</a></li>
-                                                <li><a href="www.crceanalytics.com/category/snow.html">snow</a></li>
+                                                <li><a href="../pages/about-me.html">About Me</a></li>
+                                                <li><a href="../category/climate.html">climate</a></li>
+                                                <li><a href="../category/data-analysis.html">data analysis</a></li>
+                                                <li><a href="../category/hydrology.html">hydrology</a></li>
+                                                <li><a href="../category/snow.html">snow</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="www.crceanalytics.com/automated-quality-control-of-environmental-data.html">Automated Quality Control of Environmental Data</a></h1>
+                        <h1 class="entry-title"><a href="../automated-quality-control-of-environmental-data.html">Automated Quality Control of Environmental Data</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2022-01-14T00:00:00-07:00">
                 Published: Fri 14 January 2022
         </abbr>
 
                 <address class="vcard author">
-                        By                                 <a class="url fn" href="www.crceanalytics.com/author/chris-cox.html">Chris Cox</a>
+                        By                                 <a class="url fn" href="../author/chris-cox.html">Chris Cox</a>
                 </address>
-        <p>In <a href="www.crceanalytics.com/category/data-analysis.html">data analysis</a>.</p>
-<p>tags: <a href="www.crceanalytics.com/tag/instrumentation.html">instrumentation</a> <a href="www.crceanalytics.com/tag/quality-control.html">quality-control</a> </p>        
+        <p>In <a href="../category/data-analysis.html">data analysis</a>.</p>
+<p>tags: <a href="../tag/instrumentation.html">instrumentation</a> <a href="../tag/quality-control.html">quality-control</a> </p>        
 </footer><!-- /.post-info --><h2>Part 1: Quality Control Background</h2>
 <h4>Overview</h4>
 <p>This is the first of a 2 part series on automated quality control of environmental data. This part gives an overview of quality control methods and the second part (under development) details how I used Python to create a demonstration API (<a href="http://api.crceanalytics.com">api.crceanalytics.com</a>) that performs automated QC on uploaded air temperature data.</p>
 <h4>Environmental Data Quality Control</h4>
 <p>Data is always going to need some sort of quality control after it is collected. This is especially true of environmental data collected from autonomous sensors placed in challenging environments. Sensors often break or experience electrical problems that lead to gaps in data and/or anomalous readings. Furthermore, bad data may also result from calibration or maintenance performed while the sensor is operating. Preventative maintenance and ongoing data monitoring, practices known as quality assurance (Campbell et al., 2013), help to reduce that amount of problematic data collected. However, as sensor technology gets cheaper, much more data is collected and manual methods for identifying suspicious and bad data becomes increasingly difficult and subjective (Jones et al., 2018). Automation of data quality control is going to be increasing important for ensuring high quality environmental data.</p>
-<p><img alt="" src="www.crceanalytics.com/images/IMAG0263-579x1024.jpg">
+<p><img alt="" src="../images/IMAG0263-579x1024.jpg">
 <strong>Figure 1</strong>: An iUTAH station buried in snow.</p>
 <p>I have extensive experience with a mostly manual approach to environmental data quality control. For several years, I managed a network of monitoring stations for the iUTAH project (<a href="https://iutahepscor.org">https://iutahepscor.org</a>, Jones et al., 2017). I deployed both meteorological (see picture above) and hydrological instrumentation at ~10 different sites and data was recorded, typically, every 15 minutes for each sensor. Thousands of data points were transmitted back to a central database for long term storage each day. The database itself did have some simple data checks used to alert me to problems, but most of the data required manual review, a process which was both tedious and time consuming. Sometimes a sensor would break and bad data would be obvious, but other times a problem would go unnoticed for weeks. For example, hydrological instrumentation would often become dirty, buried, or, in the winter, frozen under ice (see picture below). In any of these situations, the data might appear normal when in actuality, it is no longer representative of the average value for the river. This kind of problem is largely solved by frequent site visits for cleaning.</p>
-<p><img alt="" src="www.crceanalytics.com/images/DSCF8386-edited-scaled.jpg">
+<p><img alt="" src="../images/DSCF8386-edited-scaled.jpg">
 <strong>Figure 2</strong>: iUTAH aquatic instrumentation embedded in ice</p>
 <p>We utilized a key piece of software, ODM tools (<a href="https://github.com/ODM2/ODMToolsPython">https://github.com/ODM2/ODMToolsPython</a>, Horsburgh et al., 2015), which consists of a graphical user interface to visualize and manipulate data. Data visualization is essential for manual data quality control, as one is guaranteed to miss problematic data simply by looking at numbers in a file. With ODM tools, time series data can be selected, flagged, and changed. Flagging, as opposed to outright removal of data, is important because a suspicious anomaly could turn out to be a significant event. The changes are also saved to a Python script so there is a record that can be reviewed later if needed. My one critique is that ODM tools must be used with an ODM2 database (<a href="http://www.odm2.org/">http://www.odm2.org/</a>), hence the name, and I have found ODM2 to be overly complex. Nonetheless, I have yet to run across open source software that is similar to ODM tools.</p>
 <h4>Automated QC</h4>
