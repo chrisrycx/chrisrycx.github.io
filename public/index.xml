@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CRC Earth Analytics</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Predicting Water Supply - Another Machine Learning Competition</title>
+      <link>http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/</guid>
+      <description>A machine learning competition to predict water supply volumes in the Western US.</description>
+    </item>
+    <item>
+      <title>Sandia Peak Snowfall History - Follow Up</title>
+      <link>http://localhost:1313/posts/sandia-peak-snowfall-history-follow-up/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sandia-peak-snowfall-history-follow-up/</guid>
+      <description>&lt;p&gt;In my &lt;a href=&#34;https://crceanalytics.com/2023/01/10/sandia-peak-snowfall-history/&#34;&gt;last blog post&lt;/a&gt;, I tried to answer the question:&lt;/p&gt;
+&lt;p&gt;How has snowfall at Sandia Peak Ski Area changed over the years?&lt;/p&gt;
+&lt;p&gt;Ultimately, I want to know how climate change is affecting the future of skiing in the Sandias and to develop some sense of what weather patterns are associated with particularly good or bad years. With that in mind, I focused my initial research on assessing daily &lt;a href=&#34;#swe&#34;&gt;SWE&lt;/a&gt; values at the Ski Area. Unlike daily snowfall or total seasonal snowfall, daily SWE represents the actual amount of snow on the ground, including the effects of melting, sublimation, and redistribution from wind. Furthermore, since SWE is fundamentally a measure of water quantity, this analysis not only describes the overall quality of the snow for skiing, it is also equally useful from a hydrologic perspective.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sandia Peak Snowfall History</title>
+      <link>http://localhost:1313/posts/sandia-peak-snowfall-history/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sandia-peak-snowfall-history/</guid>
+      <description>&lt;p&gt;A few months ago I found out my local ski area, &lt;a href=&#34;http://sandiapeak.com&#34;&gt;Sandia Peak&lt;/a&gt;, preemptively chose not to open for the upcoming ski season (2022/2023). It isn’t that unusual for Sandia Peak to stay closed for the season, and they were also closed last season. However, I had thought the decision to stay closed is typically made around January, after the snow pack begins to form. At that point, if the early season snowfall is too low, the season isn’t long enough offset operating costs and it isn’t worth opening. Why was this year different?&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Machine Learning for Snow Hydrology - A Follow Up</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/</link>
+      <pubDate>Fri, 30 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/</guid>
+      <description>&lt;h3 id=&#34;overview&#34;&gt;Overview&lt;/h3&gt;
+&lt;p&gt;Last winter I tried my hand at competing in a machine learning competition to predict snow water equivalent (SWE) across the Western United States. I learned a lot and created a two part blog series to document both the competition and my approach:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Machine Learning for Snow Hydrology - A Competition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://crceanalytics.com/2022/05/11/machine-learning-for-snow-hydrology-methods/&#34;&gt;Machine Learning for Snow Hydrology - Methods&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I competed in the preliminary phase of the competition that didn’t include any prizes. The second phase involved predicting SWE in real time and included big prizes totaling $500,000. The competition ended in early summer, but the winners were just recently announced on the DrivenData Blog:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>South Foothills Weather Station</title>
+      <link>http://localhost:1313/posts/south-foothills-weather-station/</link>
+      <pubDate>Mon, 15 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/south-foothills-weather-station/</guid>
+      <description>&lt;h3 id=&#34;overview&#34;&gt;Overview&lt;/h3&gt;
+&lt;p&gt;I built a very unusual weather station on my roof. The measurements are pretty standard: wind, temperature, humidity - but everything else is unique, all the way down to the electronics. You can see a subset of the data, updated every 10 minutes at apps.crceanalytics.com/wxstation (sorry no longer running).&lt;/p&gt;
+&lt;p&gt;It is far from the easiest or cheapest approach to monitoring the weather. Furthermore, my neighbor already has a publicly accessible station. Nonetheless, the station serves a number of purposes:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Greenland Snow Temperatures</title>
+      <link>http://localhost:1313/posts/greenland-snow-temperatures/</link>
+      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/greenland-snow-temperatures/</guid>
+      <description>&lt;p&gt;My graduate degree research was focused on glacial hydrology, which is basically trying to figure out how water moves above, below, and through glaciers and ice sheets. Water is important because it affects things like sliding, melting, sub-glacial erosion, and geochemistry. My research utilized temperature measurements from snow on the Greenland ice sheet, and I was lucky enough to travel to SW Greenland in the summer of 2010.&lt;/p&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/IMG_1683_sm-1024x768.jpg&#34;&gt;
+&lt;strong&gt;Figure 1&lt;/strong&gt; - SW Greenland Ice Sheet&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>NMWDI SensorThings API</title>
+      <link>http://localhost:1313/posts/nmwdi-sensorthings-api/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nmwdi-sensorthings-api/</guid>
+      <description>&lt;p&gt;The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the &lt;a href=&#34;http://newmexicowaterdata.org&#34;&gt;New Mexico Water Data Initiative&lt;/a&gt; (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the &lt;a href=&#34;http://geoinfo.nmt.edu&#34;&gt;NM Bureau of Geology and Mineral Resources&lt;/a&gt; with the mission of developing a hub for NM water data to facilitate data discovery and access.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Stream Rating Curves and Jupyter Notebook</title>
+      <link>http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/</link>
+      <pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/</guid>
+      <description>&lt;p&gt;I wrote this a few years ago on another blog, but I think it is still relevant so I am re-posting it here. The code is still available on Github.&lt;/p&gt;
+&lt;p&gt;I worked for several years at USU on the &lt;a href=&#34;http://iutahepscor.org&#34;&gt;iUTAH&lt;/a&gt; project. While there I managed a network of water monitoring stations along the Logan river, and one component of my job involved measuring stream flow. We wanted to know how much water was flowing past each station in order to answer basic questions like &amp;ldquo;how much water is lost or gained downstream?&amp;rdquo;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Machine Learning for Snow Hydrology - Methods</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</guid>
+      <description>&lt;p&gt;This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt;, I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt; for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Machine Learning for Snow Hydrology - A Competition</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-competition/</link>
+      <pubDate>Thu, 07 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-competition/</guid>
+      <description>&lt;h2 id=&#34;part-1-competition-overview&#34;&gt;Part 1: Competition Overview&lt;/h2&gt;
+&lt;p&gt;Late last December I ran across a machine learning competition hosted by &lt;a href=&#34;https://www.drivendata.org/competitions/86/competition-reclamation-snow-water-dev/&#34;&gt;Driven Data&lt;/a&gt;. The goal of the competition is to predict &lt;a href=&#34;#swe&#34;&gt;snow water equivalent&lt;/a&gt; at high spatial resolution across the western US. I had never before thought of participating in a machine learning competition, although I had heard of the idea via another platform, &lt;a href=&#34;https://www.kaggle.com&#34;&gt;Kaggle&lt;/a&gt;. However, a machine learning competition involving snow is more up my alley, as I have both professional and personal experience with snow science. Furthermore, I had been wanting to enhance my familiarity with machine learning techniques. I decided to give it a shot.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Automated QC of Environmental Data</title>
+      <link>http://localhost:1313/posts/automated-qc-of-environmental-data/</link>
+      <pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/automated-qc-of-environmental-data/</guid>
+      <description>&lt;h2 id=&#34;part-2-a-quality-control-api&#34;&gt;Part 2: A Quality Control API&lt;/h2&gt;
+&lt;p&gt;This is the second in a two part series on automated quality control of environmental data. The &lt;a href=&#34;https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/&#34;&gt;first part&lt;/a&gt; gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (&lt;a href=&#34;https://api.crceanalytics.com&#34;&gt;api.crceanalytics.com&lt;/a&gt;) to automatically flag uploaded data using some of the techniques described in Part 1.&lt;/p&gt;
+&lt;h4 id=&#34;motivation&#34;&gt;Motivation&lt;/h4&gt;
+&lt;p&gt;A couple years ago I began work on a Python package: EnviroDataQC (&lt;a href=&#34;https://github.com/chrisrycx/EnviroDataQC&#34;&gt;https://github.com/chrisrycx/EnviroDataQC&lt;/a&gt;) that I could use to perform automated quality control on meteorological data being uploaded to &lt;a href=&#34;https://dyacon.net&#34;&gt;DyaconLive&lt;/a&gt;, a web portal for &lt;a href=&#34;https://dyacon.com&#34;&gt;Dyacon&lt;/a&gt; weather stations. The library didn’t need to be overly complex, I just wanted a way to perform range and behavioral checks in a few different contexts without having to re-write quality control code every time. Recently, I thought it might be interesting to build an API that would connect to EnviroDataQC, creating a means for anyone, anywhere to quickly perform data QC. I built a prototype limited to air temperature data at &lt;a href=&#34;http://api.crceanalytics.com&#34;&gt;api.crceanalytics.com&lt;/a&gt; and gave it a simple, interactive front end. I think the concept could be taken a lot further eventually.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Automated Quality Control of Environmental Data</title>
+      <link>http://localhost:1313/posts/automated-quality-control-of-environmental-data/</link>
+      <pubDate>Fri, 14 Jan 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/automated-quality-control-of-environmental-data/</guid>
+      <description>&lt;h2 id=&#34;part-1-quality-control-background&#34;&gt;Part 1: Quality Control Background&lt;/h2&gt;
+&lt;h4 id=&#34;overview&#34;&gt;Overview&lt;/h4&gt;
+&lt;p&gt;This is the first of a 2 part series on automated quality control of environmental data. This part gives an overview of quality control methods and the second part (under development) details how I used Python to create a demonstration API (&lt;a href=&#34;http://api.crceanalytics.com&#34;&gt;api.crceanalytics.com&lt;/a&gt;) that performs automated QC on uploaded air temperature data.&lt;/p&gt;
+&lt;h4 id=&#34;environmental-data-quality-control&#34;&gt;Environmental Data Quality Control&lt;/h4&gt;
+&lt;p&gt;Data is always going to need some sort of quality control after it is collected. This is especially true of environmental data collected from autonomous sensors placed in challenging environments. Sensors often break or experience electrical problems that lead to gaps in data and/or anomalous readings. Furthermore, bad data may also result from calibration or maintenance performed while the sensor is operating. Preventative maintenance and ongoing data monitoring, practices known as quality assurance (Campbell et al., 2013), help to reduce that amount of problematic data collected. However, as sensor technology gets cheaper, much more data is collected and manual methods for identifying suspicious and bad data becomes increasingly difficult and subjective (Jones et al., 2018). Automation of data quality control is going to be increasing important for ensuring high quality environmental data.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>About Me</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;p&gt;&lt;img alt=&#34;Picture of me&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/about_portrait.jpg&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;bio&#34;&gt;Bio&lt;/h2&gt;
+&lt;p&gt;I am currently working on a PhD in hydrology at &lt;a href=&#34;https://www.nmt.edu&#34;&gt;New Mexico Tech&lt;/a&gt;. My research focuses on simulating snow in Earth System Models. I am generally interested in the cryosphere, hydrology, climate and geomorphology.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

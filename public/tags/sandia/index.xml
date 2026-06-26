@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Sandia on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/sandia/</link>
+    <description>Recent content in Sandia on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 08 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/sandia/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sandia Peak Snowfall History - Follow Up</title>
+      <link>http://localhost:1313/posts/sandia-peak-snowfall-history-follow-up/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sandia-peak-snowfall-history-follow-up/</guid>
+      <description>&lt;p&gt;In my &lt;a href=&#34;https://crceanalytics.com/2023/01/10/sandia-peak-snowfall-history/&#34;&gt;last blog post&lt;/a&gt;, I tried to answer the question:&lt;/p&gt;
+&lt;p&gt;How has snowfall at Sandia Peak Ski Area changed over the years?&lt;/p&gt;
+&lt;p&gt;Ultimately, I want to know how climate change is affecting the future of skiing in the Sandias and to develop some sense of what weather patterns are associated with particularly good or bad years. With that in mind, I focused my initial research on assessing daily &lt;a href=&#34;#swe&#34;&gt;SWE&lt;/a&gt; values at the Ski Area. Unlike daily snowfall or total seasonal snowfall, daily SWE represents the actual amount of snow on the ground, including the effects of melting, sublimation, and redistribution from wind. Furthermore, since SWE is fundamentally a measure of water quantity, this analysis not only describes the overall quality of the snow for skiing, it is also equally useful from a hydrologic perspective.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Sandia Peak Snowfall History</title>
+      <link>http://localhost:1313/posts/sandia-peak-snowfall-history/</link>
+      <pubDate>Tue, 10 Jan 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sandia-peak-snowfall-history/</guid>
+      <description>&lt;p&gt;A few months ago I found out my local ski area, &lt;a href=&#34;http://sandiapeak.com&#34;&gt;Sandia Peak&lt;/a&gt;, preemptively chose not to open for the upcoming ski season (2022/2023). It isn’t that unusual for Sandia Peak to stay closed for the season, and they were also closed last season. However, I had thought the decision to stay closed is typically made around January, after the snow pack begins to form. At that point, if the early season snowfall is too low, the season isn’t long enough offset operating costs and it isn’t worth opening. Why was this year different?&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

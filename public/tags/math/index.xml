@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Math on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/math/</link>
+    <description>Recent content in Math on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 22 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/math/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Greenland Snow Temperatures</title>
+      <link>http://localhost:1313/posts/greenland-snow-temperatures/</link>
+      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/greenland-snow-temperatures/</guid>
+      <description>&lt;p&gt;My graduate degree research was focused on glacial hydrology, which is basically trying to figure out how water moves above, below, and through glaciers and ice sheets. Water is important because it affects things like sliding, melting, sub-glacial erosion, and geochemistry. My research utilized temperature measurements from snow on the Greenland ice sheet, and I was lucky enough to travel to SW Greenland in the summer of 2010.&lt;/p&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/IMG_1683_sm-1024x768.jpg&#34;&gt;
+&lt;strong&gt;Figure 1&lt;/strong&gt; - SW Greenland Ice Sheet&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

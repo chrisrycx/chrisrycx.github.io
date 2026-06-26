@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Machine Learning for Snow Hydrology - A Follow Up | CRC Earth Analytics</title>
+<meta name="keywords" content="gbm, snotel">
+<meta name="description" content="Overview
+Last winter I tried my hand at competing in a machine learning competition to predict snow water equivalent (SWE) across the Western United States. I learned a lot and created a two part blog series to document both the competition and my approach:
+
+Machine Learning for Snow Hydrology - A Competition
+Machine Learning for Snow Hydrology - Methods
+
+I competed in the preliminary phase of the competition that didn’t include any prizes. The second phase involved predicting SWE in real time and included big prizes totaling $500,000. The competition ended in early summer, but the winners were just recently announced on the DrivenData Blog:">
+<meta name="author" content="Chris Cox">
+<link rel="canonical" href="http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="CRC Earth Analytics (Alt + H)">CRC Earth Analytics</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Machine Learning for Snow Hydrology - A Follow Up
+    </h1>
+    <div class="post-meta">
+
+<span title='2022-09-30 00:00:00 +0000 UTC'>September 30, 2022</span>&nbsp;·&nbsp;<span>10 min</span>&nbsp;·&nbsp;<span>Chris Cox</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h3 id="overview">Overview<a hidden class="anchor" aria-hidden="true" href="#overview">#</a></h3>
+<p>Last winter I tried my hand at competing in a machine learning competition to predict snow water equivalent (SWE) across the Western United States. I learned a lot and created a two part blog series to document both the competition and my approach:</p>
+<ul>
+<li><a href="https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/">Machine Learning for Snow Hydrology - A Competition</a></li>
+<li><a href="https://crceanalytics.com/2022/05/11/machine-learning-for-snow-hydrology-methods/">Machine Learning for Snow Hydrology - Methods</a></li>
+</ul>
+<p>I competed in the preliminary phase of the competition that didn’t include any prizes. The second phase involved predicting SWE in real time and included big prizes totaling $500,000. The competition ended in early summer, but the winners were just recently announced on the DrivenData Blog:</p>
+<ul>
+<li><a href="https://drivendata.co/blog/swe-winners">Meet the winners of the Snowcast Showdown competition - DrivenData Labs</a></li>
+</ul>
+<p>There wasn’t just one winner, but winners in several categories including regional categories and awards for the top three reports describing the competitor&rsquo;s model. The top prize went to a team of mathematicians who were able to predict SWE across the US with a RMSE of 3.88. Contrast that with the RMSE from my model of 9.32, and that isn’t even using real time data.</p>
+<figure>
+<p><img loading="lazy" src="/images/image.png"></p>
+<figcaption>
+<p>Competition finalists - from DrivenData Blog</p>
+</figcaption>
+</figure>
+<p>The top five contestants all won significant (by my standards) sums of money, and here I want to give a brief summary of each approach used in the competition. With the exception of the top prize winner, each team also submitted a report describing their approach (<a href="https://github.com/drivendataorg/snowcast-showdown">GitHub - drivendataorg/snowcast-showdown</a>). Surprisingly, I was disappointed with the quality of these reports, especially given that a winning report received 10&rsquo;s of thousands of dollars in prize money. It is unclear if the prize for reports was only awarded to contestants who were also in the top spots of the winning categories or if anyone submitting a report could have potentially won. Regardless, I don&rsquo;t think the report competition was adequately incentivized because it appears contestants felt their chance of winning did not justify the time it would take to write a detailed summary of their model. I shouldn’t be too critical, as there was likely a language barrier with the international contestants, but I wonder if the Bureau of Reclamation, who sponsored the competition presumably to improve their SWE prediction abilities, will find it challenging to translate the reports into an actionable workflow.</p>
+<p>Nonetheless, the reports and post competition interviews give lots of information about what methods were used by the contestants. The biggest challenge in assessing each winner is my current skill level with machine learning. So, I will do my best to go explain each winner’s methods, and then give some reflections on what impact this competition has had on my thinking.</p>
+<h3 id="winners">Winners<a hidden class="anchor" aria-hidden="true" href="#winners">#</a></h3>
+<h4 id="first-place-170000"><em>First Place ($170,000)</em><a hidden class="anchor" aria-hidden="true" href="#first-place-170000">#</a></h4>
+<p>The winners of the top prize, with an overall RMSE of 3.88, are a pair of mathematicians, one from Russian and the other from the UK. Both have experience with problems involving the physical sciences. This is the only winning team that did not submit a report on their model, so my understanding of their approach is limited to the competition blog and a &ldquo;<a href="https://github.com/drivendataorg/snowcast-showdown/blob/main/1st%20Place/README.md">Readme</a>&rdquo; file in the competition repository. All winning models are available for download, but I don’t know how easy it would be to get one working.</p>
+<p>Their approach uses a combination of a neural network and interpolation via kriging. The neural network component is described as a two layer perceptron, and it appears to be used to predict the parameters used in the kriging. The model inputs are not well described, but input data sources include Snotel, DEM, land cover/soils, and MODIS satellite.</p>
+<figure>
+<p><img loading="lazy" src="/images/image-1.png"></p>
+<figcaption>
+<p>First place model diagram - from post competition interview</p>
+</figcaption>
+</figure>
+<p>Kriging is a method for interpolating spatial data that uses the statistics of the known data points to estimate the values between points. A <a href="https://en.wikipedia.org/wiki/Perceptron">perceptron</a> is an early version of a neural network originally used for classification. When multiple layers are utilized, it can be used for regression. Beyond that, the information given by the competitors was high level math jargon that I wasn’t able to parse.</p>
+<h4 id="second-place-135000"><em>Second Place ($135,000)</em><a hidden class="anchor" aria-hidden="true" href="#second-place-135000">#</a></h4>
+<p>The second place winners are a team of five, mostly associated with Lomonosov Moscow State University. Many are research hydrologists with experience in machine learning. This team did submit a report, which is well written, especially for non-native English speakers (I am guessing), and it won second place in the report competition.</p>
+<p>Their approach uses “state of the art implementations of Gradient Boosting Machine (GBM) algorithm”. <a href="https://en.wikipedia.org/wiki/Gradient_boosting">Gradient boosting</a> uses an iterative approach, like a gradient descent, to train a machine learning model, and appears to be common when using decision tree models. The team actually uses three different gradient boost algorithms:</p>
+<ul>
+<li>XGBoost - <a href="https://xgboost.ai">xgboost.ai</a></li>
+<li>LightGBM - <a href="https://lightgbm.readthedocs.io/">lightgbm.readthedocs.io/</a></li>
+<li>CatBoost - <a href="https://catboost.ai">catboost.ai</a></li>
+</ul>
+<p>The output from these models is then input into a final gradient boost model to generate the predicted SWE values. I think the idea behind the final model is to try and compensate for any bias that might be present in the output of the first three models.</p>
+<p>The team utilizes their earth science knowledge and experience to select which input features might be most useful in their model and they ended up utilizing 120 features! These features are extracted from a variety of data sources:</p>
+<ul>
+<li><a href="https://www.nrcs.usda.gov/wps/portal/wcc/home/snowClimateMonitoring/snowpack/snowpackMaps/">Snotel/CDEC</a></li>
+<li><a href="https://modis.gsfc.nasa.gov/">MODIS</a></li>
+<li><a href="https://rapidrefresh.noaa.gov/hrrr/">NOAA High Resolution Rapid Refresh Model</a></li>
+<li><a href="https://spacedata.copernicus.eu/web/cscda/dataset-details?articleId=394198">Copernicus DEM</a></li>
+</ul>
+<p>Snotel/CDEC data is interpolated prior to using it in the model using “random forest” which they is better than kriging. A fully featured snow evolution model (<a href="https://doc.openamundsen.org/">openAMUNDSEN</a>) is tested, but was too slow for real time predictions. Despite the high degree of expertise, I still get the impression much of the work is plugging as many relevant features into the model as possible and seeing what works.</p>
+<h4 id="third-place-60000"><em>Third Place ($60,000)</em><a hidden class="anchor" aria-hidden="true" href="#third-place-60000">#</a></h4>
+<p>The third place winners are a team of 4 professors from the University of Arizona. Their approach is unique among the winners in that only the Snotel/CDEC data is used to make predictions. This eliminates the need for complex processing of satellite and weather models, as well as, makes the computation of new SWE predictions fast and easy. Their model can easily be run on a desktop computer. The fact that they were able to achieve third place makes me think <a href="https://crceanalytics.com/2022/05/11/machine-learning-for-snow-hydrology-methods/">my simple approach</a> might have done a lot better with some minor improvements.</p>
+<p>The model used by the UA team is a mult-linear regression relating the SWE at a particular location to several of the nearby Snotel/CDEC sites. It is a bit unclear from the report how many nearby sites are used, but it appears the number is found by model tuning. The Snotel/CDEC sites are weighted based on the R2 value between a particular station and location.</p>
+<p>Another unique approach used by this team is to use a completely new data set, not provided by the competition (but still allowed) for training. This is a 4km grid of SWE values developed by UA and available from the <a href="https://nsidc.org/data/nsidc-0719/versions/1">NSIDC</a>. This dataset has daily SWE values across the Western US from 1981 to 2021. In order to relate the Snotel/CDEC data to the UA SWE dataset, the team had to ensure there were no data gaps, or anomalies, in the Snotel/CDEC data. It appears a good percentage of this team&rsquo;s effort was simply devoted to gap filling and data quality control.</p>
+<figure>
+<p><img loading="lazy" src="/images/image-2.png"></p>
+<figcaption>
+<p>Example of QC work performed by 3rd place winners - from model report</p>
+</figcaption>
+</figure>
+<h4 id="fourth-place-65000"><em>Fourth Place ($65,000)</em><a hidden class="anchor" aria-hidden="true" href="#fourth-place-65000">#</a></h4>
+<p>The fourth place winner is a freelance data scientist from Ukraine with prior experience participating in machine learning competitions. He submitted a report summarizing his approach, unfortunately I find it largely in-comprehensible. To his credit it is undoubtedly challenging to summarize your work in English if it isn’t your first language. However, most of the difficulties I had stem from extensive use of machine learning jargon. For example, he describes his model as “a neural network model with different layer architectures: Fourier neural operator, convolution layers, embeddings, and linear transformation.” My high level interpretation is that there is a somewhat complex neural network model being trained using features from the same data sources used by the second place team.</p>
+<h4 id="fifth-place-70000"><em>Fifth Place ($70,000)</em><a hidden class="anchor" aria-hidden="true" href="#fifth-place-70000">#</a></h4>
+<p>The final prize winner, coming in 5th overall, but also winning first in the report competition is a machine learning engineer from Denver, CO. I agree with the judges that this is the best report, as there is both a clear explanation of the approach used and the model performance. In brief, the methods used are similar to the second place winners utilizing “gradient boosting decision tree” algorithms.</p>
+<p>Unlike, the second and third place winners, this competitor doesn’t appear to have snow hydrology expertise that can give insight into the physics of snow accumulation and melt. However, he does appear to have a great understanding for how to best improve a machine learning model and can rely on common sense to test different ideas. For example, an initial baseline model was developed using just historical averages of SWE for different regions, and it outperformed my model with a reported RMSE of 8.15. This baseline model provided a starting point from which to build better models.</p>
+<p>A somewhat large number of features are &ldquo;engineered&rdquo; from the datasets used by the other contestants, as well as, some parameters indicating how snow in a particular grid cell compares to it&rsquo;s neighbors. Model performance evaluation indicated that some of the features with high value are MODIS measurements, elevation, and snow depth output by the HRRR.</p>
+<p>It is also interesting to note that real time SWE prediction can be especially tricky due to lagging or missing input data (like satellite observations obscured by clouds). As mentioned earlier, the third place winners spent a good deal of time fixing missing or anomalous data. Some types of models, in particular the GBM approach used by this competitor, are better able to handle missing data by default.</p>
+<figure>
+<p><img loading="lazy" src="/images/image-3.png"></p>
+<figcaption>
+<p>Performance metric for different input features used by 5th place winner - from model report</p>
+</figcaption>
+</figure>
+<h2 id="reflections-and-takeaways">Reflections and Takeaways<a hidden class="anchor" aria-hidden="true" href="#reflections-and-takeaways">#</a></h2>
+<p>I find the demographics of the winning competitors interesting. Despite, the competition data being specific to the Western US, only two of the teams were from the US. It seems like US based competitors might have had an advantage, especially snow hydrology researchers who would have been familiar with the Snotel network and current research literature. That makes me think the expertise required for this kind of competition is lacking in the US relative to other parts of the world. Furthermore, many of the winners are from Moscow, Russia and another from Ukraine. I get the impression, based on this competition and other experiences, that there are a lot of talented data scientists in this part of the world. I wonder if distribution of prize money is complicated by the current geopolitical situation. After all, the competition is sponsored by the US government and Russia is under sanctions.</p>
+<p>Some of the winners were definitely able to leverage their expertise in snow hydrology. However, top prizes went to competitors that appear to have minimal experience with snow, but high levels of learning in math and numerical problem solving. My conclusion is that machine learning remains somewhat of a black box. A winning approach is to simply cram as many different seemingly relevant inputs into the model as possible until it produces the correct answer. There remains a lack of understanding as to the details of how the inputs are controlling snow processes.</p>
+<p>Finally, when it comes to developing a machine learning model, it is clear from this competition that there is a lot of trial and error, model iteration, and model tuning required in order to get the best possible performance. At the start, I was under the impression that the key to winning would be understanding snow processes and being able to turn them into a single well designed model. However, many of the winners in this competition tried and then rejected a number of approaches before iteratively improving their final model.</p>
+<p>Congratulations to all the winners!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/gbm/">Gbm</a></li>
+      <li><a href="http://localhost:1313/tags/snotel/">Snotel</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/sandia-peak-snowfall-history/">
+    <span class="title">« Prev</span>
+    <span>Sandia Peak Snowfall History</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/south-foothills-weather-station/">
+    <span class="title">Next »</span>
+    <span>South Foothills Weather Station</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">CRC Earth Analytics</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

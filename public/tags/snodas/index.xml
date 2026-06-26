@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Snodas on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/snodas/</link>
+    <description>Recent content in Snodas on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 08 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/snodas/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sandia Peak Snowfall History - Follow Up</title>
+      <link>http://localhost:1313/posts/sandia-peak-snowfall-history-follow-up/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/sandia-peak-snowfall-history-follow-up/</guid>
+      <description>&lt;p&gt;In my &lt;a href=&#34;https://crceanalytics.com/2023/01/10/sandia-peak-snowfall-history/&#34;&gt;last blog post&lt;/a&gt;, I tried to answer the question:&lt;/p&gt;
+&lt;p&gt;How has snowfall at Sandia Peak Ski Area changed over the years?&lt;/p&gt;
+&lt;p&gt;Ultimately, I want to know how climate change is affecting the future of skiing in the Sandias and to develop some sense of what weather patterns are associated with particularly good or bad years. With that in mind, I focused my initial research on assessing daily &lt;a href=&#34;#swe&#34;&gt;SWE&lt;/a&gt; values at the Ski Area. Unlike daily snowfall or total seasonal snowfall, daily SWE represents the actual amount of snow on the ground, including the effects of melting, sublimation, and redistribution from wind. Furthermore, since SWE is fundamentally a measure of water quantity, this analysis not only describes the overall quality of the snow for skiing, it is also equally useful from a hydrologic perspective.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

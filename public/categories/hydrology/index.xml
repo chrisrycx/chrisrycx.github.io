@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Hydrology on CRC Earth Analytics</title>
+    <link>http://localhost:1313/categories/hydrology/</link>
+    <description>Recent content in Hydrology on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/hydrology/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Predicting Water Supply - Another Machine Learning Competition</title>
+      <link>http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/</guid>
+      <description>A machine learning competition to predict water supply volumes in the Western US.</description>
+    </item>
+    <item>
+      <title>Machine Learning for Snow Hydrology - A Follow Up</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/</link>
+      <pubDate>Fri, 30 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/</guid>
+      <description>&lt;h3 id=&#34;overview&#34;&gt;Overview&lt;/h3&gt;
+&lt;p&gt;Last winter I tried my hand at competing in a machine learning competition to predict snow water equivalent (SWE) across the Western United States. I learned a lot and created a two part blog series to document both the competition and my approach:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Machine Learning for Snow Hydrology - A Competition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://crceanalytics.com/2022/05/11/machine-learning-for-snow-hydrology-methods/&#34;&gt;Machine Learning for Snow Hydrology - Methods&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I competed in the preliminary phase of the competition that didn’t include any prizes. The second phase involved predicting SWE in real time and included big prizes totaling $500,000. The competition ended in early summer, but the winners were just recently announced on the DrivenData Blog:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Stream Rating Curves and Jupyter Notebook</title>
+      <link>http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/</link>
+      <pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/</guid>
+      <description>&lt;p&gt;I wrote this a few years ago on another blog, but I think it is still relevant so I am re-posting it here. The code is still available on Github.&lt;/p&gt;
+&lt;p&gt;I worked for several years at USU on the &lt;a href=&#34;http://iutahepscor.org&#34;&gt;iUTAH&lt;/a&gt; project. While there I managed a network of water monitoring stations along the Logan river, and one component of my job involved measuring stream flow. We wanted to know how much water was flowing past each station in order to answer basic questions like &amp;ldquo;how much water is lost or gained downstream?&amp;rdquo;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Machine Learning for Snow Hydrology - Methods</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</guid>
+      <description>&lt;p&gt;This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt;, I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt; for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

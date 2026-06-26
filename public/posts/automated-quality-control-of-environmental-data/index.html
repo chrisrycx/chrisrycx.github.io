@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Automated Quality Control of Environmental Data | CRC Earth Analytics</title>
+<meta name="keywords" content="instrumentation, quality-control">
+<meta name="description" content="Part 1: Quality Control Background
+Overview
+This is the first of a 2 part series on automated quality control of environmental data. This part gives an overview of quality control methods and the second part (under development) details how I used Python to create a demonstration API (api.crceanalytics.com) that performs automated QC on uploaded air temperature data.
+Environmental Data Quality Control
+Data is always going to need some sort of quality control after it is collected. This is especially true of environmental data collected from autonomous sensors placed in challenging environments. Sensors often break or experience electrical problems that lead to gaps in data and/or anomalous readings. Furthermore, bad data may also result from calibration or maintenance performed while the sensor is operating. Preventative maintenance and ongoing data monitoring, practices known as quality assurance (Campbell et al., 2013), help to reduce that amount of problematic data collected. However, as sensor technology gets cheaper, much more data is collected and manual methods for identifying suspicious and bad data becomes increasingly difficult and subjective (Jones et al., 2018). Automation of data quality control is going to be increasing important for ensuring high quality environmental data.">
+<meta name="author" content="Chris Cox">
+<link rel="canonical" href="http://localhost:1313/posts/automated-quality-control-of-environmental-data/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/automated-quality-control-of-environmental-data/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="CRC Earth Analytics (Alt + H)">CRC Earth Analytics</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Automated Quality Control of Environmental Data
+    </h1>
+    <div class="post-meta">
+
+<span title='2022-01-14 00:00:00 +0000 UTC'>January 14, 2022</span>&nbsp;·&nbsp;<span>8 min</span>&nbsp;·&nbsp;<span>Chris Cox</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="part-1-quality-control-background">Part 1: Quality Control Background<a hidden class="anchor" aria-hidden="true" href="#part-1-quality-control-background">#</a></h2>
+<h4 id="overview">Overview<a hidden class="anchor" aria-hidden="true" href="#overview">#</a></h4>
+<p>This is the first of a 2 part series on automated quality control of environmental data. This part gives an overview of quality control methods and the second part (under development) details how I used Python to create a demonstration API (<a href="http://api.crceanalytics.com">api.crceanalytics.com</a>) that performs automated QC on uploaded air temperature data.</p>
+<h4 id="environmental-data-quality-control">Environmental Data Quality Control<a hidden class="anchor" aria-hidden="true" href="#environmental-data-quality-control">#</a></h4>
+<p>Data is always going to need some sort of quality control after it is collected. This is especially true of environmental data collected from autonomous sensors placed in challenging environments. Sensors often break or experience electrical problems that lead to gaps in data and/or anomalous readings. Furthermore, bad data may also result from calibration or maintenance performed while the sensor is operating. Preventative maintenance and ongoing data monitoring, practices known as quality assurance (Campbell et al., 2013), help to reduce that amount of problematic data collected. However, as sensor technology gets cheaper, much more data is collected and manual methods for identifying suspicious and bad data becomes increasingly difficult and subjective (Jones et al., 2018). Automation of data quality control is going to be increasing important for ensuring high quality environmental data.</p>
+<p><img loading="lazy" src="/images/IMAG0263-579x1024.jpg">
+<strong>Figure 1</strong>: An iUTAH station buried in snow.</p>
+<p>I have extensive experience with a mostly manual approach to environmental data quality control. For several years, I managed a network of monitoring stations for the iUTAH project (<a href="https://iutahepscor.org">https://iutahepscor.org</a>, Jones et al., 2017). I deployed both meteorological (see picture above) and hydrological instrumentation at ~10 different sites and data was recorded, typically, every 15 minutes for each sensor. Thousands of data points were transmitted back to a central database for long term storage each day. The database itself did have some simple data checks used to alert me to problems, but most of the data required manual review, a process which was both tedious and time consuming. Sometimes a sensor would break and bad data would be obvious, but other times a problem would go unnoticed for weeks. For example, hydrological instrumentation would often become dirty, buried, or, in the winter, frozen under ice (see picture below). In any of these situations, the data might appear normal when in actuality, it is no longer representative of the average value for the river. This kind of problem is largely solved by frequent site visits for cleaning.</p>
+<p><img loading="lazy" src="/images/DSCF8386-edited-scaled.jpg">
+<strong>Figure 2</strong>: iUTAH aquatic instrumentation embedded in ice</p>
+<p>We utilized a key piece of software, ODM tools (<a href="https://github.com/ODM2/ODMToolsPython">https://github.com/ODM2/ODMToolsPython</a>, Horsburgh et al., 2015), which consists of a graphical user interface to visualize and manipulate data. Data visualization is essential for manual data quality control, as one is guaranteed to miss problematic data simply by looking at numbers in a file. With ODM tools, time series data can be selected, flagged, and changed. Flagging, as opposed to outright removal of data, is important because a suspicious anomaly could turn out to be a significant event. The changes are also saved to a Python script so there is a record that can be reviewed later if needed. My one critique is that ODM tools must be used with an ODM2 database (<a href="http://www.odm2.org/">http://www.odm2.org/</a>), hence the name, and I have found ODM2 to be overly complex. Nonetheless, I have yet to run across open source software that is similar to ODM tools.</p>
+<h4 id="automated-qc">Automated QC<a hidden class="anchor" aria-hidden="true" href="#automated-qc">#</a></h4>
+<p>My colleagues and I were able to manually quality control a significant portion of the data collected by iUTAH, but automated techniques are likely mandatory for larger projects. Automated quality control of data collected by environmental instrumentation is a fairly active area of study since at least the 1980’s and is commonly implemented on meteorological monitoring networks such as the Oklahoma Mesonet (Fiebrich et al., 2010, 2020). Several sources describe common methods for automated data assessment (Fiebrich et al., 2010, Campbell et al., 2013, Durre et al., 2010, Estevez et al., 2011). These methods typically fall into these categories:</p>
+<ul>
+<li>Range Tests - Check if data value is within a plausible range.</li>
+<li>Behavior Tests
+<ul>
+<li>Step change - Check if the rate of change between values is plausible (spiking, jumps).</li>
+<li>Flatlining - Data values are overly stable and unchanging.</li>
+</ul>
+</li>
+<li>Consistency Tests
+<ul>
+<li>Self consistency - Data is consistent between duplicate sensors or related sensors.</li>
+<li>Spatial consistency - Data is consistent with measurements from nearby stations.</li>
+</ul>
+</li>
+</ul>
+<p>Since every station and network of stations is different, the details of implementing the different checks will vary and data might not even be available to complete consistency tests. For example, there is no way to check if data is spatially consistent if there is only data from one location available. Some networks, by design, have duplicate instrumentation and long term climate records, enabling more reliable range and self consistency checks. Specific QC standards are still evolving (Fiebrich et al., 2020). Nonetheless, in order to give a sense for what QC tests might look like, table below gives an example of QC test thresholds from Fiebrich et al., 2010 for a few environmental variables.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Variable</th>
+          <th style="text-align: left">Range</th>
+          <th style="text-align: left">Behavior</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Air Temperature</td>
+          <td style="text-align: left">-30C &lt; T &lt; 50C</td>
+          <td style="text-align: left">-9 C/5 min &lt; dT/dt &lt; 6 C/5 min</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Air Pressure</td>
+          <td style="text-align: left">800 hPa &lt; P &lt; 1050 hPa</td>
+          <td style="text-align: left">-4 hPa/5 min &lt; dP/dt &lt; 5 hPa/5 min</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Humidity</td>
+          <td style="text-align: left">3% &lt; RH &lt; 103%</td>
+          <td style="text-align: left">-23 %/5 min &lt; dRH/dt &lt; 23%/5 min</td>
+      </tr>
+  </tbody>
+</table>
+<p>A few variables and QC test thresholds from Fiebrich et al., 2010</p>
+<p>Some methods used for self consistency tests are measurement specific. For example, wind speed is usually measured in conjunction with wind direction. When the wind speed is zero, the wind direction should not be varying and conversely, when the wind direction is changing, wind speed should be above zero. Wind speed has an interesting statistical behavior that has been used for anomaly detection in the past (DeGaetano, 1997). While working at Dyacon (<a href="http://dyacon.com">dyacon.com</a>), I investigated using ratios of average and maximum wind speed to try and detect problems with wind sensor bearings, but I never settled on a particular technique.</p>
+<p>Another interesting example of a self consistency test is in the measurement of incoming solar radiation. Because the amount of solar radiation reaching the earth is fairly consistent (<a href="https://en.wikipedia.org/wiki/Solar_constant">https://en.wikipedia.org/wiki/Solar_constant</a>), the surface radiation at a given location can be calculated based on geometry and time of day. Topography and the atmosphere make the calculation complex, but ignoring those factors still provides a kind of upper bound on incoming solar radiation known as “clear sky radiation” (<a href="http://www.clearskycalculator.com/">http://www.clearskycalculator.com/</a>). However, I have found that clouds can sometimes create conditions where the clear sky radiation is briefly exceeded.</p>
+<p>Automated assessment of a given measurement is challenging, but it is also very challenging to deal with missing data. Environmental data typically isn’t measured continuously. Rather measurements are taken at some frequency, like once every 10 seconds. The rate at which data should be collected depends on both what is being measured and sensor characteristics (Brock and Richardson, 2001). Therefore, missing data is defined with respect to a measurement that should have taken place but did not. This can often result from an electrical or communication problem, or it might be due to removal of values that are clearly wrong. The approach to “imputing” missing data will vary by analysis goals.</p>
+<p>When it comes to automated QC of data, missing data can make automated calculation of statistics like mean, max, and minimum challenging. For example, at Dyacon I built a web interface for displaying daily air temperature statistics calculated from 10 minute weather station observations. It is easy to calculate an average value, but how do you assess the quality of the average value when some data is missing? Does it matter if data is missing from part of the day or lots of times through out the day? Febriech et al., 2020 gives some guidelines for how hourly and daily statistics should be calculated, but I also get the impression there is still a lack of clear standards.</p>
+<h4 id="part-2">Part 2<a hidden class="anchor" aria-hidden="true" href="#part-2">#</a></h4>
+<p>In part 2 (under development) of this series, I describe how I have implemented some of these QC concepts into a Python library: <a href="https://github.com/chrisrycx/EnviroDataQC">EnviroDataQC</a>. Furthermore, I demonstrate how the package can be used in an API so that anyone can automatically perform an automated check of air temperature data (<a href="http://api.crceanalytics.com">api.crceanalytics.com</a>).</p>
+<h4 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h4>
+<p>Brock, Fred V., and Scott J. Richardson. <em>Meteorological measurement systems</em>. Oxford University Press, USA, 2001.</p>
+<p>Campbell, John L., et al. &ldquo;Quantity is nothing without quality: Automated QA/QC for streaming environmental sensor data.&rdquo; <em>BioScience</em> 63.7 (2013): 574-585.</p>
+<p>DeGaetano, Arthur T. &ldquo;A quality-control routine for hourly wind observations.&rdquo; <em>Journal of Atmospheric and Oceanic Technology</em> 14.2 (1997): 308-317.</p>
+<p>Durre, Imke, et al. &ldquo;Comprehensive automated quality assurance of daily surface observations.&rdquo; <em>Journal of Applied Meteorology and Climatology</em> 49.8 (2010): 1615-1633.</p>
+<p>Estévez, J., P. Gavilán, and Juan Vicente Giráldez. &ldquo;Guidelines on validation procedures for meteorological data from automatic weather stations.&rdquo; <em>Journal of Hydrology</em> 402.1-2 (2011): 144-154.</p>
+<p>Fiebrich, Christopher A., et al. &ldquo;Quality assurance procedures for mesoscale meteorological data.&rdquo; <em>Journal of Atmospheric and Oceanic Technology</em> 27.10 (2010): 1565-1582.</p>
+<p>Fiebrich, Christopher A., et al. &ldquo;Toward the standardization of mesoscale meteorological networks.&rdquo; <em>Journal of Atmospheric and Oceanic Technology</em> 37.11 (2020): 2033-2049.</p>
+<p>Horsburgh, Jeffery S., et al. &ldquo;Open source software for visualization and quality control of continuous hydrologic and water quality sensor data.&rdquo; <em>Environmental Modelling &amp; Software</em> 70 (2015): 32-44.</p>
+<p>Jones, Amber Spackman, et al. &ldquo;Designing and implementing a network for sensing water quality and hydrology across mountain to urban transitions.&rdquo; <em>JAWRA Journal of the American Water Resources Association</em> 53.5 (2017): 1095-1120.</p>
+<p>Jones, Amber Spackman, Jeffery S. Horsburgh, and David P. Eiriksson. &ldquo;Assessing subjectivity in environmental sensor data post processing via a controlled experiment.&rdquo; <em>Ecological Informatics</em> 46 (2018): 86-96.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/instrumentation/">Instrumentation</a></li>
+      <li><a href="http://localhost:1313/tags/quality-control/">Quality-Control</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/automated-qc-of-environmental-data/">
+    <span class="title">« Prev</span>
+    <span>Automated QC of Environmental Data</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">CRC Earth Analytics</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Gbm on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/gbm/</link>
+    <description>Recent content in Gbm on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 30 Sep 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/gbm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Machine Learning for Snow Hydrology - A Follow Up</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/</link>
+      <pubDate>Fri, 30 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-follow-up/</guid>
+      <description>&lt;h3 id=&#34;overview&#34;&gt;Overview&lt;/h3&gt;
+&lt;p&gt;Last winter I tried my hand at competing in a machine learning competition to predict snow water equivalent (SWE) across the Western United States. I learned a lot and created a two part blog series to document both the competition and my approach:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Machine Learning for Snow Hydrology - A Competition&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://crceanalytics.com/2022/05/11/machine-learning-for-snow-hydrology-methods/&#34;&gt;Machine Learning for Snow Hydrology - Methods&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I competed in the preliminary phase of the competition that didn’t include any prizes. The second phase involved predicting SWE in real time and included big prizes totaling $500,000. The competition ended in early summer, but the winners were just recently announced on the DrivenData Blog:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

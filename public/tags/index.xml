@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Tags on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/</link>
+    <description>Recent content in Tags on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Drivendata</title>
+      <link>http://localhost:1313/tags/drivendata/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/drivendata/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Quantile-Regression</title>
+      <link>http://localhost:1313/tags/quantile-regression/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/quantile-regression/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Snotel</title>
+      <link>http://localhost:1313/tags/snotel/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/snotel/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sandia</title>
+      <link>http://localhost:1313/tags/sandia/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/sandia/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Skiing</title>
+      <link>http://localhost:1313/tags/skiing/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/skiing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Snodas</title>
+      <link>http://localhost:1313/tags/snodas/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/snodas/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Snow</title>
+      <link>http://localhost:1313/tags/snow/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/snow/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Swann</title>
+      <link>http://localhost:1313/tags/swann/</link>
+      <pubDate>Tue, 08 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/swann/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gbm</title>
+      <link>http://localhost:1313/tags/gbm/</link>
+      <pubDate>Fri, 30 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/gbm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Climate</title>
+      <link>http://localhost:1313/tags/climate/</link>
+      <pubDate>Mon, 15 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/climate/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Dyacon</title>
+      <link>http://localhost:1313/tags/dyacon/</link>
+      <pubDate>Mon, 15 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/dyacon/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Linux</title>
+      <link>http://localhost:1313/tags/linux/</link>
+      <pubDate>Mon, 15 Aug 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/linux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hydrology</title>
+      <link>http://localhost:1313/tags/hydrology/</link>
+      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/hydrology/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Math</title>
+      <link>http://localhost:1313/tags/math/</link>
+      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/math/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Modelling</title>
+      <link>http://localhost:1313/tags/modelling/</link>
+      <pubDate>Fri, 22 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/modelling/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sensorthings</title>
+      <link>http://localhost:1313/tags/sensorthings/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/sensorthings/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Jupyter</title>
+      <link>http://localhost:1313/tags/jupyter/</link>
+      <pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/jupyter/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rating-Curve</title>
+      <link>http://localhost:1313/tags/rating-curve/</link>
+      <pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/rating-curve/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Machine-Learning</title>
+      <link>http://localhost:1313/tags/machine-learning/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Python</title>
+      <link>http://localhost:1313/tags/python/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/python/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Qgis</title>
+      <link>http://localhost:1313/tags/qgis/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/qgis/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Coding</title>
+      <link>http://localhost:1313/tags/coding/</link>
+      <pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/coding/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Open-Source</title>
+      <link>http://localhost:1313/tags/open-source/</link>
+      <pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/open-source/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Quality-Control</title>
+      <link>http://localhost:1313/tags/quality-control/</link>
+      <pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/quality-control/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Instrumentation</title>
+      <link>http://localhost:1313/tags/instrumentation/</link>
+      <pubDate>Fri, 14 Jan 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/instrumentation/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

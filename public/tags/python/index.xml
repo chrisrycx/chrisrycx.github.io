@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Python on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/python/</link>
+    <description>Recent content in Python on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 11 May 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Machine Learning for Snow Hydrology - Methods</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</guid>
+      <description>&lt;p&gt;This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt;, I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt; for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

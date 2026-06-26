@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Machine Learning for Snow Hydrology - Methods | CRC Earth Analytics</title>
+<meta name="keywords" content="machine-learning, python, qgis, snotel, snow">
+<meta name="description" content="This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In Part 1, I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see Part 1 for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.">
+<meta name="author" content="Chris Cox">
+<link rel="canonical" href="http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="CRC Earth Analytics (Alt + H)">CRC Earth Analytics</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Machine Learning for Snow Hydrology - Methods
+    </h1>
+    <div class="post-meta">
+
+<span title='2022-05-11 00:00:00 +0000 UTC'>May 11, 2022</span>&nbsp;·&nbsp;<span>9 min</span>&nbsp;·&nbsp;<span>Chris Cox</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><p>This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In <a href="https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/">Part 1</a>, I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see <a href="https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/">Part 1</a> for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.</p>
+<p><img loading="lazy" src="/images/Rank.png"></p>
+<p>The SWE prediction locations are specified by the competition, but they are not point locations. Instead predictions must be made for 1km x 1km grid cells. The competition provides historical SWE values at many of the grid cell locations, and these values are meant to be used to help train the machine learning model. Ironically, the hypsometric method only utilizes Snotel data, so much of data provided by the competition went unused. A more sophisticated approach would surely utilize all the available data to make new predictions. Nonetheless, the historical grid cell SWE values can be used to test the accuracy of my model (see <a href="#sweresults">Results</a>).</p>
+<p>To implement the method, I needed to complete three major steps:</p>
+<ul>
+<li>Determine an elevation for each grid cell</li>
+<li>Determine which Snotel sites to associate with each grid cell</li>
+<li>Run the model at each grid cell</li>
+</ul>
+<p>I used open source tools for each step. Specifically, QGIS is used to determine grid cell elevation and several different Python libraries are utilized for the other calculations. My Python code is available on <a href="https://github.com/chrisrycx/swecomp">Github</a>.</p>
+<h3 id="grid-cell-elevations">Grid Cell Elevations<a hidden class="anchor" aria-hidden="true" href="#grid-cell-elevations">#</a></h3>
+<p>The competition provided the spatial geometry (size and location as GeoJSON) for each 1km by 1km grid cell, as well as, historical SWE values for a subset of grid cells (it isn’t clear how this historical SWE data was derived). However, elevations are not provided, and furthermore, the topography inside a particular grid cell could vary quite a bit. Since, a single elevation is the input for my approach, I needed a way of determining an average elevation for each grid cell. Digital elevation models (DEM) are files that contain elevation data for a region. These files, which vary in resolution, can be analyzed using a Python library like <a href="https://rasterio.readthedocs.io/en/latest/">Rasterio</a>, or using GIS software. One type of analysis, known as &ldquo;zonal statistics&rdquo;, is used to calculate an average DEM value within a specified region (like a grid cell). I used zonal statistics to determine an elevation value for each cell.</p>
+<p>QGIS can perform a wide range of analyses on DEM data, and I was lucky to stumble across a <a href="https://plugins.qgis.org/plugins/OpenTopography-DEM-Downloader/">plug-in</a> that connects to <a href="https://opentopography.org/">Open Topography</a>, an organization that provides a variety of elevation data from NASA and various satellite campaigns. I ended up downloading 15 arc second “<a href="https://portal.opentopography.org/datasetMetadata?otCollectionID=OT.122019.4326.1">shuttle radar topography mission</a> +”(SRTM+) which has global coverage and a resolution of around 500m. The plug in conveniently enables you to download only a subset of the worldwide data set corresponding to the extent of the grid cells.</p>
+<p><img loading="lazy" src="/images/zonalstats.png">
+<strong>Figure 1</strong>: The QGIS Zonal Statistics tool</p>
+<p>QGIS has a tool to calculate zonal statistics in the Processing Toolbox (Processing Menu -&gt; Toolbox -&gt; Raster Analysis). The DEM and grid cell layers are specified and then a new layer is output by the tool that contains each grid cell ID and corresponding elevation calculated as an average value from the elevations inside the cell. The data is then exported to CSV to be used in the SWE prediction model.</p>
+<h3 id="snotel-sites">Snotel Sites<a hidden class="anchor" aria-hidden="true" href="#snotel-sites">#</a></h3>
+<p>After determining the elevation of each grid cell, I needed to know what Snotel sites to associate with each grid cell. The Snotel sites associated with a grid cell are used to build a linear regression for predicting SWE values for that grid cell. It therefore makes intuitive sense to use Snotel sites located close to the grid cell. Initially, I decided to use all the Snotel sites within 50km of each grid cell. However, some grid cells have no Snotel sites within this range, and furthermore, several Snotel sites are needed to create a reasonable regression. Using a search radius of 300 km, I was able to associate at least 6 Snotel sites with each grid cell.</p>
+<p><img loading="lazy" src="/images/geopandas-1024x349.png">
+<strong>Figure 2</strong>: Section of SnotelSearch.ipynb (see github) showing spatial join output</p>
+<p>I used Python, specifically <a href="http://geopandas.org">Geopandas</a>, to identify what Snotel sites are within the search radius for each cell. Geopandas is like <a href="http://pandas.pydata.org">Pandas</a>, but adds support for spatial analysis on vector geometries (points, lines, polygons). There are methods that can be used to determine the relationship between different geometries such as line intersections or if one element is inside of another. One of the most powerful features is a &ldquo;spatial join&rdquo;. A spatial join is like a table join, but combines data sets based on spatial relationships. Instead of having to use a loop to check if each Snotel site is within 50km of each grid cell, a spatial join can accomplish the same goal, but, presumably, with a much more efficient algorithm.</p>
+<p>The work flow for associating Snotels with grid cells was surprisingly simple. First I created a “buffer” around each grid cell (figure 2) with a radius equal to my search radius (50km or 300km). This is a built in method in Geopandas, and it creates a new 50km radius polygon for each grid cell. Then I perform a spatial join to identify which Snotel sites are inside each buffer. Finally, I output the resulting data set for use in the regression analysis.</p>
+<h3 id="running-the-model">Running the Model<a hidden class="anchor" aria-hidden="true" href="#running-the-model">#</a></h3>
+<p>The last step in making SWE predictions is to actually “run the model” or perform the regression calculations for every grid cell. Each regression is specific to a particular date, and the competition specifies 57 different dates on which to predict SWE - that is 57 dates for each grid cell:</p>
+<p>Total regressions to calculate = 9062 grid cells x 57 days = 516534</p>
+<p>Initial testing indicated that, on my computer, calculating all the regressions for a single grid cell took around 1 sec. At that rate, it would take about 2 and a half hours to compute all the SWE predictions. In order to speed things up, I tried to execute the regressions in parallel. After all, each regression is independent of the next, so there is no reason to compute them one at a time. Unfortunately, the computer I am using only has two cores, meaning I can only compute two regressions at the same time. Nonetheless, the parallel approach does half the amount of time needed for the computation.</p>
+<p><img loading="lazy" src="/images/swecalc_func-1024x642.png">
+<strong>Figure 3</strong>: swecalc function from SWEModel_V0.3.py</p>
+<p>I implemented the model using Python, including the <a href="https://docs.python.org/3/library/multiprocessing.html">Multiprocessing</a> library to run parallel computations. The code is organized such that there is a function (figure 3) that takes a grid cell ID, a date, and a list of Snotel sites as input and returns a SWE value. The Snotel sites input in conjunction with a grid cell are determined from the 50km data set unless there is less than three Snotel sites available, in which case the 300km data set is used. Inside the function, the regression is calculated for the input date using <a href="https://scikit-learn.org/stable/index.html">Sci-Kit Learn</a>. In some cases, there are Snotel sites that don&rsquo;t have data for a particular data. This reduces the number of Snotel sites that can be used to create a regression, and when less than two sites are available, the function returns a NaN (“Not a Number”). This situation was rare, but did result in a number of NaN SWE values. Since these values cannot be submitted to the competition, they were filled by simply copying values from adjacent dates.</p>
+<h3 id="results">Results<a hidden class="anchor" aria-hidden="true" href="#results">#</a></h3>
+<p>As with any calculation, it is good to do a sanity check on the output. When I first ran the model, there were a few sites with SWE values corresponding to snow depths on the order of 60ft. I went back and found some anomalous spikes in some of the Snotel data. These were probably bad values that were accidentally included in the Snotel data set, and I removed them and re-ran the model. Overall, the values seemed more reasonable, but I made a plot comparing maximum Snotel values to maximum predicted SWE values (figure 4). This approach is a bit unusual since the maximum Snotel value on a particular date might not be a Snotel site that is near the maximum predicted SWE value. Nonetheless, it gives some sense of what might be reasonable for a maximum SWE value. Many of the predicted values are much larger than the maximum Snotel values, and some are upwards of 200 inches SWE (roughly 30ft of snow). Sturm et al. 2010 compiles over 25,000 SWE observations with the maximum being around 120 inches. So, these predictions are likely large overestimates.</p>
+<p><img loading="lazy" src="/images/MaxSubmission.png">
+<strong>Figure 4</strong>: Maximum SWE values from model compared to maximum Snotel SWE values</p>
+<p>I went ahead and submitted the predicted values to the competition, including the unrealistic values reaching 200 inches. To my surprise, out of about 900 submissions, mine ranked 62. The metric used to evaluate a submission is the Root Mean Square Error. This metric compares my predictions to known values, takes the difference (residuals), and then performs a sum of squares:</p>
+<p><img loading="lazy" src="/images/image.png">
+RMSE Equation from drivendata.org</p>
+<p>My submission has an RMSE of 9.3921 while the competition leader has a RMSE of 2.86.</p>
+<p>I can also evaluate my approach using the grid cell training data. As mentioned before, a subset of grid cells have historical data that is meant to be used to train the machine learning model. Since my approach only utilizes Snotel measurements, I can use the historical data to test my model accuracy. I re-ran the model to predict the historical data values and then compared to the actual values. This time, I calculated a RMSE for each grid cell in order to see if there is a pattern to the accuracy of model output. Figure 5 shows the RMSE for each site in the San Juan mountains of southern CO. My impression is that lower elevation predictions are more accurate, but the pattern is not very clear.</p>
+<p><img loading="lazy" src="/images/SanJuanRMSE_med-1024x724.png">
+Figure 5: Grid cell specific RMSE values in the San Juan mountains of CO</p>
+<h4 id="ongoing-competition">Ongoing Competition<a hidden class="anchor" aria-hidden="true" href="#ongoing-competition">#</a></h4>
+<p>As of May 2022, the <a href="https://www.drivendata.org/competitions/90/competition-reclamation-snow-water-eval/">Evaluation Stage</a> of the competition is still ongoing. In contrast to the &ldquo;development stage&rdquo; (which I competed in), the evaluation stage tests models using live data and awards prizes totaling $500,000. The current leader is showing a RMSE of 3.4541. I look forward to seeing the winning approaches after the competition ends.</p>
+<h3 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h3>
+<p>Fassnacht, S. R., Dressler, K. A., &amp; Bales, R. C. (2003). Snow water equivalent interpolation for the Colorado River Basin from snow telemetry (SNOTEL) data. <em>Water Resources Research</em>, <em>39</em>(8).</p>
+<p>Sturm, M., Taras, B., Liston, G. E., Derksen, C., Jonas, T., &amp; Lea, J. (2010). Estimating snow water equivalent using snow depth data and climate classes. <em>Journal of Hydrometeorology</em>, <em>11</em>(6), 1380-1394.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/machine-learning/">Machine-Learning</a></li>
+      <li><a href="http://localhost:1313/tags/python/">Python</a></li>
+      <li><a href="http://localhost:1313/tags/qgis/">Qgis</a></li>
+      <li><a href="http://localhost:1313/tags/snotel/">Snotel</a></li>
+      <li><a href="http://localhost:1313/tags/snow/">Snow</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/">
+    <span class="title">« Prev</span>
+    <span>Stream Rating Curves and Jupyter Notebook</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-competition/">
+    <span class="title">Next »</span>
+    <span>Machine Learning for Snow Hydrology - A Competition</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">CRC Earth Analytics</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

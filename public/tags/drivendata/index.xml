@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Drivendata on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/drivendata/</link>
+    <description>Recent content in Drivendata on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/drivendata/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Predicting Water Supply - Another Machine Learning Competition</title>
+      <link>http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/</guid>
+      <description>A machine learning competition to predict water supply volumes in the Western US.</description>
+    </item>
+  </channel>
+</rss>

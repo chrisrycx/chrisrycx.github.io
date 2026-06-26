@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Machine-Learning on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/machine-learning/</link>
+    <description>Recent content in Machine-Learning on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 11 May 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Machine Learning for Snow Hydrology - Methods</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</link>
+      <pubDate>Wed, 11 May 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/</guid>
+      <description>&lt;p&gt;This is the second part of my two part series on a machine learning competition to predict snow water equivalent (SWE). In &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt;, I describe the competition, as well as, my process for coming up with an approach for making SWE predictions at 9,067 locations across the Western US. That approach, sometimes called the “hypsometric” method (Fassnacht et al., 2003, see &lt;a href=&#34;https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/&#34;&gt;Part 1&lt;/a&gt; for an overview of the method), is one of the easiest I could find, and it therefore seemed doable given personal time constraints. My expectations were low - I just wanted to see how a simple approach compared to others in the competition. To my surprise, out of about 1000 predictions submitted to the competition, my predictions ranked 62. Here I describe how I computed the SWE predictions and assess the results.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Machine Learning for Snow Hydrology - A Competition</title>
+      <link>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-competition/</link>
+      <pubDate>Thu, 07 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-competition/</guid>
+      <description>&lt;h2 id=&#34;part-1-competition-overview&#34;&gt;Part 1: Competition Overview&lt;/h2&gt;
+&lt;p&gt;Late last December I ran across a machine learning competition hosted by &lt;a href=&#34;https://www.drivendata.org/competitions/86/competition-reclamation-snow-water-dev/&#34;&gt;Driven Data&lt;/a&gt;. The goal of the competition is to predict &lt;a href=&#34;#swe&#34;&gt;snow water equivalent&lt;/a&gt; at high spatial resolution across the western US. I had never before thought of participating in a machine learning competition, although I had heard of the idea via another platform, &lt;a href=&#34;https://www.kaggle.com&#34;&gt;Kaggle&lt;/a&gt;. However, a machine learning competition involving snow is more up my alley, as I have both professional and personal experience with snow science. Furthermore, I had been wanting to enhance my familiarity with machine learning techniques. I decided to give it a shot.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Automated QC of Environmental Data | CRC Earth Analytics</title>
+<meta name="keywords" content="coding, open-source, quality-control">
+<meta name="description" content="Part 2: A Quality Control API
+This is the second in a two part series on automated quality control of environmental data. The first part gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (api.crceanalytics.com) to automatically flag uploaded data using some of the techniques described in Part 1.
+Motivation
+A couple years ago I began work on a Python package: EnviroDataQC (https://github.com/chrisrycx/EnviroDataQC) that I could use to perform automated quality control on meteorological data being uploaded to DyaconLive, a web portal for Dyacon weather stations. The library didn’t need to be overly complex, I just wanted a way to perform range and behavioral checks in a few different contexts without having to re-write quality control code every time. Recently, I thought it might be interesting to build an API that would connect to EnviroDataQC, creating a means for anyone, anywhere to quickly perform data QC. I built a prototype limited to air temperature data at api.crceanalytics.com and gave it a simple, interactive front end. I think the concept could be taken a lot further eventually.">
+<meta name="author" content="Chris Cox">
+<link rel="canonical" href="http://localhost:1313/posts/automated-qc-of-environmental-data/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/automated-qc-of-environmental-data/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="CRC Earth Analytics (Alt + H)">CRC Earth Analytics</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Automated QC of Environmental Data
+    </h1>
+    <div class="post-meta">
+
+<span title='2022-02-03 00:00:00 +0000 UTC'>February 3, 2022</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>Chris Cox</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><h2 id="part-2-a-quality-control-api">Part 2: A Quality Control API<a hidden class="anchor" aria-hidden="true" href="#part-2-a-quality-control-api">#</a></h2>
+<p>This is the second in a two part series on automated quality control of environmental data. The <a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/">first part</a> gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (<a href="https://api.crceanalytics.com">api.crceanalytics.com</a>) to automatically flag uploaded data using some of the techniques described in Part 1.</p>
+<h4 id="motivation">Motivation<a hidden class="anchor" aria-hidden="true" href="#motivation">#</a></h4>
+<p>A couple years ago I began work on a Python package: EnviroDataQC (<a href="https://github.com/chrisrycx/EnviroDataQC">https://github.com/chrisrycx/EnviroDataQC</a>) that I could use to perform automated quality control on meteorological data being uploaded to <a href="https://dyacon.net">DyaconLive</a>, a web portal for <a href="https://dyacon.com">Dyacon</a> weather stations. The library didn’t need to be overly complex, I just wanted a way to perform range and behavioral checks in a few different contexts without having to re-write quality control code every time. Recently, I thought it might be interesting to build an API that would connect to EnviroDataQC, creating a means for anyone, anywhere to quickly perform data QC. I built a prototype limited to air temperature data at <a href="http://api.crceanalytics.com">api.crceanalytics.com</a> and gave it a simple, interactive front end. I think the concept could be taken a lot further eventually.</p>
+<h4 id="api-walk-thru">API Walk Thru<a hidden class="anchor" aria-hidden="true" href="#api-walk-thru">#</a></h4>
+<p>The API front end aims to provide a visual example of how the API works. Anyone visiting the site can submit data for quality control following a few simple steps:</p>
+<ol>
+<li>A user inputs data into a text box (Figure 1).</li>
+<li>Data is submitted to the API and the response is displayed beside the input.</li>
+<li>Unless there is an error, the data will come back with flags indicating data quality.</li>
+<li>The data is plotted in a chart below the input and any flags are displayed on top of the original data (Figure 2).</li>
+</ol>
+<p><img loading="lazy" src="/images/APIinput-1024x484.png">
+<strong>Figure 1</strong>: Data entry and returned JSON response</p>
+<p>Data entered into the text box should be in comma separated format with the observation time followed by the air temperature value (°C). The input data gets reformatted to JSON as required by the API (<a href="http://api.crceanalytics.com/docs">See API docs</a>), but I figured it would be easier to copy and paste data from a CSV for general testing and experimentation. The response JSON is displayed beside the input and the input data is returned along with quality flags. The flag values are 0, 1, or 2 representing “good”, “suspicious” and “bad” values. Below the input, the data and flags are plotted to show how data spikes and &ldquo;flatlining&rdquo; (data persistance) are identified.</p>
+<p><img loading="lazy" src="/images/APIchart.png">
+<strong>Figure 2</strong>: Chart displaying data and flags</p>
+<p>Although the input can be loaded with any data (limited to 200 rows), default data is pre-loaded into the inputs. Figure 2 shows the data plotted along with the flags returned by the API. Large spikes are flagged as ‘bad’ as well as sections of unchanging data that persist for more than 35 minutes. There are also &ldquo;suspicious&rdquo; flags adjacent to the larger spikes, as well as identifying a smaller spike. Configuration settings in EnviroDataQC determine what gets flagged.</p>
+<h4 id="api-implementation">API Implementation<a hidden class="anchor" aria-hidden="true" href="#api-implementation">#</a></h4>
+<p>The API is implemented with Python on the back end and utilizes <a href="https://fastapi.tiangolo.com/">FastAPI</a>. FastAPI lives up to it’s name and makes API creation really easy. I also found the &ldquo;<a href="https://training.talkpython.fm/courses/getting-started-with-fastapi">Modern APIs with FastAPI</a>&rdquo; course at TalkPython super helpful. Since, EnviroDataQC was already built, the actual coding of the API fits into one short script. Most of the time spent on this project actually went into the front end and testing some different front end plotting libraries.</p>
+<p>The API code is available on Github (<a href="https://github.com/chrisrycx/EnviroData_API">https://github.com/chrisrycx/EnviroData_API</a>) for those interested in creating a similar project. Furthermore, documentation for the API is generated automatically by FastAPI via Swagger (<a href="https://swagger.io/">https://swagger.io/</a>) and is accessed via <a href="http://api.crceanalytics.com/docs">http://api.crceanalytics.com/docs</a>. I found a number of FastAPI features perfect for this project. First, FastAPI uses <a href="https://pydantic-docs.helpmanual.io/">Pydantic</a> which enforces &ldquo;type hinting&rdquo; in Python. For an API that is receiving data, it is important that the incoming data is of a particular type and format so that it can be processed or return an informative error. In the API code, I create a “temperatures” type (figure 3) that contains lists of datetimes and floats corresponding to incoming temperature data that has a value and time stamp. I was even able to limit the number of items, so that a user could not upload too much data.</p>
+<p><img loading="lazy" src="/images/APItypes.png">
+<strong>Figure 3</strong>: Code defining types used by API</p>
+<p>Coding with FastAPI looks similar to using <a href="https://flask.palletsprojects.com/en/2.0.x/">Flask</a>. Application behavior is specified with functions that are connected to a particular route (such as api.crceanalytics.com/check_data/2m_air_temperature) using a decorator (figure 4). Inside the function, the incoming data is parsed and checked using EnviroDataQC functions. Then the response is returned. FastAPI can also render templates, so the back end API code is also used for the front end demonstration page. Total back end code is only around 250 lines.</p>
+<p><img loading="lazy" src="/images/APIendpoint.png">
+<strong>Figure 4</strong>: The API endpoint handling function.</p>
+<h4 id="envirodataqc">EnviroDataQC<a hidden class="anchor" aria-hidden="true" href="#envirodataqc">#</a></h4>
+<p>Data quality is checked using EnviroDataQC, a Python library I developed while working at Dyacon. EnviroDataQC is an initial attempt at implementing the concepts discussed in <a href="https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/">Part 1</a> of this series. Data quality is checked with respect to range, rate of change, and persistence (which I tend to call “flatlining”). Additionally, there are some wind consistency checks and a function that attempts to consolidate hourly quality flags into daily values. The package can be PIP installed:</p>
+<p><code>&gt; pip install envirodataqc</code></p>
+<p>The most basic usage is via the ‘check_vals’ function. This function takes a Pandas series and returns a Dataframe with the original data as well as the flags. The type of variable (air temperature, humidity, ect.) is also specified in the function call and must match a variable type listed in the configuration file (QCconfig.py). A couple interesting features of EnviroDataQC that I haven’t seen elsewhere are flags for suspicious values (as opposed to just flagging data as &lsquo;bad&rsquo;), as well as an algorithm for consolidating quality flags. Often times data looks strange, but plausible, so flagging it as suspicious enables one to efficiently focus on certain parts of the data for review rather than wasting time reviewing data that is clearly bad. Consolidation of flags is also somewhat unique, and my initial take on the problem is built into the ‘daily_quality’ function. At Dyacon, I was taking 10 minute data with quality flags and reducing it to daily data, such as a daily mean temperature. The daily value needs to have a quality rating that is somehow related to the 10 minute quality flags. I came up with a scheme based on intuition that categorizes the daily values as good, suspicious, and bad based on the number of flags and gaps in the input data (figure 5).</p>
+<p><img loading="lazy" src="/images/APIenviroqc.png">
+<strong>Figure 5</strong>: Function from EnviroDataQC defining how quality flags are consolidated to daily values</p>
+<h4 id="other-software-tools">Other software tools<a hidden class="anchor" aria-hidden="true" href="#other-software-tools">#</a></h4>
+<p>I searched for other open source software tools that perform automated and/or manual quality control of data, but didn&rsquo;t find that many options. This is surprising given the increased need for data quality control (Campbell et al 2013). It could be that there are general purpose QC libraries that could be applied to environmental data, but haven’t yet become popular in the environmental domain. Another possibility is that QC is not yet standardized enough to drive a need for solutions more sophisticated than spreadsheets and custom scripts (this reason is given by Horsburgh et al. 2015).</p>
+<p>Nonetheless, there are some existing open source tools worth testing. My former colleagues at USU developed <a href="https://github.com/ODM2/ODMToolsPython">ODM tools</a>, an interactive GUI for manual data QC. Another similar product I have seen mentioned is the <a href="https://gce-lter.marsci.uga.edu/gce_toolbox/">GCE toolbox</a>, however, this library is a Matlab Extension and is therefore not really open source. Another tool developed by Amber Jones and others at USU is <a href="https://github.com/AmberSJones/PyHydroQC">PyHydroQC</a>, which is focused on hydrology but appears to have similar functionality to EnviroDataQC, except it does much more by including machine learning methods.</p>
+<h4 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h4>
+<p>That concludes this two part series on automated QC of environmental data. Let me know in the comments if you have any feedback or have recommendations for open source QC software.</p>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<p>Campbell, John L., et al. &ldquo;Quantity is nothing without quality: Automated QA/QC for streaming environmental sensor data.&rdquo; BioScience 63.7 (2013): 574-585.</p>
+<p>Horsburgh, Jeffery S., et al. &ldquo;Open source software for visualization and quality control of continuous hydrologic and water quality sensor data.&rdquo; Environmental Modelling &amp; Software 70 (2015): 32-44.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/coding/">Coding</a></li>
+      <li><a href="http://localhost:1313/tags/open-source/">Open-Source</a></li>
+      <li><a href="http://localhost:1313/tags/quality-control/">Quality-Control</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/machine-learning-for-snow-hydrology-a-competition/">
+    <span class="title">« Prev</span>
+    <span>Machine Learning for Snow Hydrology - A Competition</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/automated-quality-control-of-environmental-data/">
+    <span class="title">Next »</span>
+    <span>Automated Quality Control of Environmental Data</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">CRC Earth Analytics</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

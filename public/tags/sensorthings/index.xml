@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Sensorthings on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/sensorthings/</link>
+    <description>Recent content in Sensorthings on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 07 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/sensorthings/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NMWDI SensorThings API</title>
+      <link>http://localhost:1313/posts/nmwdi-sensorthings-api/</link>
+      <pubDate>Thu, 07 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/nmwdi-sensorthings-api/</guid>
+      <description>&lt;p&gt;The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the &lt;a href=&#34;http://newmexicowaterdata.org&#34;&gt;New Mexico Water Data Initiative&lt;/a&gt; (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the &lt;a href=&#34;http://geoinfo.nmt.edu&#34;&gt;NM Bureau of Geology and Mineral Resources&lt;/a&gt; with the mission of developing a hub for NM water data to facilitate data discovery and access.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>NMWDI SensorThings API | CRC Earth Analytics</title>
+<meta name="keywords" content="sensorthings">
+<meta name="description" content="The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the New Mexico Water Data Initiative (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the NM Bureau of Geology and Mineral Resources with the mission of developing a hub for NM water data to facilitate data discovery and access.">
+<meta name="author" content="Chris Cox">
+<link rel="canonical" href="http://localhost:1313/posts/nmwdi-sensorthings-api/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/nmwdi-sensorthings-api/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="CRC Earth Analytics (Alt + H)">CRC Earth Analytics</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      NMWDI SensorThings API
+    </h1>
+    <div class="post-meta">
+
+<span title='2022-07-07 00:00:00 +0000 UTC'>July 7, 2022</span>&nbsp;·&nbsp;<span>7 min</span>&nbsp;·&nbsp;<span>Chris Cox</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><p>The mean annual precipitation in NM is about 14 inches which makes it one the driest states in the US. Almost the entire Western US is much drier than the Eastern US, and climate change is likely to make things worse. Water management is therefore critical, and I recently starting interacting with the <a href="http://newmexicowaterdata.org">New Mexico Water Data Initiative</a> (NMWDI). Created as part of NM House Bill 651 (2019), the NMWDI is managed by the <a href="http://geoinfo.nmt.edu">NM Bureau of Geology and Mineral Resources</a> with the mission of developing a hub for NM water data to facilitate data discovery and access.</p>
+<p><img loading="lazy" src="/images/NMWDwebsite-1024x543.png">
+NM Water Data Website</p>
+<p>The types of data accessible via NM Water Data range from climate, to groundwater, to water quality. Much of the data is provided by State and Federal agencies like the NM State Engineer and the USGS, but there are also partnerships with various non-profits. In some cases, the data is available for direct download or there is a link to the data provider&rsquo;s website. Importantly, a subset of the data can be accessed programmatically via a <strong>“Sensor Things” <a href="#whatsanapi">API</a></strong>.</p>
+<p>A SensorThings API follows a standardized approach to designing an API (described further below), and provides a powerful means for quickly accessing and manipulating data. However, I get the impression the SensorThings standard is not yet widely implemented, and it took some time for me to understand how it works. In this blog post I describe what the SensorThings API is, how it works, and how I utilized NMWDI&rsquo;s SensorThings API to create an app <a href="http://apps.crceanalytics.com/sensorthingsdemo">http://apps.crceanalytics.com/sensorthingsdemo</a> (sorry, no longer active) that displays NM groundwater data.</p>
+<h3 id="what-is-an-api">What is an API?<a hidden class="anchor" aria-hidden="true" href="#what-is-an-api">#</a></h3>
+<p>API stands for “Application Programming Interface”. Computer programs use APIs to communicate and interact with other programs. I find the term API to be fairly vague, abstract, and seemingly applied to many different situations. However, it helps to think of it as being synonymous with a similar, perhaps more familiar acronym GUI (graphical user interface). A GUI is the buttons and controls that a user interacts with when running a computer program. With an API, the “user” is another program and the interface isn’t graphical, but might be a function or a message following a particular format.</p>
+<p>A web API utilizes the internet as the means of communicating between programs, so the different programs do not need to be on the same computer. Much of the internet is structured with a client-server network, so one computer acts as a client and sends a request to a computer that acts as a server. To send a request, the program needs to know the server hostname and path to desired content. This is what your browser does to request a webpage, and the request information is shown in the URL. For example:</p>
+<p><a href="http://apps.crceanalystics.com/sensorthingsdemo/">http://apps.crceanalystics.com/sensorthingsdemo/</a></p>
+<p>http://<hostname>/<path to content></p>
+<p>The server responds to the request, typically, by returning data. Exactly what to send the server and how it will respond is what defines the API. The hostname and path to a particular API is known as the “endpoint”.</p>
+<p>Web API’s often return data that follow a JSON format. JSON stands for Javascript Object Notation and is simply a way of formatting text so it is easier for computers to parse. While it was created in association with Javascript, it is easily parsed by other programming languages.</p>
+<p>{&ldquo;examplejson&rdquo;: [ 1, 2, 3 ]}</p>
+<h3 id="sensorthings-api">SensorThings API<a hidden class="anchor" aria-hidden="true" href="#sensorthings-api">#</a></h3>
+<p>Many of the API services I have utilized don’t follow a rigorous standard. In order to understand how to use such an API, the creator of the API must make instructions available somewhere. In contrast, NMWDI has elected to implement a “<a href="https://www.ogc.org/standards/sensorthings">SensorThings</a>” API. This particular approach to structuring an API is defined by the <a href="https://www.ogc.org/">Open Geospatial Consortium</a> (OGC), an international standards organization for managing and sharing of geospatial data. The SensorThings standard was initially developed in 2015 and continues to be actively updated (see their <a href="https://github.com/opengeospatial/sensorthings">Github page</a>). However, it does not yet appear to be widely adopted, with NMWDI being just the second US based organization shown on a <a href="https://github.com/opengeospatial/sensorthings/blob/master/PublicEndPoints.md">&ldquo;list of endpoints&rdquo;</a>.</p>
+<p><img alt="SensorThings API Data Model" loading="lazy" src="/images/SensorThings_API_data_model.png">
+<strong>Figure 1</strong>: SensorThings Data Model (from Frost-server documentation)</p>
+<p>SensorThings incorporates a “data model” into the API (figure 1) and understanding it is key to utilizing a SensorThings API. The data model describes how all data available from the API is organized and provides a map for accessing data of interest. The data model consists of various entities (like tables in a database) that store both field measurements as well as information about how the measurement was made. Entities include:</p>
+<ul>
+<li>Things - any physical object</li>
+<li>Locations - where the thing is located</li>
+<li>Datastreams - data sets associated with things</li>
+<li>Observations - Data values in data streams</li>
+<li>Sensors - An instrument associated with a datastream</li>
+</ul>
+<p>For example, a “thing” might be a weather station located in NM with various sensors. Datastreams could be temperature, humidity, and wind speed.</p>
+<p>It is worth keeping in mind that the SensorThings standard just defines how the API should be structured and behave. The standard must be implemented in some sort of programming language, and it appears the only implementation, perhaps due to the complexity, is the “<a href="https://github.com/FraunhoferIOSB/FROST-Server">Frost server</a>”, written in Java, apparently by one of the primary authors of the standard itself.</p>
+<h3 id="using-the-api---demo-app">Using the API - Demo App<a hidden class="anchor" aria-hidden="true" href="#using-the-api---demo-app">#</a></h3>
+<p><img loading="lazy" src="/images/image-1024x581.png">
+<strong>Figure 2</strong> - NMWDI SensorThings API Demo App</p>
+<p>Working with SensorThings is somewhat analogous to interacting with a relational database where a query is sent as part of the client request. In general though, it is easiest to learn by manually sending requests to the API and assessing the response. I built a simple web application to demonstrate some basic interaction with the NM Water Data SensorThings API: <a href="http://apps.crceanalytics.com/sensorthingsdemo">http://apps.crceanalytics.com/sensorthingsdemo</a> (No longer active). The app has three main features: a map showing well locations, a chart showing the time series of well data, and a table giving some details about a particular well (figure 2). Depending on the year, different wells are displayed on the map and different years can be selected. When a well is clicked on the observations are displayed in the chart and information about the well is loaded into the table. Next to each feature is the relevant SensorThings query that was used to load the data. To see the raw data from a query, simply copy the query and load it in a browser:</p>
+<p>Example query: Datastreams(1285)/Thing</p>
+<p>Full URL: <a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Datastreams(1285)/Thing">https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Datastreams(1285)/Thing</a></p>
+<p>The <a href="https://github.com/chrisrycx/SensorThingsDemo">code for the app</a> is available on Github, and utilizes <a href="https://leafletjs.com">Leaflet</a> for mapping and <a href="https://plotly.com/javascript/">Plotly</a> for plotting. The Javascript is mostly just sending a request and parsing the data that comes back so that it can be used in the map and/or plot functions.</p>
+<p><img alt="Missing" loading="lazy" src="/images/X">
+<strong>Figure 3</strong> - Code from sensorthings_map.js showing a request made to the NMWDI Sensorthings API</p>
+<p>SensorThings API&rsquo;s have lots of sophisticated data search functionality. Surprisingly, I found basic data access to be the least intuitive (it is the least like interacting with a database). Accessing specific data can be best explained using examples. Here are some queries for location data:</p>
+<ul>
+<li><a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Locations">Locations/</a> - All the locations associated with the data</li>
+<li><a href="https://st2.newmexicowaterdata.org/FROST-Server/v1.1/Locations(1)/Things">Location(1)/Things</a> - All the things associated with location ID=1</li>
+<li>Location(1)/Observations - This will not work because the data model associates observations with Datastreams, not Locations</li>
+</ul>
+<p>Once basic access of the data is understood, the more advanced functionality is easy to add on. For example, the default query to load wells to the map is: “ObservedProperties(1)?\$expand=Datastreams(\$filter=year(phenomenonTime) eq 2022)”. There are sometimes multiple ways to get a particular dataset, and in this case I start with &ldquo;ObservedProperties(1)&rdquo; because this limits the data returned to be of type &ldquo;Depth to water&rdquo; (determined by trial and error). Then I use the \$expand function, which sort of appends data on to an existing query, to get all Datastreams associated with &ldquo;Depth to water&rdquo;. Finally, the \$filter function only returns data from wells in a particular year.</p>
+<p>There is much more functionality than I have shown here including an ability to search for data using geospatial information. The most helpful examples I found are on the <a href="https://fraunhoferiosb.github.io/FROST-Server/">Frost Server documentation</a>. Ironically, I found the official <a href="https://www.ogc.org/standards/sensorthings">OGC documentation</a> to be fairly unhelpful, as it is written in a very technical dry manner. Some other resources:</p>
+<ul>
+<li>Wikipedia - <a href="https://en.wikipedia.org/wiki/SensorThings_API">https://en.wikipedia.org/wiki/SensorThings_API</a></li>
+<li>SensorUp - <a href="https://developers.sensorup.com">developers.sensorup.com</a></li>
+<li>YouTube - <a href="https://www.youtube.com/playlist?list=PLUSJC5mjKZ9TQb2sSkqqoikXFHUMKWr25">SensorThings Series</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/sensorthings/">Sensorthings</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/greenland-snow-temperatures/">
+    <span class="title">« Prev</span>
+    <span>Greenland Snow Temperatures</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/">
+    <span class="title">Next »</span>
+    <span>Stream Rating Curves and Jupyter Notebook</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">CRC Earth Analytics</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

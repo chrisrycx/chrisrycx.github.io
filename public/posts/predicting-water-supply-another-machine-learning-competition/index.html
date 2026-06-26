@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Predicting Water Supply - Another Machine Learning Competition | CRC Earth Analytics</title>
+<meta name="keywords" content="drivendata, quantile-regression, snotel">
+<meta name="description" content="A machine learning competition to predict water supply volumes in the Western US.">
+<meta name="author" content="Chris Cox">
+<link rel="canonical" href="http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/predicting-water-supply-another-machine-learning-competition/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="CRC Earth Analytics (Alt + H)">CRC Earth Analytics</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Predicting Water Supply - Another Machine Learning Competition
+    </h1>
+    <div class="post-description">
+      A machine learning competition to predict water supply volumes in the Western US.
+    </div>
+    <div class="post-meta">
+
+<span title='2024-03-20 00:00:00 +0000 UTC'>March 20, 2024</span>&nbsp;·&nbsp;<span>12 min</span>&nbsp;·&nbsp;<span>Chris Cox</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><p><a href="https://drivendata.org">DrivenData</a> is a website that hosts machine learning competitions, often involving some component of Earth Science or hydrology. In 2022, they hosted a competition sponsored by the US Bureau of Reclamation to predict snow quantity across the Western US. Although I didn’t have much experience with machine learning at the time, I decided to participate in the competition and was pretty surprised to rank 62 out of 1000 using a simple approach. See these three blog posts for more details:</p>
+<ul>
+<li>
+<p><a href="https://crceanalytics.com/2022/04/07/machine-learning-for-snow-hydrology-a-competition/">Machine Learning for Snow Hydrology - Part 1</a></p>
+</li>
+<li>
+<p><a href="https://crceanalytics.com/2022/05/11/machine-learning-for-snow-hydrology-methods/">Machine Learning for Snow Hydrology - Part 2</a></p>
+</li>
+<li>
+<p><a href="https://crceanalytics.com/2022/09/30/machine-learning-for-snow-hydrology-a-follow-up/">Follow up evaluation of competition winners</a></p>
+</li>
+</ul>
+<p>DrivenData is currently (spring 2024) hosting another Bureau of Reclamation competition to predict water supply volumes in 26 basins scattered across the Western US (see Figure 1). Specifically, the goal is to predict total stream flow at the basin outlet over several months in the spring and summer. This is critical information used by water managers and water users to plan activities like irrigation and hydroelectric power generation. The spring and summer timeframe is important because, in the Western US, a majority of the surface water supply is generated by snowmelt (Fleming et al., 2021). So, most of the flow volume occurs in the spring during snowmelt and is often stored in reservoirs for later use.</p>
+<p><img loading="lazy" src="/images/AllBasins-1024x724.png">
+<strong>Figure 1</strong>: Competition basins (blue) and associated flow volume locations (red).</p>
+<p>As was the case with the 2022 snow competition, I find that these competitions require the perfect combination of hydrology, mathematics, data engineering, and computing skills for the expertise that I am cultivating. So, I couldn’t resist getting involved. The prize money is also substantial, but I don’t consider myself to be competitive at that level yet.</p>
+<p>There are two aspects of this water supply competition that make it particularly challenging (at least from my perspective). The first is a requirement to generate multiple forecasts throughout the winter and spring. Forecasts begin as early as January 1st and earlier forecasts will necessarily have more uncertainty than later forecasts because parameters like peak snowpack are not yet known. Predicting the climate months in advance is also very difficult. Another requirement is to issue “quantile” forecasts which include an estimate of uncertainty in the prediction. For example, instead of predicting a specific flow volume, the forecast is given such that the volume will be above a certain amount (“90% chance total flow volume exceeds 10000 acre-feet”).</p>
+<h3 id="natural-resource-conservation-service">Natural Resource Conservation Service<a hidden class="anchor" aria-hidden="true" href="#natural-resource-conservation-service">#</a></h3>
+<p>Forecasting spring flow volumes has a long history, and, in the US, has primarily been the domain of the Natural Resource Conservation Service (NRCS). The NRCS, whose primary mission is focused on agriculture, seems like an unusual candidate for snow pack monitoring and runoff forecasting, especially given that the USGS is typically in charge of making the flow measurements. However, the need for flow forecasting was driven in part by water users including irrigators. This led the predecessor of the NRCS, the “Bureau of Agricultural Engineering” to take the lead in establishing a snow survey program in the early 20th century (Helms et al., 2008).</p>
+<p><img alt="A SNOTEL site in Utah" loading="lazy" src="/images/snotel.jpg">
+<strong>A SNOTEL site in Utah</strong></p>
+<p>Some of the earliest snow pack measurements in the Western US began in the late 1800’s in California. As early as the 1930’s, there was a need for flow forecasting and the general approach was to relate snow in a given location to flow at a given location. Today, the NRCS uses the “VIPER” system which utilizes watershed specific linear regressions, but is highly flexible in terms of input types and data quantity (see NRCS Technical Note). Surprisingly, VIPER is <strong>Excel</strong> based rather than implemented in a programming language. I am guessing Excel is used because the analysts are more familiar with Excel than a scripting language like Python, but implementing it must have been painful.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Example VIPER Inputs</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Peak SWE multiple station</td>
+      </tr>
+      <tr>
+          <td>Season start SWE multiple stations</td>
+      </tr>
+      <tr>
+          <td>Climate index like ENSO</td>
+      </tr>
+      <tr>
+          <td>Antecedent streamflow</td>
+      </tr>
+      <tr>
+          <td>Precipitation from multiple stations</td>
+      </tr>
+  </tbody>
+</table>
+<p>VIPER makes flow volume predictions via either “principle component analysis” or “Z-score regression”. While both of these methods utilize linear regression, in the case of Z-score regression, the various inputs are combined into a composite variable before computing the linear regression. Principle Components Analysis, on the other hand, is used to eliminate correlations between input variables. For example, two different Snotel stations in the same basin are likely to be highly correlated. These correlations can cause problems in the linear regression because each variable is conveying duplicate information to some extent. Ideally, each input should be explaining the output variance in a different way.</p>
+<p>In addition to the regression methods used, VIPER also optimizes the inputs for a given watershed. Flow volume in one watershed might depend on peak snowpack where in another basin flow might depend on a combination of snow and antecedent flow.</p>
+<h2 id="watershed-hydrology">Watershed Hydrology<a hidden class="anchor" aria-hidden="true" href="#watershed-hydrology">#</a></h2>
+<p>It seems that many machine learning models, including models that win competitions, are essentially black boxes. Large amounts of training data are crammed into the model, and it automatically figures out the relationships between inputs and outputs. There are various approaches for interpreting what data is most important after the fact, but the main challenge is to identify what modeling approach works best and how to tune the model correctly. I haven’t yet reached that level of familiarity with all the different machine learning techniques, so I try to leverage my knowledge of hydrology to give myself some sort of competitive advantage.</p>
+<p>A simple model of basin hydrology, created using conservation of mass, is quite useful for getting a better understanding of the essential data needed for predicting flow volumes. Hydrologic basins, also known as “catchments” or watersheds are defined as areas upstream of a location (the outlet) on the landscape, such that all the precipitation falling on that area could theoretically follow a surface flow path to the outlet (Hornberger et al., 1998). The perimeters of the 26 basins in this competition are already delineated (figure 1) with respect to the location where flow volume is to be predicted.</p>
+<p>For each basin, over the course of the flow season: Inputs – Outputs = Change in Basin Storage</p>
+<p><img loading="lazy" src="/images/basin_diagram.png">
+<strong>Figure 2</strong>: Diagram of watershed inputs and outputs</p>
+<p>Inputs are precipitation in the form of rain or snow. By definition, there are no surface flows of water into the basin. It is assumed that groundwater is also not moving in or out of the basin perimeter (which might not be true in some situations). Outputs include evapotranspiration (ET), sublimation, and, of course, streamflow at the basin outlet, which is the target of the competition. Water can be stored within the basin as snow, surface water, or groundwater. After all of the basin inputs and outputs are accounted for, we can solve for the target variable “flow volume”.</p>
+<p>Outlet flow volume = Rain + Snow - ET - Sublimation - Δ(snowpack, groundwater, surface water) [EQ1]</p>
+<p>If all the variables in equation 1 were known, the flow volume could simply be calculated. However, some, like ET and sublimation, are tricky to measure let alone predict at a future time period. Estimating the change in storage is also tricky because movement of water between the different types of storage, especially snowmelt to groundwater, doesn’t necessarily change the overall amount of water in the basin. Nonetheless, equation 1 provides a framework for determining what input data I should focus on and how the different datasets relate to one another.</p>
+<h3 id="linear-modeling">Linear Modeling<a hidden class="anchor" aria-hidden="true" href="#linear-modeling">#</a></h3>
+<p>My approach to these DrivenData competitions has basically been to start as simply as possible and add on complexity depending on performance and available time. Unfortunately, I only seem to have time to do the bare minimum. On the other hand, I continue to be surprised by how good a job a simple model can do. In this case, I just use linear regression to relate snowpack (SWE) to river flows. That is essentially what the NRCS already does, but instead of using Snotel measurements as direct inputs, I utilize the NOAA snow model <a href="https://nsidc.org/data/g02158/versions/1">SNODAS</a> to estimate total basin SWE. While I found problems with SNODAS in prior projects, it still seemed like a good option given that it has output covering each of the basins, including one basin extending into Canada. The total amount of SWE in a basin provides a more direct relationship between snow and river flow as compared to SWE at one or two locations, and eliminates the need for Principle Component Analysis. Considering only snow is a major simplification of equation 1, but it is a reasonable starting point assuming snowpack is the dominant factor.</p>
+<p><img loading="lazy" src="/images/snowvsvolume-1024x386.png">
+<strong>Figure 3</strong>: Season start SWE vs total flow volume for three different basins</p>
+<p>My machine learning model actually consists of two linear regression models. The first regression relates total SWE in the basin at the start of the flow season to total flow volume for each basin. Figure 3 shows the relationship between Season Start SWE and total flow volume for three different basins in the competition. Despite the fact that there is Snotel data going back to the 1970&rsquo;s (older?), SNODAS has only been available since 2005. So, only 9 data point are available in each watershed for determining the regression (odd years are withheld for testing). This is a major weakness to my approach.</p>
+<p><img loading="lazy" src="/images/snowvssnow-1024x412.png">
+<strong>Figure 4</strong> Snow vs snow comparison plot</p>
+<p>A second linear regression is needed to predict the start of season total SWE from snowpack on a given date. I create a new regression for each basin and forecast date (figure 4). As can be seen in figure 4, earlier forecasts have more uncertainty because it is hard to predict based on historical data whether a low snowpack will recover (or vice versa) looking ahead from January. Luckily, there is enough inertia in the system that deeper snowpacks early in the year often lead to big snowpacks by the start of flow season.</p>
+<p>Although I was able to submit model predictions to the competition using just snow as an input, I had some extra time left to try and improve the model. The quickest option appeared to be to incorporate “antecedent flow” into the model. Antecedent flow is the flow volume at the outlet over some period of time prior to the flow season, such as flow from January to April. The competition conveniently provided this data, eliminating the need for any data engineering and lowering the implementation time. However, it wasn’t clear exactly how antecedent flow fit into my hydrology model. It seems like it might provide some indication of the state of the groundwater, but not in any direct way.</p>
+<p>I ended up simply adding it as another regression parameter in the model such that total flow season volume is a function of both snowpack and antecedent flow. Once again, I predict future antecedent flow as a linear function of flow on a given date. I had high hopes that the improved model would lead to better results, but it didn’t turn out that way.</p>
+<h3 id="implementation">Implementation<a hidden class="anchor" aria-hidden="true" href="#implementation">#</a></h3>
+<p>All the steps required for both data engineering and regression modeling were completed using Python and the code is available on <a href="https://github.com/chrisrycx/water-supply-competition">Github</a>. Data engineering involves creating model inputs from whatever raw data sources are available. Often data needs to be cleaned, re-organized, or transformed prior to use. For the most part, all my coding is done in a <a href="https://jupyter.org/">Jupyter Notebook</a> which hopefully makes it easier to follow for anyone interested, or just as likely, my future self.</p>
+<p><img loading="lazy" src="/images/image-1024x555.png"></p>
+<p>SNODAS data is automatically retrieved from NOAA, but many steps are required to use it in the model. Once SNODAS model data for a particular date is downloaded, it must be unzipped and the raw contents converted into a GeoTiff for analysis. For this, I use the RasterIO package which, in turn, uses GDAL to make the conversion. Another library RasterStats is used to calculate total snow water equivalent within a given basin. This is repeated for all the dates needed for training the model (~ 300).</p>
+<p>Once all the training data has been extracted, I can begin computing the various linear regressions that make up the model. Rather than computing a single seasonal flow prediction at each site on the forecast dates, the competition requires “quantile predictions”. Quantile regression still produces a linear function relating input (such as snow) to output (flow volume), however, the regression line for a given quantile will be shifted and/or rotated to form upper or lower bounds on the training data. Figure 5 shows the quantile regression lines used in the Pecos River Basin. Unlike regular least squares linear regression, there is no analytical solution for quantile regression. I used the <a href="https://scikit-learn.org/stable/modules/linear_model.html#quantile-regression">SciKit Learn</a> Python Package which includes a quantile regression solver. It uses a SciPy optimization algorithm to find a solution.</p>
+<p><img loading="lazy" src="/images/quantileregression.png">
+<strong>Figure 5</strong>: Quantile regression on Pecos River Basin data</p>
+<h3 id="results">Results<a hidden class="anchor" aria-hidden="true" href="#results">#</a></h3>
+<p>The competition provides flow data from each of the basins going all the way back to the 1910s for training. Ten odd numbered years of historical flow data are held back for testing. There are about 28 forecast dates per site in each test year and three predictions, corresponding to the three quantiles, are made on each date. This gives a total of about 21,000 predictions that are submitted to the competition for evaluation. Each submission is evaluated using the test data and a “pinball” evaluation metric (see <a href="https://scikit-learn.org/stable/modules/model_evaluation.html#pinball-loss">https://scikit-learn.org/stable/modules/model_evaluation.html#pinball-loss</a>).</p>
+<p><img loading="lazy" src="/images/Ranking-1024x254.png"></p>
+<p>Given the simplicity of my approach, I was surprised to find that my first submission ranked 23rd out of 509. The unexpectedly good performance of my model inspired me to try some simple improvements and I went ahead and implemented the model with antecedent flow as another regressor. Unfortunately, adding antecedent flow to the model actually decreased the performance, and I am not sure why.</p>
+<h3 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h3>
+<p>This is the second machine learning competition I have participated in, and I continue to be surprised by how well I do without relying on sophisticated techniques like neural networks. Having more time to build a model would likely improve my ranking, however, being part of the right team would probably be even more impactful. Unfortunately, I have had trouble finding other who are interested in joining me. Regardless, I suspect breaking into the top ten probably does require a lot more sophistication, so it will be interesting to assess the competition winners later this year.</p>
+<h3 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h3>
+<p>Fleming, S. W., Garen, D. C., Goodbody, A. G., McCarthy, C. S., &amp; Landers, L. C. (2021). Assessing the new Natural Resources Conservation Service water supply forecast model for the American West: A challenging test of explainable, automated, ensemble artificial intelligence. <em>Journal of Hydrology</em>, <em>602</em>, 126782.</p>
+<p>Helms, D., Phillips, S. E., &amp; Reich, P. F. (2008). <em>The history of snow survey and water supply forecasting: Interviews with US Department of Agriculture pioneers</em> (No. 8). US Department of Agriculture, Natural Resources Conservation Service, Resource Economics and Social Sciences Division.</p>
+<p>Hornberger, G. M., Wiberg, P. L., Raffensperger, J. P., &amp; D&rsquo;Odorico, P. (1998). <em>Elements of physical hydrology</em>. JHU Press.</p>
+<p>NRCS Technical Note, Statistical Techniques Used in the VIPER Water Supply Forecasting Software, Accessed from <a href="https://www.nrcs.usda.gov/resources/data-and-reports/publications-of-the-national-water-and-climate-center">https://www.nrcs.usda.gov/resources/data-and-reports/publications-of-the-national-water-and-climate-center</a>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/drivendata/">Drivendata</a></li>
+      <li><a href="http://localhost:1313/tags/quantile-regression/">Quantile-Regression</a></li>
+      <li><a href="http://localhost:1313/tags/snotel/">Snotel</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/posts/sandia-peak-snowfall-history-follow-up/">
+    <span class="title">Next »</span>
+    <span>Sandia Peak Snowfall History - Follow Up</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">CRC Earth Analytics</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

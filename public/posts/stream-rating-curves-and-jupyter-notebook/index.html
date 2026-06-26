@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Stream Rating Curves and Jupyter Notebook | CRC Earth Analytics</title>
+<meta name="keywords" content="hydrology, jupyter, rating-curve">
+<meta name="description" content="I wrote this a few years ago on another blog, but I think it is still relevant so I am re-posting it here. The code is still available on Github.
+I worked for several years at USU on the iUTAH project. While there I managed a network of water monitoring stations along the Logan river, and one component of my job involved measuring stream flow. We wanted to know how much water was flowing past each station in order to answer basic questions like &ldquo;how much water is lost or gained downstream?&rdquo;">
+<meta name="author" content="Chris Cox">
+<link rel="canonical" href="http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="CRC Earth Analytics (Alt + H)">CRC Earth Analytics</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Stream Rating Curves and Jupyter Notebook
+    </h1>
+    <div class="post-meta">
+
+<span title='2022-06-02 00:00:00 +0000 UTC'>June 2, 2022</span>&nbsp;·&nbsp;<span>8 min</span>&nbsp;·&nbsp;<span>Chris Cox</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><p>I wrote this a few years ago on another blog, but I think it is still relevant so I am re-posting it here. The code is still available on Github.</p>
+<p>I worked for several years at USU on the <a href="http://iutahepscor.org">iUTAH</a> project. While there I managed a network of water monitoring stations along the Logan river, and one component of my job involved measuring stream flow. We wanted to know how much water was flowing past each station in order to answer basic questions like &ldquo;how much water is lost or gained downstream?&rdquo;</p>
+<p>It is amazing how much Earth Science is simply trying to figure out how much of a particular thing there is in a particular spot. How much water is there? How deep is the snow? How much precipitation falls on the ground? In the case of stream flow, also known as discharge, things get a little tricky because fluid mechanics is complex. For example, water near the surface moves downhill faster than water near the stream bed due to friction. Furthermore, the flow is highly turbulent, so there are lots of eddies and waves. If the water is channeled through an engineered structure with a specific geometry, the flow can be calculated, but a natural river channel has an irregular shape that changes through time. In this situation the typical approach is to make lots of measurements across the channel and add them all together to get a total flow. While various instruments with different degrees of accuracy have been invented to make these measurements, sometimes ones only option is to hang a water velocity meter from a truck with a big weight (see figure 1).</p>
+<p><img loading="lazy" src="/images/RatingCurveTruck-1024x579.jpg">
+<strong>Figure 1</strong> - A simple crane in the back of a truck used to lower a velocity sensor into the water</p>
+<p>I won&rsquo;t detail the various methods used to measure discharge in this post. Rather, my goal here is to present a tool for performing a regression on discharge measurements against the elevation of the water surface, also known as stage. Relating stage to discharge (a &ldquo;rating curve&rdquo;) enables you to take something that is easy to measure, water depth, and convert it to something that is difficult to measure, flow. In general, measurement of stream flow is a huge component of hydrology and I don&rsquo;t claim to be an expert. The analysis presented here mostly follows Herschy 2008. But, I do think there is a need for more open source calculation tools, so I hope the python code discussed below is helpful for a working hydrologist, student, or researcher.</p>
+<h3 id="rating-curve-theory">Rating Curve Theory<a hidden class="anchor" aria-hidden="true" href="#rating-curve-theory">#</a></h3>
+<p>While I expect someone who is interested in using the rating curve notebook to have a little bit of knowledge of open channel hydrology, I also think it is helpful to give a bit of an overview of the theory because it is needed to properly use the notebook.</p>
+<p>A rating curve is simply a regression relating stage and discharge. The classic approach is to fit the data with an equation of the form:</p>
+<p>$$ Q(h) = C(h-a)^{\alpha} $$</p>
+<p>Q = discharge (cms), h = stage (m), and a = effective height of zero flow (m).<br>
+C and alpha are parameters derived from the regression, and as discussed below, the value of alpha may give some insight into the factors influencing the relationship between stage and discharge. This equation is generally described as a &ldquo;power law&rdquo; because the dependent variable is related to the independent variable by some power. Power law functions are very common in physics and earth science. There is probably some deeper reason for it, but I don&rsquo;t know what it is off the top of my head. Aside from the commonality of this type of equation, there is some additional logic behind using a power law over some other curve. After all, one can fit any curve to any data. In this case, the power law relationship is used because it has the same form as the &ldquo;manning equation&rdquo;.</p>
+<p>$$ Q = \frac{K}{n}  h^{5/3}  slope ^{1/2}  width $$</p>
+<p>This is basically $Q=Constants * h^{5/3}$ which is only different in that it lacks &lsquo;a&rsquo;. The Manning equation is derived via a conservation of energy analysis of flow in a rectangular shaped channel (Hornberger et al. 1998). The equation components are basically just the driving and resisting forces acting on the water: gravity (slope) and friction. In this equation, alpha = 5/3, but a natural channel is rarely rectangular, so one wouldn&rsquo;t expect it to be exactly 5/3 as determined by regression.</p>
+<p>Thus far I neglected to discuss parameter &lsquo;a&rsquo;, the effective height of zero flow, because it will make more sense after a short discussion on &ldquo;controls&rdquo;. Different sites will most likely have different rating curves (values of C and alpha) because each site has a different (a least slightly) set of characteristics that influence the flow including channel shape, bank vegetation, meanders, and constrictions (Herschy 2008). These characteristics are known as a &ldquo;control&rdquo; since they control the shape of the rating curve. A control can be broadly classified into two groups: section and channel. A section control is a localized somewhat specific feature that has a big influence on flow regardless of what is going on downstream. A waterfall a short distance downstream from a station is one example of a section control because it will be the main feature influencing how flow varies with water depth regardless of what is going on downstream. A channel control exists when the rating curve is determined by the collective effects of all the site characteristics as a whole rather than a specific feature.</p>
+<p>Going back to parameter &lsquo;a&rsquo;: In the Manning equation the discharge is a function of the depth of the flow, but in an irregularly shaped natural channel the depth is variable across the cross-section. Instead of using depth of flow, the regression is based on the depth of flow above the elevation of zero flow. Intuitively, zero flow might be the elevation of the bottom of the channel, but often it is not, especially for a section control. If a section control is behaving somewhat like a dam, the depth of zero flow would be the lip of the dam, not the depth of the pool. Furthermore, at higher flows a localized feature might be completely submerged and the &ldquo;effective&rdquo; elevation of zero flow corresponding to the high flow channel control might not be different from lower flow value of &lsquo;a&rsquo;. In that situation, there might be two different rating curves representing the overall river behavior. While &lsquo;a&rsquo; can be estimated in the field, the easiest approach to determining &lsquo;a&rsquo; is to plot the stage-discharge measurements in log-log space. Using a trial and error procedure, &lsquo;a&rsquo; can be estimated by adjusting the value of &lsquo;a&rsquo; until the stage-discharge values plot in a straight line (see below).</p>
+<h3 id="jupyter-notebook">Jupyter Notebook<a hidden class="anchor" aria-hidden="true" href="#jupyter-notebook">#</a></h3>
+<p>Now, an overview of the the Jupyter Notebook Template. The template is available on <a href="https://github.com/chrisrycx/JupyterRatingCurve">Github</a> along with some data one can use to give it a try. I assume you have some experience with Python and the <a href="http://jupyter.org/">Jupyter project</a>. Input data consists of discharge measurements and associated stage readings for a particular site. The final &ldquo;output&rdquo; at the end of the template is an equation of the form $Q = C(h-a)^{\alpha}$. Each cell in the notebook is described to some extent, but I will elaborate on a few items below. Some cells are blank leaving room for analysis and interpretation of data from a particular site enabling one to share how a particular rating curve came to be.</p>
+<p>An initial plot of the stage-discharge data is created in both &ldquo;linear&rdquo; and log-log space. The linear plot can help identify outliers or odd features in the data. The log-log can be used to identify any major changes in the slope of the data. This could signify that the control changes substantially at a particular flow and it might be best to construct two separate rating curves rather than one.</p>
+<p><img loading="lazy" src="/images/JupInitial.png">
+Initial plot of the stage-discharge data in linear and log-log space</p>
+<p>The effective height of zero flow should be somewhat similar to the thalweg of the river, but will vary somewhat depending on the nature of the control at the site. At a station with an obvious section control, the height of zero flow can be estimated from height measurements of the base of the control. However, it may be easier to use a graphical approach to estimating &lsquo;a&rsquo;. A reasonable value for &lsquo;a&rsquo; will result in a more linear plot of the stage-discharge points while bad values of &lsquo;a&rsquo; will result in the plotted points showing some curvature. Depending on the amount of scatter in the measurements, the best value for &lsquo;a&rsquo; may remain unclear so it is important to verify the final value is realistic. The notebook has a slider for adjusting the value of &lsquo;a&rsquo; between the minimum measured stage value and that value minus 1m.</p>
+<p><img loading="lazy" src="/images/JupSlider.png">
+Slider for adjusting the value of &lsquo;a&rsquo;</p>
+<p>The final step in the process is simply performing a standard linear regression on the data. It would be nice if error in measurement could somehow be included in the regression with higher accuracy measurements being weighted more than lower accuracy measurements. Unfortunately in my literature search, I didn&rsquo;t see any obviously simple approaches to that problem. The final plot in the notebook shows the points as well as the rating curve and the regression parameters.</p>
+<p><img loading="lazy" src="/images/JupFinal.png">
+Final plot showing the rating curve and regression parameters</p>
+<h3 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h3>
+<p>Herschy, R. W., 2008, Streamflow measurement. CRC press.</p>
+<p>Hornberger, G.M., Raffensperger, J.P., Wiberg, P.L., Eshleman, K.N., 1998, Elements of Physical Hydrology, John Hopkins University Press.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/hydrology/">Hydrology</a></li>
+      <li><a href="http://localhost:1313/tags/jupyter/">Jupyter</a></li>
+      <li><a href="http://localhost:1313/tags/rating-curve/">Rating-Curve</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/posts/nmwdi-sensorthings-api/">
+    <span class="title">« Prev</span>
+    <span>NMWDI SensorThings API</span>
+  </a>
+  <a class="next" href="http://localhost:1313/posts/machine-learning-for-snow-hydrology-methods/">
+    <span class="title">Next »</span>
+    <span>Machine Learning for Snow Hydrology - Methods</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">CRC Earth Analytics</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

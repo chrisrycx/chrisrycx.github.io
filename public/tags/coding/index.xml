@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Coding on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/coding/</link>
+    <description>Recent content in Coding on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 03 Feb 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/coding/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Automated QC of Environmental Data</title>
+      <link>http://localhost:1313/posts/automated-qc-of-environmental-data/</link>
+      <pubDate>Thu, 03 Feb 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/automated-qc-of-environmental-data/</guid>
+      <description>&lt;h2 id=&#34;part-2-a-quality-control-api&#34;&gt;Part 2: A Quality Control API&lt;/h2&gt;
+&lt;p&gt;This is the second in a two part series on automated quality control of environmental data. The &lt;a href=&#34;https://crceanalytics.com/2022/01/13/automated-quality-control-of-environmental-data/&#34;&gt;first part&lt;/a&gt; gives an overview of quality control with some specific methods for environmental data. In this post, I describe how I created an API (&lt;a href=&#34;https://api.crceanalytics.com&#34;&gt;api.crceanalytics.com&lt;/a&gt;) to automatically flag uploaded data using some of the techniques described in Part 1.&lt;/p&gt;
+&lt;h4 id=&#34;motivation&#34;&gt;Motivation&lt;/h4&gt;
+&lt;p&gt;A couple years ago I began work on a Python package: EnviroDataQC (&lt;a href=&#34;https://github.com/chrisrycx/EnviroDataQC&#34;&gt;https://github.com/chrisrycx/EnviroDataQC&lt;/a&gt;) that I could use to perform automated quality control on meteorological data being uploaded to &lt;a href=&#34;https://dyacon.net&#34;&gt;DyaconLive&lt;/a&gt;, a web portal for &lt;a href=&#34;https://dyacon.com&#34;&gt;Dyacon&lt;/a&gt; weather stations. The library didn’t need to be overly complex, I just wanted a way to perform range and behavioral checks in a few different contexts without having to re-write quality control code every time. Recently, I thought it might be interesting to build an API that would connect to EnviroDataQC, creating a means for anyone, anywhere to quickly perform data QC. I built a prototype limited to air temperature data at &lt;a href=&#34;http://api.crceanalytics.com&#34;&gt;api.crceanalytics.com&lt;/a&gt; and gave it a simple, interactive front end. I think the concept could be taken a lot further eventually.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

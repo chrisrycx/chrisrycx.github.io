@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Jupyter on CRC Earth Analytics</title>
+    <link>http://localhost:1313/tags/jupyter/</link>
+    <description>Recent content in Jupyter on CRC Earth Analytics</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 02 Jun 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/jupyter/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Stream Rating Curves and Jupyter Notebook</title>
+      <link>http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/</link>
+      <pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/stream-rating-curves-and-jupyter-notebook/</guid>
+      <description>&lt;p&gt;I wrote this a few years ago on another blog, but I think it is still relevant so I am re-posting it here. The code is still available on Github.&lt;/p&gt;
+&lt;p&gt;I worked for several years at USU on the &lt;a href=&#34;http://iutahepscor.org&#34;&gt;iUTAH&lt;/a&gt; project. While there I managed a network of water monitoring stations along the Logan river, and one component of my job involved measuring stream flow. We wanted to know how much water was flowing past each station in order to answer basic questions like &amp;ldquo;how much water is lost or gained downstream?&amp;rdquo;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

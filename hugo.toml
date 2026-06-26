@@ -1,0 +1,45 @@
+baseURL = "https://www.crceanalytics.com/"
+languageCode = "en-us"
+title = "CRC Earth Analytics"
+theme = "PaperMod"
+[pagination]
+  pagerSize = 10
+
+[params]
+  author = "Chris Cox"
+  description = "Earth analytics, hydrology, and data science"
+  ShowReadingTime = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = false
+  ShowCodeCopyButtons = true
+  DateFormat = "January 2, 2006"
+
+[params.homeInfoParams]
+  Title = "CRC Earth Analytics"
+  Content = "Writing about hydrology, data science, and Earth analytics"
+
+[[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/chrisrycx"
+
+[[params.socialIcons]]
+  name = "mastodon"
+  url = "https://fosstodon.org/@chrisrycx"
+
+[[params.socialIcons]]
+  name = "linkedin"
+  url = "https://www.linkedin.com/in/chrisrycx/"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 10
